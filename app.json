@@ -43,6 +43,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a6683e2e-bc0d-4f6a-b755-11fbb7869de3"
+      }
+    },
+    "owner": "trevor_farthing"
   }
 }
