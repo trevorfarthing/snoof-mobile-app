@@ -1,13 +1,27 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient, processLock } from "@supabase/supabase-js";
+import * as SecureStore from "expo-secure-store";
 import { AppState, Platform } from "react-native";
+
+const ExpoSecureStoreAdapter = {
+  getItem: (key: string) => SecureStore.getItemAsync(key),
+  setItem: (key: string, value: string) => {
+    if (value.length > 2048) {
+      console.warn(
+        "Value being stored in SecureStore is larger than 2048 bytes and may not be stored successfully.",
+      );
+    }
+    return SecureStore.setItemAsync(key, value);
+  },
+  removeItem: (key: string) => SecureStore.deleteItemAsync(key),
+};
 
 export const supabase = createClient(
   process.env.EXPO_PUBLIC_SUPABASE_URL!,
   process.env.EXPO_PUBLIC_SUPABASE_KEY!,
   {
     auth: {
-      storage: AsyncStorage,
+      storage: Platform.OS !== "web" ? ExpoSecureStoreAdapter : AsyncStorage,
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: false,

@@ -1,3 +1,4 @@
+import SignOutButton from "@/components/Auth/SocialAuthButtons/SignOutButton";
 import { Text, View } from "react-native";
 
 export default function Index() {
@@ -7,9 +8,11 @@ export default function Index() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        gap: 16,
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <Text style={{ fontSize: 24, fontWeight: "600" }}>Welcome to Snoof 🐾</Text>
+      <SignOutButton />
     </View>
   );
 }
