@@ -1,0 +1,2 @@
+- Install Prettier / ESLint and configure
+- Install WatermelonDB / SQLite and figure out process for syncing to Supabase

@@ -11,11 +11,17 @@
     "prebuild": "expo prebuild --clean",
     "lint": "expo lint",
     "supabase:start": "supabase start",
-    "supabase:stop": "supabase stop"
+    "supabase:stop": "supabase stop",
+    "migration:create": "supabase migration new",
+    "migration:local:reset": "supabase db reset",
+    "migration:pull": "supabase db pull",
+    "migration:local:up": "supabase migration up",
+    "migration:local:down": "supabase migration down",
+    "migration:remote:push": "supabase db push"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
-    "@react-native-async-storage/async-storage": "^3.0.1",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
@@ -27,6 +33,7 @@
     "expo-image": "~3.0.11",
     "expo-linking": "~8.0.11",
     "expo-router": "~6.0.23",
+    "expo-secure-store": "^55.0.9",
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
     "expo-symbols": "~1.0.8",
