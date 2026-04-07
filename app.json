@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "snoof-mobile-app",
+    "name": "Snoof",
     "slug": "snoof-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,7 +11,11 @@
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
-      "bundleIdentifier": "com.trevor-farthing.snoofmobileapp"
+      "bundleIdentifier": "app.snoof.ios",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +26,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.trevor_farthing.snoofmobileapp"
+      "package": "app.snoof.android",
+      "versionCode": 1
     },
     "web": {
       "output": "static",

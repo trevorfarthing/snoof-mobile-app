@@ -1,10 +1,22 @@
 // https://docs.expo.dev/guides/using-eslint/
-const { defineConfig } = require('eslint/config');
-const expoConfig = require('eslint-config-expo/flat');
+import expoConfig from "eslint-config-expo/flat.js";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import eslintPluginUnicorn from "eslint-plugin-unicorn";
+import { defineConfig } from "eslint/config";
 
-module.exports = defineConfig([
+export default defineConfig([
   expoConfig,
+  eslintPluginPrettierRecommended,
+  eslintPluginUnicorn.configs.recommended,
   {
-    ignores: ['dist/*'],
+    ignores: ["dist/*", "ios/*", "android/*", "node_modules/*", ".expo/*"],
+    plugins: {
+      unicorn: eslintPluginUnicorn,
+    },
+    rules: {
+      "unicorn/better-regex": "warn",
+      "unicorn/no-negated-condition": "off",
+      "unicorn/no-null": "off",
+    },
   },
 ]);

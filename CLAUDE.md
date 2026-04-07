@@ -381,7 +381,7 @@ Snoof's advantages: comprehensive + beautiful + AI-native + dog-first + transpar
 
 ### Naming Conventions
 
-- Components: PascalCase (`PetSwitcher.tsx`)
+- Components: kebab-case (`pet-switcher.tsx`)
 - Hooks: camelCase with `use` prefix (`usePetData.ts`)
 - Utils/helpers: camelCase (`formatWeight.ts`)
 - Constants: SCREAMING_SNAKE_CASE for values, PascalCase for files

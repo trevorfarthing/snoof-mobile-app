@@ -1,4 +1,4 @@
-import Auth from "@/components/Auth";
+import Auth from "@/components/auth";
 import { Stack } from "expo-router";
 import { ScrollView } from "react-native";
 

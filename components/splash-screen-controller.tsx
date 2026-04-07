@@ -11,5 +11,5 @@ export function SplashScreenController() {
     SplashScreen.hideAsync();
   }
 
-  return null;
+  return;
 }

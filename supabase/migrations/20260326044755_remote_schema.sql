@@ -132,7 +132,7 @@ ALTER TABLE ONLY "public"."profiles"
 
 
 
-CREATE POLICY "Public profiles are viewable by everyone." ON "public"."profiles" FOR SELECT USING (true);
+-- CREATE POLICY "Public profiles are viewable by everyone." ON "public"."profiles" FOR SELECT USING (true);
 
 
 
@@ -140,7 +140,7 @@ CREATE POLICY "Users can insert their own profile." ON "public"."profiles" FOR I
 
 
 
-CREATE POLICY "Users can update own profile." ON "public"."profiles" FOR UPDATE USING ((( SELECT "auth"."uid"() AS "uid") = "id"));
+-- CREATE POLICY "Users can update own profile." ON "public"."profiles" FOR UPDATE USING ((( SELECT "auth"."uid"() AS "uid") = "id"));
 
 
 

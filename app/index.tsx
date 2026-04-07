@@ -1,4 +1,4 @@
-import SignOutButton from "@/components/Auth/SocialAuthButtons/SignOutButton";
+import SignOutButton from "@/components/auth/social-auth-buttons/sign-out-button";
 import { Text, View } from "react-native";
 
 export default function Index() {
@@ -11,7 +11,9 @@ export default function Index() {
         gap: 16,
       }}
     >
-      <Text style={{ fontSize: 24, fontWeight: "600" }}>Welcome to Snoof 🐾</Text>
+      <Text style={{ fontSize: 24, fontWeight: "600" }}>
+        Welcome to Snoof 🐾
+      </Text>
       <SignOutButton />
     </View>
   );

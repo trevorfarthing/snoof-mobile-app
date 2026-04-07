@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { supabase } from "../../lib/utils/supabase";
-import AppleSignInButton from "./SocialAuthButtons/AppleSignInButton";
-import GoogleSignInButton from "./SocialAuthButtons/GoogleSignInButton";
+import AppleSignInButton from "./social-auth-buttons/apple-sign-in-button.ios";
+import GoogleSignInButton from "./social-auth-buttons/google-sign-in-button";
 import styles from "./styles";
 
 export default function Auth() {
@@ -84,9 +91,13 @@ export default function Auth() {
       <View style={styles.verticallySpaced}>
         <GoogleSignInButton />
       </View>
-      <View style={styles.verticallySpaced}>
-        <AppleSignInButton />
-      </View>
+      {Platform.OS === "ios" ? (
+        <View style={styles.verticallySpaced}>
+          <AppleSignInButton />
+        </View>
+      ) : (
+        <></>
+      )}
     </View>
   );
 }
