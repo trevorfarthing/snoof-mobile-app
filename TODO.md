@@ -1,5 +1,5 @@
 - Install WatermelonDB / SQLite (possibly just use expo-sqlite) and figure out process for syncing to Supabase
-- Set up Apple auth in Supabase dashboard once Apple Developer account is approved
+- Create seed data script
 
 - Generate design for app icon and color palette
 - Figure out animations

@@ -7,6 +7,7 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "ios:device": "npx expo run:ios --device",
     "web": "expo start --web",
     "prebuild": "expo prebuild --clean",
     "lint": "expo lint",
@@ -17,7 +18,11 @@
     "migration:pull": "supabase db pull",
     "migration:local:up": "supabase migration up",
     "migration:local:down": "supabase migration down",
-    "migration:remote:push": "supabase db push"
+    "migration:remote:push": "supabase db push",
+    "eas:development:ios": "eas build --profile development --platform ios",
+    "eas:preview:ios": "eas build --profile preview --platform ios",
+    "eas:submit:ios": "eas submit --platform ios",
+    "eas:production:ios": "eas build --profile production --platform ios"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

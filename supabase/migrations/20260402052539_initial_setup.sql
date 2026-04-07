@@ -169,7 +169,7 @@ DECLARE
   new_household_id UUID;
 BEGIN
   -- Create a profile for the new user
-  INSERT INTO profiles (id, full_name, avatar_url, email, phone)
+  INSERT INTO profiles (id, full_name, avatar_url, email)
   VALUES (
     new.id, 
     COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1)),
