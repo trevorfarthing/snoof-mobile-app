@@ -13,6 +13,7 @@ The name "Snoof" is a coined word (a playful riff on "snoot/boop the snoof" dog 
 | Layer              | Technology                                                     |
 | ------------------ | -------------------------------------------------------------- |
 | Framework          | Expo + React Native + TypeScript                               |
+| State Management   | Zustand                                                        |
 | Backend            | Supabase (PostgreSQL, Auth, Storage, Edge Functions, Realtime) |
 | AI                 | Anthropic Claude API (called via Supabase Edge Functions)      |
 | Offline Storage    | WatermelonDB or Expo SQLite (local-first, syncs to Supabase)   |
