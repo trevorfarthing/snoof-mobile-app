@@ -1,16 +1,17 @@
 import { usePetStore } from "@/lib/stores/use-pet-store";
 import { useEffect, useRef } from "react";
 import {
+  Dimensions,
   LayoutChangeEvent,
-  ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import {
   NavigationState,
@@ -23,9 +24,12 @@ type Props = SceneRendererProps & {
   navigationState: NavigationState<Route>;
 };
 
-type PillMeasure = { x: number; y: number; width: number; height: number };
+type PillLayout = { x: number; width: number };
 
-const SPRING_CONFIG = { damping: 22, stiffness: 220, mass: 0.9 };
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SIDE_PADDING = SCREEN_WIDTH / 2;
+
+const SCROLL_TIMING = { duration: 200, easing: Easing.inOut(Easing.linear) };
 
 function getLabel(key: string, petName: string | null): string {
   if (key === "pet") return petName ?? "Pet";
@@ -34,65 +38,44 @@ function getLabel(key: string, petName: string | null): string {
 
 export function AppNav({ navigationState, jumpTo }: Props) {
   const { activePet } = usePetStore();
+  const pillLayouts = useRef<(PillLayout | undefined)[]>([]);
+  const offsetX = useSharedValue(0);
+  const hasInitialLayout = useRef(false);
 
-  const pillMeasures = useRef<(PillMeasure | undefined)[]>([]);
-  const initialized = useRef(false);
-
-  const indicatorX = useSharedValue(0);
-  const indicatorY = useSharedValue(0);
-  const indicatorWidth = useSharedValue(80);
-  const indicatorHeight = useSharedValue(28);
-
-  const applyMeasure = (measure: PillMeasure, animated: boolean) => {
-    if (animated) {
-      indicatorX.value = withSpring(measure.x, SPRING_CONFIG);
-      indicatorWidth.value = withSpring(measure.width, SPRING_CONFIG);
-    } else {
-      indicatorX.value = measure.x;
-      indicatorY.value = measure.y;
-      indicatorWidth.value = measure.width;
-      indicatorHeight.value = measure.height;
-    }
-  };
-
-  const handlePillLayout = (index: number, e: LayoutChangeEvent) => {
-    const { x, y, width, height } = e.nativeEvent.layout;
-    pillMeasures.current[index] = { x, y, width, height };
-
-    if (index === navigationState.index) {
-      applyMeasure({ x, y, width, height }, initialized.current);
-      initialized.current = true;
-    }
-  };
-
-  // Animate indicator when active tab changes after initial mount
-  useEffect(() => {
-    if (!initialized.current) return;
-    const m = pillMeasures.current[navigationState.index];
-    if (m) applyMeasure(m, true);
-  }, [navigationState.index]);
-
-  const indicatorAnimStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: indicatorX.value }],
-    width: indicatorWidth.value,
-    top: indicatorY.value,
-    height: indicatorHeight.value,
+  // Translate the entire pill row rather than scrolling a ScrollView.
+  // This runs entirely on the UI thread with no bridge round-trips.
+  const rowStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: -offsetX.value }],
   }));
 
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {/* Sliding active-pill indicator (renders behind pill labels) */}
-        <Animated.View
-          pointerEvents="none"
-          style={[styles.indicator, indicatorAnimStyle]}
-        />
+  const centerTab = (index: number, animated: boolean) => {
+    const layout = pillLayouts.current[index];
+    if (!layout) return;
+    const x = layout.x + layout.width / 2 - SCREEN_WIDTH / 2;
+    offsetX.value = animated ? withTiming(x, SCROLL_TIMING) : x;
+  };
 
-        {/* Pills */}
+  useEffect(() => {
+    centerTab(navigationState.index, true);
+  }, [navigationState.index]);
+
+  const handlePillLayout = (index: number, e: LayoutChangeEvent) => {
+    const { x, width } = e.nativeEvent.layout;
+    pillLayouts.current[index] = { x, width };
+    // Only snap on first layout of the active tab. After that, all centering
+    // goes through the useEffect so style-change re-layouts don't override animations.
+    if (!hasInitialLayout.current && index === navigationState.index) {
+      centerTab(index, false);
+      hasInitialLayout.current = true;
+    }
+  };
+
+  return (
+    // overflow:hidden clips pills that slide off either edge
+    <View style={[styles.container, { overflow: "hidden" }]}>
+      <Animated.View style={[styles.scrollContent, rowStyle]}>
+        {/* Spacers replace paddingHorizontal so pills get their natural content width */}
+        <View style={{ width: SIDE_PADDING }} />
         {navigationState.routes.map((route, i) => {
           const isActive = i === navigationState.index;
           return (
@@ -119,7 +102,8 @@ export function AppNav({ navigationState, jumpTo }: Props) {
             </TouchableOpacity>
           );
         })}
-      </ScrollView>
+        <View style={{ width: SIDE_PADDING }} />
+      </Animated.View>
     </View>
   );
 }

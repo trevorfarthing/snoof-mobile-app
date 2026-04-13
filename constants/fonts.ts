@@ -1,12 +1,6 @@
-import { Platform } from "react-native";
-
 export const fonts = {
-  nunito: Platform.select({
-    android: "Nunito_400Regular",
-    ios: "Nunito-400Regular",
-  }),
-  nunitoSemiBold: Platform.select({
-    android: "Nunito_600SemiBold",
-    ios: "Nunito-600SemiBold",
-  }),
+  nunito: "Nunito_400Regular",
+  nunitoSemiBold: "Nunito_600SemiBold",
+  nunitoBold: "Nunito_700Bold",
+  nunitoExtraBold: "Nunito_800ExtraBold",
 };

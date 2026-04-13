@@ -10,15 +10,8 @@ export const styles = StyleSheet.create({
   scrollContent: {
     flexDirection: "row",
     gap: 8,
-    paddingHorizontal: 16,
     paddingBottom: 12,
     paddingTop: 4,
-  },
-  indicator: {
-    position: "absolute",
-    borderRadius: radii.pill,
-    backgroundColor: colors.textPrimary,
-    // x/y/width/height set via Reanimated
   },
   pill: {
     paddingVertical: 8,
@@ -26,7 +19,7 @@ export const styles = StyleSheet.create({
     borderRadius: radii.pill,
   },
   pillActive: {
-    backgroundColor: "transparent", // indicator provides the dark bg
+    backgroundColor: colors.textPrimary,
   },
   pillInactive: {
     backgroundColor: colors.bgElevated,
@@ -38,7 +31,7 @@ export const styles = StyleSheet.create({
   pillLabelActive: {
     color: colors.textInverse,
     fontWeight: "600",
-    fontFamily: fonts.nunitoSemiBold,
+    fontFamily: fonts.nunitoBold,
   },
   pillLabelInactive: {
     color: colors.textSecondary,
