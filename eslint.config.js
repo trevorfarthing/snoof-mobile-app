@@ -17,6 +17,7 @@ export default defineConfig([
       "unicorn/better-regex": "warn",
       "unicorn/no-negated-condition": "off",
       "unicorn/no-null": "off",
+      "unicorn/prevent-abbreviations": "off",
     },
   },
 ]);

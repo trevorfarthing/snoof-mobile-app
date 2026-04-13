@@ -1,5 +1,6 @@
 import { colors, radii, spacing } from "@/constants/colors";
-import { Platform, StyleSheet } from "react-native";
+import { fonts } from "@/constants/fonts";
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -39,19 +40,13 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   petAvatarInitial: {
-    fontFamily: Platform.select({
-      android: "Nunito_600SemiBold",
-      ios: "Nunito-600SemiBold",
-    }),
+    fontFamily: fonts.nunitoSemiBold,
     fontSize: 11,
     fontWeight: "600",
     color: colors.textInverse,
   },
   petName: {
-    fontFamily: Platform.select({
-      android: "Nunito_600SemiBold",
-      ios: "Nunito-600SemiBold",
-    }),
+    fontFamily: fonts.nunitoSemiBold,
     fontSize: 13,
     fontWeight: "600",
     color: colors.textPrimary,
