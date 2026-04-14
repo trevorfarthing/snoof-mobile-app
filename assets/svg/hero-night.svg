@@ -1,0 +1,43 @@
+<svg viewBox="0 0 362 210" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky-night" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0F1A2E" />
+      <stop offset="50%" stop-color="#1A2A40" />
+      <stop offset="100%" stop-color="#1E3040" />
+    </linearGradient>
+  </defs>
+  <rect width="362" height="210" fill="url(#sky-night)" />
+  <!-- moon -->
+  <circle cx="290" cy="50" r="18" fill="#E8E0C8" opacity="0.9" />
+  <circle cx="296" cy="46" r="15" fill="#0F1A2E" opacity="0.7" />
+  <!-- moon glow -->
+  <circle cx="290" cy="50" r="30" fill="#E8E0C8" opacity="0.06" />
+  <!-- stars -->
+  <circle cx="40" cy="30" r="1.2" fill="#E8E0C8" opacity="0.7" />
+  <circle cx="80" cy="55" r="0.8" fill="#E8E0C8" opacity="0.5" />
+  <circle cx="120" cy="25" r="1" fill="#E8E0C8" opacity="0.6" />
+  <circle cx="160" cy="45" r="0.8" fill="#E8E0C8" opacity="0.4" />
+  <circle cx="200" cy="20" r="1.2" fill="#E8E0C8" opacity="0.5" />
+  <circle cx="240" cy="38" r="0.8" fill="#E8E0C8" opacity="0.6" />
+  <circle cx="340" cy="30" r="1" fill="#E8E0C8" opacity="0.5" />
+  <circle cx="55" cy="70" r="0.6" fill="#E8E0C8" opacity="0.3" />
+  <circle cx="180" cy="65" r="0.7" fill="#E8E0C8" opacity="0.4" />
+  <circle cx="320" cy="70" r="0.9" fill="#E8E0C8" opacity="0.3" />
+  <circle cx="110" cy="80" r="0.5" fill="#E8E0C8" opacity="0.25" />
+  <!-- distant hills -->
+  <path d="M0 145 Q80 125 160 138 Q240 118 362 132 L362 210 L0 210Z" fill="#14202E" opacity="0.8" />
+  <!-- mid hills -->
+  <path d="M0 160 Q70 148 140 155 Q210 142 280 150 Q340 140 362 148 L362 210 L0 210Z" fill="#0F1822" opacity="0.9" />
+  <!-- tree silhouettes -->
+  <path d="M30 155 L40 125 L50 155Z" fill="#0A1018" opacity="0.9" />
+  <path d="M60 158 L68 132 L76 158Z" fill="#0A1018" opacity="0.8" />
+  <path d="M300 148 L308 122 L316 148Z" fill="#0A1018" opacity="0.85" />
+  <path d="M325 152 L331 130 L337 152Z" fill="#0A1018" opacity="0.8" />
+  <!-- fireflies (static, no SVG animation in React Native) -->
+  <circle cx="100" cy="140" r="2" fill="#D4C46A" opacity="0.6" />
+  <circle cx="200" cy="150" r="1.5" fill="#D4C46A" opacity="0.4" />
+  <circle cx="260" cy="135" r="1.8" fill="#D4C46A" opacity="0.5" />
+  <circle cx="150" cy="155" r="1.2" fill="#D4C46A" opacity="0.35" />
+  <!-- foreground -->
+  <path d="M0 175 Q90 165 180 170 Q270 162 362 168 L362 210 L0 210Z" fill="#080E14" opacity="0.9" />
+</svg>

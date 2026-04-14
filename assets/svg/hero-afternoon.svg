@@ -1,0 +1,45 @@
+<svg viewBox="0 0 362 210" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky-afternoon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5B9BD5" />
+      <stop offset="60%" stop-color="#7BB8E0" />
+      <stop offset="100%" stop-color="#A8D4E8" />
+    </linearGradient>
+  </defs>
+  <rect width="362" height="210" fill="url(#sky-afternoon)" />
+  <!-- sun high -->
+  <circle r="22" fill="#FFF5D4" opacity="0.95" cy="30" cx="220" />
+  <circle r="34" fill="#FFF5D4" opacity="0.15" cx="220" cy="30" />
+  <!-- clouds -->
+  <g opacity="0.6">
+    <ellipse cx="80" cy="50" rx="30" ry="10" fill="white" />
+    <ellipse cx="95" cy="46" rx="20" ry="8" fill="white" />
+    <ellipse cx="70" cy="48" rx="15" ry="7" fill="white" />
+  </g>
+  <g opacity="0.4">
+    <ellipse cx="290" cy="65" rx="25" ry="8" fill="white" />
+    <ellipse cx="305" cy="62" rx="18" ry="7" fill="white" />
+  </g>
+  <!-- rolling meadow -->
+  <path d="M0 150 Q80 125 160 140 Q240 120 362 135 L362 210 L0 210Z" fill="#7BAA65" opacity="0.5" />
+  <path d="M0 165 Q100 145 200 158 Q300 140 362 155 L362 210 L0 210Z" fill="#5E944A" opacity="0.6" />
+  <!-- path/trail -->
+  <path d="M160 210 Q170 185 185 170 Q200 160 220 155" stroke="#C4AA78" stroke-width="3" fill="none" opacity="0.4" stroke-linecap="round" />
+  <!-- trees -->
+  <circle cx="50" cy="148" r="14" fill="#4A7A3A" opacity="0.6" />
+  <rect x="48" y="155" width="4" height="10" fill="#6A5A3A" opacity="0.5" rx="1" />
+  <circle cx="330" cy="140" r="12" fill="#4A7A3A" opacity="0.5" />
+  <rect x="328" y="147" width="4" height="9" fill="#6A5A3A" opacity="0.5" rx="1" />
+  <circle cx="310" cy="146" r="10" fill="#5A8A4A" opacity="0.5" />
+  <!-- dog silhouette on trail -->
+  <g transform="translate(195, 148) scale(0.5)" opacity="0.35">
+    <path d="M0 12 Q2 5 8 4 Q12 3 16 6 L20 4 Q22 3 22 6 L24 8 Q26 6 28 8 L26 12 Q24 16 20 16 L8 16 Q2 16 0 12Z" fill="#3A3020" />
+  </g>
+  <!-- foreground grass -->
+  <path d="M0 180 Q60 170 140 175 Q220 168 362 174 L362 210 L0 210Z" fill="#4A7A3A" opacity="0.5" />
+  <!-- butterfly -->
+  <g transform="translate(120, 130)" opacity="0.5">
+    <path d="M0 0 Q-4 -4 -2 -7 Q0 -5 0 0" fill="#D4A34A" />
+    <path d="M0 0 Q4 -4 2 -7 Q0 -5 0 0" fill="#E8B85A" />
+  </g>
+</svg>

@@ -1,0 +1,31 @@
+<svg viewBox="0 0 362 210" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky-morning" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7BAFD4" />
+      <stop offset="40%" stop-color="#B8D4E8" />
+      <stop offset="70%" stop-color="#F0D6A8" />
+      <stop offset="100%" stop-color="#E8C48A" />
+    </linearGradient>
+  </defs>
+  <rect width="362" height="210" fill="url(#sky-morning)" />
+  <!-- sun -->
+  <circle cx="280" cy="95" r="24" fill="#F5DFA0" opacity="0.9" />
+  <circle cx="280" cy="95" r="32" fill="#F5DFA0" opacity="0.2" />
+  <!-- distant hills -->
+  <path d="M0 155 Q60 120 120 140 Q180 115 240 135 Q300 110 362 130 L362 210 L0 210Z" fill="#8BAA7A" opacity="0.4" />
+  <!-- mid hills -->
+  <path d="M0 165 Q50 140 100 155 Q160 135 220 150 Q290 130 362 148 L362 210 L0 210Z" fill="#6B8E5A" opacity="0.5" />
+  <!-- trees -->
+  <path d="M30 155 L38 130 L46 155Z" fill="#5A7A4A" opacity="0.7" />
+  <path d="M55 158 L62 136 L69 158Z" fill="#4A6A3A" opacity="0.6" />
+  <path d="M295 143 L303 118 L311 143Z" fill="#5A7A4A" opacity="0.6" />
+  <path d="M320 148 L326 128 L332 148Z" fill="#4A6A3A" opacity="0.7" />
+  <!-- foreground -->
+  <path d="M0 175 Q90 160 180 170 Q270 158 362 168 L362 210 L0 210Z" fill="#4A6A3A" opacity="0.6" />
+  <!-- morning mist -->
+  <rect x="0" y="130" width="362" height="60" fill="white" opacity="0.12" />
+  <!-- birds -->
+  <path stroke="#5A6A5A" stroke-width="1.2" fill="none" opacity="0.4" d="M232 27 Q236 32 240 27" />
+  <path stroke="#5A6A5A" stroke-width="1" fill="none" opacity="0.3" d="M222 38 Q225 34 228 38" />
+  <path stroke="#5A6A5A" stroke-width="1" fill="none" opacity="0.3" d="M245 22 Q248 18 251 22" />
+</svg>

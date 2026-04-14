@@ -1,0 +1,31 @@
+<svg viewBox="0 0 362 210" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky-evening" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4A3A6A" />
+      <stop offset="25%" stop-color="#8A5A6A" />
+      <stop offset="50%" stop-color="#D4845A" />
+      <stop offset="75%" stop-color="#E8AA6A" />
+      <stop offset="100%" stop-color="#D4945A" />
+    </linearGradient>
+  </defs>
+  <rect width="362" height="210" fill="url(#sky-evening)" />
+  <!-- setting sun -->
+  <circle cx="300" cy="128" r="28" fill="#F0C070" opacity="0.85" />
+  <circle cx="300" cy="128" r="42" fill="#F0C070" opacity="0.15" />
+  <!-- sun reflection bands -->
+  <rect x="0" y="120" width="362" height="4" fill="#F0C070" opacity="0.06" />
+  <rect x="0" y="130" width="362" height="3" fill="#F0C070" opacity="0.04" />
+  <!-- distant ridge -->
+  <path d="M0 145 Q50 128 100 138 Q170 118 240 132 Q310 120 362 130 L362 210 L0 210Z" fill="#5A4A3A" opacity="0.5" />
+  <!-- mid ridge -->
+  <path d="M0 160 Q80 145 160 155 Q250 138 362 150 L362 210 L0 210Z" fill="#4A3A2A" opacity="0.6" />
+  <!-- silhouette trees -->
+  <path d="M40 155 L50 125 L60 155Z" fill="#3A2A1A" opacity="0.7" />
+  <path d="M65 158 L73 132 L81 158Z" fill="#3A2A1A" opacity="0.6" />
+  <path d="M140 150 L148 128 L156 150Z" fill="#3A2A1A" opacity="0.5" />
+  <path d="M250 145 L256 125 L262 145Z" fill="#3A2A1A" opacity="0.55" />
+  <!-- foreground -->
+  <path d="M0 175 Q90 162 180 170 Q270 160 362 168 L362 210 L0 210Z" fill="#2A1A0A" opacity="0.6" />
+  <!-- warm glow on horizon -->
+  <ellipse cx="300" cy="145" rx="80" ry="20" fill="#F0C070" opacity="0.12" />
+</svg>
