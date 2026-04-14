@@ -1,7 +1,7 @@
 import HeroAfternoon from "@/assets/svg/hero-afternoon.svg";
 import HeroEvening from "@/assets/svg/hero-evening.svg";
 import HeroMorning from "@/assets/svg/hero-morning.svg";
-import HeroNight from "@/assets/svg/hero-night.svg";
+import { HeroNightScene } from "./hero-night-scene";
 import { usePetStore } from "@/lib/stores/use-pet-store";
 import { BlurView } from "expo-blur";
 import { Platform, StyleSheet, Text, View } from "react-native";
@@ -49,6 +49,22 @@ function buildSubtitle(
   return [breed, age, weight].filter(Boolean).join(" · ");
 }
 
+const DAY_SCENES = {
+  morning: HeroMorning,
+  afternoon: HeroAfternoon,
+  evening: HeroEvening,
+} as const;
+
+function SceneBackground({ period }: { period: TimePeriod }) {
+  if (period === "night") return <HeroNightScene />;
+  const Scene = DAY_SCENES[period];
+  return (
+    <View style={StyleSheet.absoluteFill}>
+      <Scene width="100%" height="100%" />
+    </View>
+  );
+}
+
 export function HeroCard() {
   const { activePet } = usePetStore();
 
@@ -62,18 +78,9 @@ export function HeroCard() {
   const subtitle = buildSubtitle(activePet?.breed ?? null, age, weight);
   const initial = petName.charAt(0).toUpperCase();
 
-  const SceneBackground = {
-    morning: HeroMorning,
-    afternoon: HeroAfternoon,
-    evening: HeroEvening,
-    night: HeroNight,
-  }[period];
-
   return (
     <View style={styles.card}>
-      <View style={StyleSheet.absoluteFill}>
-        <SceneBackground width="100%" height="100%" />
-      </View>
+      <SceneBackground period={period} />
 
       <View style={styles.content}>
         <View style={styles.topRow}>
