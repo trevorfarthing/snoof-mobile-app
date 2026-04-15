@@ -16,7 +16,7 @@ The name "Snoof" is a coined word (a playful riff on "snoot/boop the snoof" dog 
 | State Management   | Zustand                                                        |
 | Backend            | Supabase (PostgreSQL, Auth, Storage, Edge Functions, Realtime) |
 | AI                 | Anthropic Claude API (called via Supabase Edge Functions)      |
-| Offline Storage    | WatermelonDB or Expo SQLite (local-first, syncs to Supabase)   |
+| Offline Storage    | Expo SQLite (local-first, syncs to Supabase)                   |
 | Subscriptions      | RevenueCat                                                     |
 | Analytics          | Mixpanel or PostHog (not yet decided)                          |
 | Maps/GPS           | Google Maps API or Mapbox (not yet decided)                    |
@@ -25,7 +25,7 @@ The name "Snoof" is a coined word (a playful riff on "snoot/boop the snoof" dog 
 ### Key Architecture Decisions
 
 - **AI calls go through Supabase Edge Functions** — keeps API keys server-side and enables rate limiting per subscription tier.
-- **Offline-first is required** — dog owners need to log walks, potty breaks, and feedings without signal. Plan to use WatermelonDB or Expo SQLite for local storage that syncs to Supabase when online. This decision is not yet finalized.
+- **Offline-first is required** — dog owners need to log walks, potty breaks, and feedings without signal. Use Expo SQLite for local storage that syncs to Supabase when online.
 - **Row Level Security (RLS)** must be designed carefully from the start — household members share pet data while accounts remain isolated.
 - **Realtime** is used for household coordination so all family members see who walked/fed the dog.
 
@@ -41,15 +41,18 @@ src/
 │   │   ├── dashboard/      # Dashboard tab (home screen)
 │   │   ├── health/         # Health tab
 │   │   ├── activity/       # Activity tab
-│   │   └── pawchat/        # PawChat AI tab
+│   │   └── training/       # Training tab
 │   └── _layout.tsx
 ├── components/
 │   ├── ui/                 # Reusable UI primitives (Button, Card, Input, etc.)
+│   │   └── app-header/     # Example: each component gets its own folder
+│   │       ├── index.tsx   # Component logic
+│   │       └── styles.ts   # StyleSheet definitions
 │   ├── pet/                # Pet-related components (PetAvatar, PetSwitcher, HeroCard)
 │   ├── dashboard/          # Dashboard-specific components
 │   ├── health/             # Health module components
 │   ├── activity/           # Activity module components
-│   └── pawchat/            # PawChat components
+│   └── training/           # Training module components
 ├── lib/
 │   ├── supabase.ts         # Supabase client init
 │   ├── api/                # API helper functions per module
@@ -76,9 +79,9 @@ The app uses **5 horizontal pill tabs** at the top of the screen (inspired by th
 2. **Dashboard** — the home screen, central hub (default active tab)
 3. **Health** — medications, vaccinations, vet visits, weight, documents
 4. **Activity** — walks, potty, feeding, sleep, training logs
-5. **PawChat** — AI assistant chat interface
+5. **Training** — commands, training sessions, behaviors
 
-The pill tabs are horizontally swipeable when content overflows. Active tab is filled dark (#111) with white text. Inactive tabs have a light border with gray text. Settings lives as an icon in the top-left of the header bar — it is NOT a tab.
+The pill tabs are horizontally swipeable when content overflows. Active tab is filled dark (#111) with white text. Settings lives as an icon in the top-left of the header bar — it is NOT a tab.
 
 ### Pet Switching
 
@@ -93,82 +96,7 @@ An opt-in toggle (not default) on the **Activity tab** that shows all pets' acti
 
 ## UI/UX Design Direction
 
-### Visual Language
-
-- **Dark hero card** for the active pet at the top of Dashboard (deep navy #0F3460 for primary pet, deep purple #3D1A6E for secondary — each pet gets a unique color)
-- **Light, clean background** (#f0f0f0 or white)
-- **Card-based layout** with 20px border radius, subtle borders (0.5px rgba(0,0,0,0.08))
-- **SF Pro Text / system font stack** — no custom fonts needed for MVP
-- **Teal accent color** (#4ECDC4) for progress bars and success states
-- **Blue accent** (#2563eb) for interactive links and actions
-- Warm, approachable tone — not clinical
-
-### Design Tokens
-
-```typescript
-// colors.ts
-export const colors = {
-  // Backgrounds
-  background: "#f0f0f0",
-  surface: "#ffffff",
-  surfacePressed: "#f4f4f4",
-
-  // Text
-  textPrimary: "#111111",
-  textSecondary: "#666666",
-  textTertiary: "#888888",
-  textMuted: "#999999",
-
-  // Accents
-  teal: "#4ECDC4", // progress, success, done states
-  blue: "#2563eb", // links, interactive actions
-  red: "#E24B4A", // overdue, errors, destructive
-
-  // Status badges
-  warnBg: "#fef3c7",
-  warnText: "#92400e",
-  infoBg: "#dbeafe",
-  infoText: "#1e40af",
-  okBg: "#d1fae5",
-  okText: "#065f46",
-
-  // Pet hero card backgrounds (each pet gets a unique dark color)
-  heroPrimary: "#0F3460", // deep navy
-  heroSecondary: "#3D1A6E", // deep purple
-  heroTertiary: "#1B4332", // deep forest
-
-  // Borders
-  border: "rgba(0,0,0,0.08)",
-  borderMedium: "rgba(0,0,0,0.12)",
-
-  // Tab bar
-  tabActive: "#111111",
-  tabActiveText: "#ffffff",
-  tabInactive: "#ffffff",
-  tabInactiveText: "#666666",
-};
-
-// layout.ts
-export const layout = {
-  borderRadius: {
-    sm: 6,
-    md: 12,
-    lg: 16,
-    xl: 20,
-    pill: 20,
-    card: 20,
-    avatar: 9999,
-  },
-  spacing: {
-    xs: 4,
-    sm: 8,
-    md: 12,
-    lg: 16,
-    xl: 20,
-    xxl: 24,
-  },
-};
-```
+For design tokens (colors, spacing, border radius) and visual language guidelines, refer to `DESIGN_SPEC.md` in the repo root.
 
 ### Design Inspiration
 
@@ -378,6 +306,7 @@ Snoof's advantages: comprehensive + beautiful + AI-native + dog-first + transpar
 - Use Zustand for global state management
 - Prefer composition over inheritance
 - Keep components small and focused (< 150 lines)
+- Each component lives in its own named folder with `index.tsx` for logic and `styles.ts` for StyleSheet definitions (e.g. `components/ui/app-header/index.tsx`)
 - Co-locate tests with components
 
 ### Naming Conventions
