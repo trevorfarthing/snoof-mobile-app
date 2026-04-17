@@ -72,6 +72,73 @@ export type Database = {
           },
         ];
       };
+      documents: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          file_size_bytes: number | null;
+          id: string;
+          metadata: Json | null;
+          mime_type: string | null;
+          pet_id: string;
+          related_visit_id: string | null;
+          storage_path: string;
+          title: string;
+          type: Database["public"]["Enums"]["document_type"];
+          uploaded_by: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          file_size_bytes?: number | null;
+          id?: string;
+          metadata?: Json | null;
+          mime_type?: string | null;
+          pet_id: string;
+          related_visit_id?: string | null;
+          storage_path: string;
+          title: string;
+          type?: Database["public"]["Enums"]["document_type"];
+          uploaded_by?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          file_size_bytes?: number | null;
+          id?: string;
+          metadata?: Json | null;
+          mime_type?: string | null;
+          pet_id?: string;
+          related_visit_id?: string | null;
+          storage_path?: string;
+          title?: string;
+          type?: Database["public"]["Enums"]["document_type"];
+          uploaded_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "documents_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "documents_related_visit_id_fkey";
+            columns: ["related_visit_id"];
+            isOneToOne: false;
+            referencedRelation: "vet_visits";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "documents_uploaded_by_fkey";
+            columns: ["uploaded_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       feedings: {
         Row: {
           activity_log_id: string;
@@ -242,6 +309,149 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      medication_logs: {
+        Row: {
+          administered_at: string;
+          administered_by: string | null;
+          created_at: string;
+          id: string;
+          medication_id: string;
+          notes: string | null;
+          pet_id: string;
+          skip_reason: string | null;
+          skipped: boolean | null;
+        };
+        Insert: {
+          administered_at?: string;
+          administered_by?: string | null;
+          created_at?: string;
+          id?: string;
+          medication_id: string;
+          notes?: string | null;
+          pet_id: string;
+          skip_reason?: string | null;
+          skipped?: boolean | null;
+        };
+        Update: {
+          administered_at?: string;
+          administered_by?: string | null;
+          created_at?: string;
+          id?: string;
+          medication_id?: string;
+          notes?: string | null;
+          pet_id?: string;
+          skip_reason?: string | null;
+          skipped?: boolean | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "medication_logs_administered_by_fkey";
+            columns: ["administered_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "medication_logs_medication_id_fkey";
+            columns: ["medication_id"];
+            isOneToOne: false;
+            referencedRelation: "active_medications";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "medication_logs_medication_id_fkey";
+            columns: ["medication_id"];
+            isOneToOne: false;
+            referencedRelation: "medications";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "medication_logs_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      medications: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          dosage: string | null;
+          end_date: string | null;
+          frequency: Database["public"]["Enums"]["medication_frequency"];
+          frequency_custom: string | null;
+          id: string;
+          instructions: string | null;
+          is_preventative: boolean | null;
+          metadata: Json | null;
+          name: string;
+          pet_id: string;
+          prescribed_by: string | null;
+          refill_date: string | null;
+          remaining_count: number | null;
+          start_date: string | null;
+          status: Database["public"]["Enums"]["medication_status"];
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          dosage?: string | null;
+          end_date?: string | null;
+          frequency?: Database["public"]["Enums"]["medication_frequency"];
+          frequency_custom?: string | null;
+          id?: string;
+          instructions?: string | null;
+          is_preventative?: boolean | null;
+          metadata?: Json | null;
+          name: string;
+          pet_id: string;
+          prescribed_by?: string | null;
+          refill_date?: string | null;
+          remaining_count?: number | null;
+          start_date?: string | null;
+          status?: Database["public"]["Enums"]["medication_status"];
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          dosage?: string | null;
+          end_date?: string | null;
+          frequency?: Database["public"]["Enums"]["medication_frequency"];
+          frequency_custom?: string | null;
+          id?: string;
+          instructions?: string | null;
+          is_preventative?: boolean | null;
+          metadata?: Json | null;
+          name?: string;
+          pet_id?: string;
+          prescribed_by?: string | null;
+          refill_date?: string | null;
+          remaining_count?: number | null;
+          start_date?: string | null;
+          status?: Database["public"]["Enums"]["medication_status"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "medications_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "medications_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       pets: {
         Row: {
@@ -429,6 +639,128 @@ export type Database = {
         };
         Relationships: [];
       };
+      vaccinations: {
+        Row: {
+          administering_vet: string | null;
+          created_at: string;
+          date_given: string;
+          document_id: string | null;
+          id: string;
+          lot_number: string | null;
+          name: string;
+          next_due_date: string | null;
+          notes: string | null;
+          pet_id: string;
+          status: Database["public"]["Enums"]["vaccination_status"];
+          updated_at: string;
+        };
+        Insert: {
+          administering_vet?: string | null;
+          created_at?: string;
+          date_given: string;
+          document_id?: string | null;
+          id?: string;
+          lot_number?: string | null;
+          name: string;
+          next_due_date?: string | null;
+          notes?: string | null;
+          pet_id: string;
+          status?: Database["public"]["Enums"]["vaccination_status"];
+          updated_at?: string;
+        };
+        Update: {
+          administering_vet?: string | null;
+          created_at?: string;
+          date_given?: string;
+          document_id?: string | null;
+          id?: string;
+          lot_number?: string | null;
+          name?: string;
+          next_due_date?: string | null;
+          notes?: string | null;
+          pet_id?: string;
+          status?: Database["public"]["Enums"]["vaccination_status"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "vaccinations_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      vet_visits: {
+        Row: {
+          clinic_name: string | null;
+          cost: number | null;
+          created_at: string;
+          created_by: string | null;
+          diagnosis: string | null;
+          follow_up_date: string | null;
+          id: string;
+          metadata: Json | null;
+          notes: string | null;
+          pet_id: string;
+          reason: string;
+          treatment: string | null;
+          updated_at: string;
+          vet_name: string | null;
+          visit_date: string;
+        };
+        Insert: {
+          clinic_name?: string | null;
+          cost?: number | null;
+          created_at?: string;
+          created_by?: string | null;
+          diagnosis?: string | null;
+          follow_up_date?: string | null;
+          id?: string;
+          metadata?: Json | null;
+          notes?: string | null;
+          pet_id: string;
+          reason: string;
+          treatment?: string | null;
+          updated_at?: string;
+          vet_name?: string | null;
+          visit_date: string;
+        };
+        Update: {
+          clinic_name?: string | null;
+          cost?: number | null;
+          created_at?: string;
+          created_by?: string | null;
+          diagnosis?: string | null;
+          follow_up_date?: string | null;
+          id?: string;
+          metadata?: Json | null;
+          notes?: string | null;
+          pet_id?: string;
+          reason?: string;
+          treatment?: string | null;
+          updated_at?: string;
+          vet_name?: string | null;
+          visit_date?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "vet_visits_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "vet_visits_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       walks: {
         Row: {
           activity_log_id: string;
@@ -489,9 +821,93 @@ export type Database = {
           },
         ];
       };
+      weight_logs: {
+        Row: {
+          created_at: string;
+          id: string;
+          logged_by: string | null;
+          measured_at: string;
+          notes: string | null;
+          pet_id: string;
+          weight_lbs: number;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          logged_by?: string | null;
+          measured_at?: string;
+          notes?: string | null;
+          pet_id: string;
+          weight_lbs: number;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          logged_by?: string | null;
+          measured_at?: string;
+          notes?: string | null;
+          pet_id?: string;
+          weight_lbs?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "weight_logs_logged_by_fkey";
+            columns: ["logged_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "weight_logs_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
-      [_ in never]: never;
+      active_medications: {
+        Row: {
+          created_at: string | null;
+          created_by: string | null;
+          dosage: string | null;
+          end_date: string | null;
+          frequency: Database["public"]["Enums"]["medication_frequency"] | null;
+          frequency_custom: string | null;
+          id: string | null;
+          instructions: string | null;
+          is_preventative: boolean | null;
+          last_administered: string | null;
+          metadata: Json | null;
+          name: string | null;
+          pet_id: string | null;
+          pet_name: string | null;
+          prescribed_by: string | null;
+          refill_date: string | null;
+          remaining_count: number | null;
+          start_date: string | null;
+          status: Database["public"]["Enums"]["medication_status"] | null;
+          updated_at: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "medications_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "medications_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Functions: {
       can_access_pet: { Args: { p_id: string }; Returns: boolean };
@@ -511,8 +927,28 @@ export type Database = {
         | "vet_visit"
         | "play"
         | "other";
+      document_type:
+        | "vet_record"
+        | "lab_result"
+        | "xray"
+        | "vaccination_cert"
+        | "insurance"
+        | "adoption"
+        | "registration"
+        | "other";
       household_role: "owner" | "admin" | "member";
       invite_status: "pending" | "accepted" | "declined" | "expired";
+      medication_frequency:
+        | "once_daily"
+        | "twice_daily"
+        | "three_times_daily"
+        | "every_other_day"
+        | "weekly"
+        | "biweekly"
+        | "monthly"
+        | "as_needed"
+        | "custom";
+      medication_status: "active" | "completed" | "discontinued" | "paused";
       pet_sex: "male" | "female" | "unknown";
       pet_species: "dog" | "cat" | "other";
       potty_consistency:
@@ -524,6 +960,7 @@ export type Database = {
         | "mucus";
       potty_type: "pee" | "poo" | "both";
       spay_neuter_status: "spayed" | "neutered" | "intact" | "unknown";
+      vaccination_status: "current" | "due_soon" | "overdue" | "not_applicable";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -667,8 +1104,30 @@ export const Constants = {
         "play",
         "other",
       ],
+      document_type: [
+        "vet_record",
+        "lab_result",
+        "xray",
+        "vaccination_cert",
+        "insurance",
+        "adoption",
+        "registration",
+        "other",
+      ],
       household_role: ["owner", "admin", "member"],
       invite_status: ["pending", "accepted", "declined", "expired"],
+      medication_frequency: [
+        "once_daily",
+        "twice_daily",
+        "three_times_daily",
+        "every_other_day",
+        "weekly",
+        "biweekly",
+        "monthly",
+        "as_needed",
+        "custom",
+      ],
+      medication_status: ["active", "completed", "discontinued", "paused"],
       pet_sex: ["male", "female", "unknown"],
       pet_species: ["dog", "cat", "other"],
       potty_consistency: [
@@ -681,6 +1140,7 @@ export const Constants = {
       ],
       potty_type: ["pee", "poo", "both"],
       spay_neuter_status: ["spayed", "neutered", "intact", "unknown"],
+      vaccination_status: ["current", "due_soon", "overdue", "not_applicable"],
     },
   },
 } as const;
