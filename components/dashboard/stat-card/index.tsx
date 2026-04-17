@@ -2,6 +2,7 @@ import { colors } from "@/constants/colors";
 import type { GoalProgress, UpcomingEvent } from "@/lib/hooks/use-hero-stats";
 import { BlurView } from "expo-blur";
 import { Platform, Text, View } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { styles } from "./styles";
 import { StatCardProps } from "./types";
 
@@ -97,7 +98,7 @@ function Skeleton() {
 // ─── Component ─────────────────────────────────────────────────────────────
 
 export function StatCard(props: StatCardProps) {
-  const { loading = false } = props;
+  const { loading = false, position } = props;
 
   const renderContent = () => {
     if (loading) {
@@ -119,7 +120,10 @@ export function StatCard(props: StatCardProps) {
   };
 
   return (
-    <View style={styles.cardOuter}>
+    <Animated.View
+      style={styles.cardOuter}
+      entering={FadeIn.duration(1500).delay(position * 150 + 200)}
+    >
       <View style={styles.cardWrapper}>
         <BlurView
           intensity={20}
@@ -132,7 +136,7 @@ export function StatCard(props: StatCardProps) {
           {renderContent()}
         </BlurView>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

@@ -122,16 +122,19 @@ export function HeroCard() {
             variant="progress"
             goal={goalBySlot[1] ?? null}
             loading={loading}
+            position={1}
           />
           <StatCard
             variant="progress"
             goal={goalBySlot[2] ?? null}
             loading={loading}
+            position={2}
           />
           <StatCard
             variant="upcoming"
             event={upcomingEvent}
             loading={loading}
+            position={3}
           />
         </View>
       </View>

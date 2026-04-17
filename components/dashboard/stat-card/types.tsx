@@ -16,4 +16,6 @@ type UpcomingProps = {
   loading?: boolean;
 };
 
-export type StatCardProps = ProgressProps | UpcomingProps;
+export type StatCardProps = (ProgressProps | UpcomingProps) & {
+  position: number;
+};
