@@ -453,6 +453,50 @@ export type Database = {
           },
         ];
       };
+      pet_daily_goals: {
+        Row: {
+          created_at: string;
+          goal_type: Database["public"]["Enums"]["goal_type"];
+          hero_card_slot: number | null;
+          id: string;
+          is_active: boolean;
+          pet_id: string;
+          target_unit: string;
+          target_value: number;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          goal_type: Database["public"]["Enums"]["goal_type"];
+          hero_card_slot?: number | null;
+          id?: string;
+          is_active?: boolean;
+          pet_id: string;
+          target_unit: string;
+          target_value: number;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          goal_type?: Database["public"]["Enums"]["goal_type"];
+          hero_card_slot?: number | null;
+          id?: string;
+          is_active?: boolean;
+          pet_id?: string;
+          target_unit?: string;
+          target_value?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pet_daily_goals_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       pets: {
         Row: {
           avatar_url: string | null;
@@ -911,6 +955,26 @@ export type Database = {
     };
     Functions: {
       can_access_pet: { Args: { p_id: string }; Returns: boolean };
+      get_next_upcoming_event: {
+        Args: { p_pet_id: string };
+        Returns: {
+          days_until: number;
+          due_date: string;
+          event_type: string;
+          title: string;
+        }[];
+      };
+      get_pet_goal_progress: {
+        Args: { p_pet_id: string; p_utc_offset_minutes?: number };
+        Returns: {
+          current_value: number;
+          goal_id: string;
+          goal_type: string;
+          hero_card_slot: number;
+          target_unit: string;
+          target_value: number;
+        }[];
+      };
       get_user_household_ids: { Args: never; Returns: string[] };
       is_household_admin: { Args: { h_id: string }; Returns: boolean };
     };
@@ -936,6 +1000,7 @@ export type Database = {
         | "adoption"
         | "registration"
         | "other";
+      goal_type: "walk_distance" | "walk_duration" | "meal_count";
       household_role: "owner" | "admin" | "member";
       invite_status: "pending" | "accepted" | "declined" | "expired";
       medication_frequency:
@@ -1114,6 +1179,7 @@ export const Constants = {
         "registration",
         "other",
       ],
+      goal_type: ["walk_distance", "walk_duration", "meal_count"],
       household_role: ["owner", "admin", "member"],
       invite_status: ["pending", "accepted", "declined", "expired"],
       medication_frequency: [

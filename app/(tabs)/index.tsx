@@ -1,4 +1,4 @@
-import { HeroCard } from "@/components/dashboard/hero-card/hero-card";
+import { HeroCard } from "@/components/dashboard/hero-card";
 import { colors } from "@/constants/colors";
 import { ScrollView } from "react-native";
 

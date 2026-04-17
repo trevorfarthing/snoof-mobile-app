@@ -2,17 +2,25 @@ import HeroAfternoon from "@/assets/svg/hero-afternoon.svg";
 import HeroEvening from "@/assets/svg/hero-evening.svg";
 import HeroMorning from "@/assets/svg/hero-morning.svg";
 import HeroNight from "@/assets/svg/hero-night.svg";
+import { useHeroStats } from "@/lib/hooks/use-hero-stats";
 import { usePetStore } from "@/lib/stores/use-pet-store";
 import { BlurView } from "expo-blur";
 import { Platform, StyleSheet, Text, View } from "react-native";
+import { StatCard } from "../stat-card";
 import { styles } from "./styles";
 
 type TimePeriod = "morning" | "afternoon" | "evening" | "night";
 
 function getTimePeriod(hour: number): TimePeriod {
-  if (hour >= 5 && hour < 12) return "morning";
-  if (hour >= 12 && hour < 17) return "afternoon";
-  if (hour >= 17 && hour < 21) return "evening";
+  if (hour >= 5 && hour < 12) {
+    return "morning";
+  }
+  if (hour >= 12 && hour < 17) {
+    return "afternoon";
+  }
+  if (hour >= 17 && hour < 21) {
+    return "evening";
+  }
   return "night";
 }
 
@@ -24,20 +32,26 @@ const GREETINGS: Record<TimePeriod, string> = {
 };
 
 function formatAge(dateOfBirth: string | null): string {
-  if (!dateOfBirth) return "";
+  if (!dateOfBirth) {
+    return "";
+  }
   const dob = new Date(dateOfBirth);
   const now = new Date();
   const months =
     (now.getFullYear() - dob.getFullYear()) * 12 +
     (now.getMonth() - dob.getMonth());
-  if (months < 12) return `${months} mo`;
+  if (months < 12) {
+    return `${months} mo`;
+  }
   const years = months / 12;
   const rounded = Math.round(years * 2) / 2;
   return rounded === 1 ? "1 yr" : `${rounded} yrs`;
 }
 
 function formatWeight(weightLbs: number | null): string {
-  if (weightLbs == null) return "";
+  if (weightLbs == null) {
+    return "";
+  }
   return `${weightLbs} lbs`;
 }
 
@@ -51,6 +65,9 @@ function buildSubtitle(
 
 export function HeroCard() {
   const { activePet } = usePetStore();
+  const { goalProgress, upcomingEvent, loading } = useHeroStats(
+    activePet?.id ?? null,
+  );
 
   const hour = new Date().getHours();
   const period = getTimePeriod(hour);
@@ -68,6 +85,11 @@ export function HeroCard() {
     evening: HeroEvening,
     night: HeroNight,
   }[period];
+
+  // Map goals by slot so we can look them up for slots 1 and 2
+  const goalBySlot = Object.fromEntries(
+    goalProgress.map((g) => [g.heroCardSlot, g]),
+  );
 
   return (
     <View style={styles.card}>
@@ -93,6 +115,24 @@ export function HeroCard() {
             <Text style={styles.petName}>{petName}</Text>
             {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
           </View>
+        </View>
+
+        <View style={styles.statsRow}>
+          <StatCard
+            variant="progress"
+            goal={goalBySlot[1] ?? null}
+            loading={loading}
+          />
+          <StatCard
+            variant="progress"
+            goal={goalBySlot[2] ?? null}
+            loading={loading}
+          />
+          <StatCard
+            variant="upcoming"
+            event={upcomingEvent}
+            loading={loading}
+          />
         </View>
       </View>
     </View>

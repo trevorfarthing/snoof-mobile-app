@@ -1,3 +1,4 @@
+import SignOutButton from "@/components/auth/social-auth-buttons/sign-out-button";
 import { colors } from "@/constants/colors";
 import { fonts } from "@/constants/fonts";
 import { Text, View } from "react-native";
@@ -21,6 +22,7 @@ export default function PetScreen() {
       >
         Pet Profile
       </Text>
+      <SignOutButton />
     </View>
   );
 }

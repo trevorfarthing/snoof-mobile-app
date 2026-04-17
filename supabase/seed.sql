@@ -99,3 +99,36 @@ SELECT
     pd.weight_lbs::decimal(6,2)
 FROM ranked_households rh
 JOIN pet_data pd ON rh.rn = pd.rn::int;
+
+-- Replace auto-generated default goals with varied seed data
+DELETE FROM pet_daily_goals;
+
+WITH pet_ranks AS (
+    SELECT id, ROW_NUMBER() OVER (ORDER BY created_at) AS rn FROM pets
+),
+goal_data (rn, gtype, tval, tunit, slot) AS (VALUES
+    (1::int,  'walk_duration',  60.0::numeric, 'minutes', 1::smallint),
+    (1,       'meal_count',      3.0,           'count',   2),
+    (2,       'walk_distance',   2.0,           'miles',   1),
+    (2,       'meal_count',      2.0,           'count',   2),
+    (3,       'walk_distance',   3.0,           'miles',   1),
+    (3,       'meal_count',      2.0,           'count',   2),
+    (4,       'walk_duration',  30.0,           'minutes', 1),
+    (4,       'meal_count',      3.0,           'count',   2),
+    (5,       'walk_distance',   4.0,           'miles',   1),
+    (5,       'meal_count',      2.0,           'count',   2),
+    (6,       'walk_duration',  90.0,           'minutes', 1),
+    (6,       'meal_count',      2.0,           'count',   2),
+    (7,       'walk_distance',   1.5,           'miles',   1),
+    (7,       'meal_count',      3.0,           'count',   2),
+    (8,       'walk_duration',  45.0,           'minutes', 1),
+    (8,       'meal_count',      2.0,           'count',   2),
+    (9,       'walk_distance',   3.5,           'miles',   1),
+    (9,       'meal_count',      2.0,           'count',   2),
+    (10,      'walk_duration',  20.0,           'minutes', 1),
+    (10,      'meal_count',      3.0,           'count',   2)
+)
+INSERT INTO pet_daily_goals (pet_id, goal_type, target_value, target_unit, hero_card_slot)
+SELECT pr.id, gd.gtype::goal_type, gd.tval, gd.tunit, gd.slot
+FROM pet_ranks pr
+JOIN goal_data gd ON pr.rn = gd.rn;

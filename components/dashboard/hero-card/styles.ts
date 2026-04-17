@@ -57,4 +57,9 @@ export const styles = StyleSheet.create({
     color: "rgba(255,255,255,0.5)",
     marginTop: 1,
   },
+  statsRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 14,
+  },
 });

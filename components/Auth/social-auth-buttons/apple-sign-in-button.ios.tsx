@@ -58,7 +58,9 @@ export default function AppleSignInButton() {
     AppleAuthentication.isAvailableAsync().then(setIsAvailable);
   }, []);
 
-  if (Platform.OS !== "ios" || !isAvailable) return null;
+  if (Platform.OS !== "ios" || !isAvailable) {
+    return null;
+  }
 
   return (
     <AppleAuthentication.AppleAuthenticationButton

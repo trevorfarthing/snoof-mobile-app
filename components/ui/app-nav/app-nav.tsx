@@ -27,7 +27,9 @@ const SIDE_PADDING = SCREEN_WIDTH / 2;
 const SWIPE_THRESHOLD = 40;
 
 function getLabel(key: string, petName: string | null): string {
-  if (key === "pet") return petName ?? "Pet";
+  if (key === "pet") {
+    return petName ?? "Pet";
+  }
   return key.charAt(0).toUpperCase() + key.slice(1);
 }
 
