@@ -1,0 +1,101 @@
+import { colors, radii, spacing } from "@/constants/colors";
+import { fonts } from "@/constants/fonts";
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  dragHint: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: radii.sm,
+    backgroundColor: colors.bgElevated,
+    marginBottom: spacing[3],
+  },
+  dragHintText: {
+    fontFamily: fonts.nunito,
+    fontSize: 11,
+    color: colors.textTertiary,
+  },
+  presetsRow: {
+    flexDirection: "row",
+    gap: 6,
+    marginBottom: spacing[3],
+  },
+  emptySlot: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 18,
+    borderRadius: radii.md,
+    borderWidth: 1.5,
+    borderStyle: "dashed",
+    borderColor: "#C8B9A4",
+  },
+  sectionLabel: {
+    fontFamily: fonts.nunitoBold,
+    fontSize: 9,
+    color: colors.textTertiary,
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+    marginBottom: spacing[2],
+  },
+  availableGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
+    marginBottom: spacing[4],
+  },
+  presetItem: {
+    flex: 1,
+    alignItems: "center",
+    gap: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+    borderRadius: radii.md,
+    backgroundColor: colors.bgElevated,
+  },
+  availableItem: {
+    width: "23%",
+    alignItems: "center",
+    gap: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+    borderRadius: radii.md,
+    backgroundColor: colors.bgElevated,
+  },
+  availableIconContainer: {
+    width: 30,
+    height: 30,
+    borderRadius: radii.sm,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  availableLabel: {
+    fontFamily: fonts.nunitoSemiBold,
+    fontSize: 9,
+    color: colors.textSecondary,
+    textAlign: "center",
+  },
+  doneButton: {
+    backgroundColor: colors.primary,
+    borderRadius: radii.md,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  doneButtonText: {
+    fontFamily: fonts.nunitoBold,
+    fontSize: 15,
+    color: "#fff",
+  },
+  dragging: {
+    shadowColor: "#3D3224",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 8,
+    zIndex: 100,
+  },
+});

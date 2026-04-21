@@ -3,6 +3,7 @@ import { useAuthContext } from "@/lib/hooks/use-auth-context";
 import AuthProvider from "@/providers/auth-provider";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 function RootNavigator() {
   const { isLoggedIn } = useAuthContext();
@@ -21,10 +22,12 @@ function RootNavigator() {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <SplashScreenController />
-      <RootNavigator />
-      <StatusBar style="auto" />
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <SplashScreenController />
+        <RootNavigator />
+        <StatusBar style="auto" />
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }

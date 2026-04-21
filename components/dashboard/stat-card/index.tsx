@@ -122,7 +122,7 @@ export function StatCard(props: StatCardProps) {
   return (
     <Animated.View
       style={styles.cardOuter}
-      entering={FadeIn.duration(1500).delay(position * 150 + 200)}
+      entering={FadeIn.duration(1000).delay(position * 150 + 200)}
     >
       <View style={styles.cardWrapper}>
         <BlurView
