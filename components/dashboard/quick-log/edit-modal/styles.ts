@@ -22,6 +22,8 @@ export const styles = StyleSheet.create({
   presetsRow: {
     flexDirection: "row",
     gap: 6,
+    paddingTop: 8,
+    paddingLeft: 5,
     marginBottom: spacing[3],
   },
   emptySlot: {

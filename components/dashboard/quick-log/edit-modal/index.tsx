@@ -276,9 +276,13 @@ function DraggableItem({
   return (
     <GestureDetector gesture={composed}>
       <ReAnimated.View
-        style={[{ flex: 1 }, isDragging && styles.dragging, animatedStyle]}
+        style={[
+          { flex: 1, overflow: "visible" },
+          isDragging && styles.dragging,
+          animatedStyle,
+        ]}
       >
-        <View style={{ flex: 1, position: "relative" }}>
+        <View style={{ flex: 1, position: "relative", overflow: "visible" }}>
           <View style={styles.presetItem}>
             <View
               style={[
