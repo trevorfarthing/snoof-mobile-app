@@ -14,7 +14,6 @@ export function ActivityButton({
   variant = "default",
   removable = false,
   onRemove,
-  logged = false,
 }: ActivityButtonProps) {
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -35,20 +34,18 @@ export function ActivityButton({
   return (
     <View style={{ flex: 1 }}>
       <Pressable
-        style={[styles.button, logged && styles.buttonLogged]}
+        style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }, styles.button]}
         onPress={handlePress}
       >
         <View style={[styles.iconContainer, { backgroundColor: iconBg }]}>
           <IconComponent
             size={18}
-            color={logged ? "#A0C8A0" : colors.textPrimary}
+            color={colors.textPrimary}
             stroke={iconColor || colors.textPrimary}
             strokeWidth={1.75}
           />
         </View>
-        <Text style={[styles.label, logged && styles.labelLogged]}>
-          {logged ? "Done" : label}
-        </Text>
+        <Text style={[styles.label]}>{label}</Text>
       </Pressable>
 
       {removable && (

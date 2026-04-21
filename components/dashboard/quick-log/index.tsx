@@ -12,10 +12,9 @@ import { ActiveModal } from "./types";
 export function QuickLog() {
   const { presets, savePresets } = useQuickLogPresets();
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
-  const [loggedTypes, setLoggedTypes] = useState<Set<ActivityType>>(new Set());
 
   const handleLogged = (type: ActivityType) => {
-    setLoggedTypes((prev) => new Set(prev).add(type));
+    // TODO: Trigger haptic feedback with a toast and send request to log the activity
   };
 
   const openModal = (modal: ActiveModal) => setActiveModal(modal);
@@ -46,7 +45,6 @@ export function QuickLog() {
               IconComponent={config.IconComponent}
               iconBg={config.iconBg}
               iconColor={config.iconColor}
-              logged={loggedTypes.has(type)}
               onPress={() => openModal(type)}
             />
           );

@@ -12,6 +12,4 @@ export type ActivityButtonProps = {
   /** Shows a red X badge for removal (edit mode) */
   removable?: boolean;
   onRemove?: () => void;
-  /** Grays out the icon and shows "Done" */
-  logged?: boolean;
 };

@@ -41,7 +41,13 @@ export function ActionModal({
         </Text>
       </View>
 
-      <Pressable style={styles.logButton} onPress={handleLog}>
+      <Pressable
+        style={({ pressed }) => [
+          { opacity: pressed ? 0.7 : 1 },
+          styles.logButton,
+        ]}
+        onPress={handleLog}
+      >
         <Text style={styles.logButtonText}>Log {config.label}</Text>
       </Pressable>
     </BottomSheet>

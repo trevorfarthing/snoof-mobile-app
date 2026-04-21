@@ -57,7 +57,11 @@ export function MoreModal({ visible, onClose, onLogged }: MoreModalProps) {
       </ScrollView>
 
       <Pressable
-        style={[styles.logButton, !selected && styles.logButtonDisabled]}
+        style={({ pressed }) => [
+          styles.logButton,
+          !selected && styles.logButtonDisabled,
+          pressed && selected && styles.logButtonPressed,
+        ]}
         onPress={handleLog}
         disabled={!selected}
       >

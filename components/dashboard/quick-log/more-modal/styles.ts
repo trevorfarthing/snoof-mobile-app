@@ -60,6 +60,9 @@ export const styles = StyleSheet.create({
   logButtonDisabled: {
     opacity: 0.4,
   },
+  logButtonPressed: {
+    opacity: 0.7,
+  },
   logButtonText: {
     fontFamily: fonts.nunitoBold,
     fontSize: 15,

@@ -24,9 +24,6 @@ export const styles = StyleSheet.create({
     borderStyle: "dashed",
     borderColor: "#C8B9A4",
   },
-  buttonLogged: {
-    backgroundColor: "#E8F3E8",
-  },
   iconContainer: {
     width: 32,
     height: 32,
@@ -39,9 +36,6 @@ export const styles = StyleSheet.create({
     fontSize: 9,
     color: colors.textSecondary,
     textAlign: "center",
-  },
-  labelLogged: {
-    color: "#5A8A5A",
   },
   removeBadge: {
     position: "absolute",

@@ -134,7 +134,13 @@ export function EditModal({
         )}
       </ScrollView>
 
-      <Pressable style={styles.doneButton} onPress={handleDone}>
+      <Pressable
+        style={({ pressed }) => [
+          { opacity: pressed ? 0.7 : 1 },
+          styles.doneButton,
+        ]}
+        onPress={handleDone}
+      >
         <Text style={styles.doneButtonText}>Done</Text>
       </Pressable>
     </BottomSheet>

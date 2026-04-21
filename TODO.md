@@ -1,5 +1,6 @@
 - Generate design for app icon and color palette
 - Design some mockups with Stitch
+- Set up forms for Logs with react-hook-form
 
 ### Future
 
