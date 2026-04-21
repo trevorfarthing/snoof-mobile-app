@@ -29,7 +29,7 @@ export type HeroStats = {
   loading: boolean;
 };
 
-export function useHeroStats(petId: string | null): HeroStats {
+export function useHeroStats(petId: string | null, refreshKey = 0): HeroStats {
   const [goalProgress, setGoalProgress] = useState<GoalProgress[]>([]);
   const [upcomingEvent, setUpcomingEvent] = useState<UpcomingEvent>(null);
   const [loading, setLoading] = useState(true);
@@ -94,7 +94,7 @@ export function useHeroStats(petId: string | null): HeroStats {
     return () => {
       cancelled = true;
     };
-  }, [petId]);
+  }, [petId, refreshKey]);
 
   return { goalProgress, upcomingEvent, loading };
 }

@@ -1,6 +1,5 @@
 - Generate design for app icon and color palette
 - Design some mockups with Stitch
-- Implement swiping down on screen (below app nav) to re-load the data on the current tab
 
 ### Future
 

@@ -5,6 +5,7 @@ import HeroNight from "@/assets/svg/hero-night.svg";
 import { useHeroStats } from "@/lib/hooks/use-hero-stats";
 import { usePetStore } from "@/lib/stores/use-pet-store";
 import { BlurView } from "expo-blur";
+import { useEffect } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { StatCard } from "../stat-card";
 import { styles } from "./styles";
@@ -63,11 +64,22 @@ function buildSubtitle(
   return [breed, age, weight].filter(Boolean).join(" · ");
 }
 
-export function HeroCard() {
+export function HeroCard({
+  refreshKey = 0,
+  onLoadingChange,
+}: {
+  refreshKey?: number;
+  onLoadingChange?: (loading: boolean) => void;
+}) {
   const { activePet } = usePetStore();
   const { goalProgress, upcomingEvent, loading } = useHeroStats(
     activePet?.id ?? null,
+    refreshKey,
   );
+
+  useEffect(() => {
+    onLoadingChange?.(loading);
+  }, [loading, onLoadingChange]);
 
   const hour = new Date().getHours();
   const period = getTimePeriod(hour);
