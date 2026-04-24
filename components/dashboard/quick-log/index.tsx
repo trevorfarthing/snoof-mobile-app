@@ -1,5 +1,7 @@
 import { ActivityButton } from "@/components/ui/activity-button";
+import { Toast } from "@/components/ui/toast";
 import { useQuickLogPresets } from "@/lib/hooks/use-quick-log-presets";
+import * as Haptics from "expo-haptics";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { ActionModal } from "./action-modal";
@@ -12,9 +14,13 @@ import { ActiveModal } from "./types";
 export function QuickLog() {
   const { presets, savePresets } = useQuickLogPresets();
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const handleLogged = (type: ActivityType) => {
-    // TODO: Trigger haptic feedback with a toast and send request to log the activity
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    setToastMessage(`${ACTIVITY_CONFIG[type].label} logged`);
+    setToastVisible(true);
   };
 
   const openModal = (modal: ActiveModal) => setActiveModal(modal);
@@ -77,6 +83,12 @@ export function QuickLog() {
         onClose={closeModal}
         presets={presets}
         onSave={savePresets}
+      />
+
+      <Toast
+        visible={toastVisible}
+        message={toastMessage}
+        onHide={() => setToastVisible(false)}
       />
     </View>
   );

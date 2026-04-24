@@ -1,0 +1,265 @@
+import { useWalkForm } from "@/lib/hooks/activity-logs/use-walk-form";
+import { useAuthContext } from "@/lib/hooks/use-auth-context";
+import { usePetStore } from "@/lib/stores/use-pet-store";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import { useState } from "react";
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { CollapsibleSection } from "../shared/collapsible-section";
+import { DurationInput } from "../shared/duration-input";
+import { SelectorGrid } from "../shared/selector-grid";
+import { ENVIRONMENT_OPTIONS, WEATHER_OPTIONS } from "./options";
+import { styles } from "./styles";
+
+const NOTES_LIMIT = 500;
+
+type Props = {
+  onClose: () => void;
+  onLogged?: () => void;
+};
+
+type PickerTarget = null | "start" | "end";
+
+const formatTime = (d: Date): string =>
+  d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+
+const addMinutes = (d: Date, m: number): Date => {
+  const next = new Date(d);
+  next.setMinutes(next.getMinutes() + m);
+  return next;
+};
+
+const subMinutes = (d: Date, m: number): Date => addMinutes(d, -m);
+
+export const WalkForm = ({ onClose, onLogged }: Props) => {
+  const { activePet } = usePetStore();
+  const { session } = useAuthContext();
+  const form = useWalkForm();
+  const [picker, setPicker] = useState<PickerTarget>(null);
+
+  const userId = session?.user?.id;
+
+  // Android's DateTimePicker is a one-shot modal — once the user picks or
+  // dismisses, we unmount it. iOS renders the picker inline (spinner), so we
+  // keep it mounted until the user taps the field again to close.
+  //
+  // The `date >= form.endedAt` check is belt-and-suspenders: `maximumDate` is
+  // respected on iOS but not reliably in Android's time mode, so we also
+  // reject invalid picks here.
+  const handleStartChange = (_: DateTimePickerEvent, date?: Date) => {
+    if (Platform.OS !== "ios") {
+      setPicker(null);
+    }
+    if (date) {
+      if (form.endedAt && date >= form.endedAt) {
+        form.setError("End time must be after start time");
+        return;
+      }
+      form.setError(null);
+      form.setStartedAt(date);
+    }
+  };
+
+  const handleEndChange = (_: DateTimePickerEvent, date?: Date) => {
+    if (Platform.OS !== "ios") {
+      setPicker(null);
+    }
+    if (date) {
+      if (form.startedAt && date <= form.startedAt) {
+        form.setError("End time must be after start time");
+        return;
+      }
+      form.setError(null);
+      form.setEndedAt(date);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!activePet || !userId) {
+      form.setError("You must be signed in with an active pet");
+      return;
+    }
+    const { error } = await form.submit({
+      petId: activePet.id,
+      householdId: activePet.household_id,
+      userId,
+    });
+    if (error) {
+      return;
+    }
+    form.reset();
+    onLogged?.();
+    onClose();
+  };
+
+  // One-minute buffer on each side so the user can never select equal times.
+  const startMax =
+    form.endedAt !== null ? subMinutes(form.endedAt, 1) : undefined;
+  const startMin = undefined;
+  const endMin =
+    form.startedAt !== null ? addMinutes(form.startedAt, 1) : undefined;
+  const endMax = undefined;
+
+  // Seed the end picker to +30min past start when opened first — saves the
+  // common case of scrolling forward from midnight.
+  const startPickerValue = form.startedAt ?? new Date();
+  const endPickerValue =
+    form.endedAt ??
+    (form.startedAt ? addMinutes(form.startedAt, 30) : new Date());
+
+  return (
+    <>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.requiredRow}>
+          <View style={styles.requiredField}>
+            <Text style={styles.fieldLabel}>Distance</Text>
+            <View style={styles.distanceField}>
+              <TextInput
+                style={styles.distanceInput}
+                value={form.distanceMiles}
+                onChangeText={form.setDistanceMiles}
+                keyboardType="decimal-pad"
+                placeholder="0.0"
+                placeholderTextColor="#C8B9A4"
+              />
+              <Text style={styles.distanceSuffix}>mi</Text>
+            </View>
+          </View>
+
+          <View style={styles.requiredField}>
+            <Text style={styles.fieldLabel}>Duration</Text>
+            <DurationInput
+              hours={form.hours}
+              minutes={form.minutes}
+              onHoursChange={form.setHours}
+              onMinutesChange={form.setMinutes}
+              disabled={form.isDurationLocked}
+              computedMinutes={form.computedDurationMinutes}
+            />
+          </View>
+        </View>
+
+        {form.error ? <Text style={styles.errorText}>{form.error}</Text> : null}
+
+        <CollapsibleSection
+          title="Details"
+          expanded={form.detailsExpanded}
+          onToggle={() => form.setDetailsExpanded(!form.detailsExpanded)}
+        >
+          <SelectorGrid
+            label="Environment"
+            options={ENVIRONMENT_OPTIONS}
+            value={form.environment}
+            onChange={form.setEnvironment}
+          />
+
+          <SelectorGrid
+            label="Weather"
+            options={WEATHER_OPTIONS}
+            value={form.weather}
+            onChange={form.setWeather}
+          />
+
+          <View style={styles.timeRow}>
+            <View style={styles.timeField}>
+              <Text style={styles.fieldLabel}>Time started</Text>
+              <Pressable
+                style={styles.timeButton}
+                onPress={() => setPicker(picker === "start" ? null : "start")}
+              >
+                <Text
+                  style={
+                    form.startedAt ? styles.timeValue : styles.timePlaceholder
+                  }
+                >
+                  {form.startedAt ? formatTime(form.startedAt) : "Select"}
+                </Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.timeField}>
+              <Text style={styles.fieldLabel}>Time ended</Text>
+              <Pressable
+                style={styles.timeButton}
+                onPress={() => setPicker(picker === "end" ? null : "end")}
+              >
+                <Text
+                  style={
+                    form.endedAt ? styles.timeValue : styles.timePlaceholder
+                  }
+                >
+                  {form.endedAt ? formatTime(form.endedAt) : "Select"}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+
+          {picker === "start" ? (
+            <DateTimePicker
+              value={startPickerValue}
+              mode="time"
+              display={Platform.OS === "ios" ? "spinner" : "default"}
+              onChange={handleStartChange}
+              minimumDate={startMin}
+              maximumDate={startMax}
+            />
+          ) : null}
+
+          {picker === "end" ? (
+            <DateTimePicker
+              value={endPickerValue}
+              mode="time"
+              display={Platform.OS === "ios" ? "spinner" : "default"}
+              onChange={handleEndChange}
+              minimumDate={endMin}
+              maximumDate={endMax}
+            />
+          ) : null}
+
+          <View style={styles.notesField}>
+            <Text style={styles.fieldLabel}>Notes</Text>
+            <TextInput
+              style={styles.notesInput}
+              value={form.notes}
+              onChangeText={form.setNotes}
+              placeholder="Anything notable about this walk?"
+              placeholderTextColor="#C8B9A4"
+              multiline
+              maxLength={NOTES_LIMIT}
+              textAlignVertical="top"
+            />
+            <Text style={styles.notesCounter}>
+              {form.notes.length}/{NOTES_LIMIT}
+            </Text>
+          </View>
+        </CollapsibleSection>
+      </ScrollView>
+
+      <Pressable
+        style={({ pressed }) => [
+          { opacity: pressed || form.submitting ? 0.7 : 1 },
+          styles.logButton,
+        ]}
+        onPress={handleSubmit}
+        disabled={form.submitting}
+      >
+        <Text style={styles.logButtonText}>
+          {form.submitting ? "Logging…" : "Log Walk"}
+        </Text>
+      </Pressable>
+    </>
+  );
+};

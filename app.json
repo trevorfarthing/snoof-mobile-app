@@ -59,7 +59,8 @@
             "node_modules/@expo-google-fonts/dm-mono/400Regular/DMMono_400Regular.ttf"
           ]
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,

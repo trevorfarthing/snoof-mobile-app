@@ -311,6 +311,7 @@ Snoof's advantages: comprehensive + beautiful + AI-native + dog-first + transpar
 - Co-locate tests with components
 - **Always** use ES6 arrow functions (`const func = () => {}` instead of `function func() {}`)
 - **Never** use single-line if-statements. Always wrap enclosed code in braces.
+- Use comments where appropriate especially above main blocks of code.
 
 ### Naming Conventions
 
