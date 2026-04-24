@@ -5,7 +5,7 @@ import { AuthContext } from "@/lib/hooks/use-auth-context";
 import { supabase } from "@/lib/utils/supabase";
 
 export default function AuthProvider({ children }: PropsWithChildren) {
-  const [session, setSession] = useState<Session | null | undefined>(undefined);
+  const [session, setSession] = useState<Session | null | undefined>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

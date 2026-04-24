@@ -75,16 +75,17 @@ WITH ranked_households AS (
 ),
 pet_data (rn, name, breed, dob, sex, spay_neuter, color, weight_lbs) AS (
     VALUES
-        (1,  'Poppy',   'Australian Cattle Dog',    '2024-01-15', 'female', 'spayed',   'blue merle',      37.0),
-        (2,  'Ruby',    'English Springer Spaniel', '2019-03-22', 'female', 'spayed',   'liver and white', 40.0),
-        (3,  'Milo',    'Golden Retriever',         '2022-06-10', 'male',   'neutered', 'golden',          68.5),
-        (4,  'Bella',   'French Bulldog',           '2023-09-01', 'female', 'spayed',   'fawn brindle',    22.0),
-        (5,  'Cooper',  'Border Collie',            '2021-11-30', 'male',   'neutered', 'black and white', 45.0),
-        (6,  'Luna',    'Labrador Retriever',       '2020-05-14', 'female', 'spayed',   'chocolate',       58.0),
-        (7,  'Charlie', 'Beagle',                   '2023-02-28', 'male',   'neutered', 'tricolor',        26.5),
-        (8,  'Daisy',   'Bernese Mountain Dog',     '2022-08-19', 'female', 'spayed',   'tricolor',        82.0),
-        (9,  'Max',     'German Shepherd',          '2021-04-03', 'male',   'neutered', 'black and tan',   75.0),
-        (10, 'Zoe',     'Shih Tzu',                 '2020-12-25', 'female', 'spayed',   'white and gold',  12.5)
+        (1,  'Poppy',     'Australian Cattle Dog',    '2024-01-15', 'female', 'spayed',   'blue merle',      37.0),
+        (1,  'Skateboard','Corgi',                    '2022-04-21', 'male',   'neutered', 'tan and white',   25.0),
+        (2,  'Ruby',      'English Springer Spaniel', '2019-03-22', 'female', 'spayed',   'liver and white', 40.0),
+        (3,  'Milo',      'Golden Retriever',         '2022-06-10', 'male',   'neutered', 'golden',          68.5),
+        (4,  'Bella',     'French Bulldog',           '2023-09-01', 'female', 'spayed',   'fawn brindle',    22.0),
+        (5,  'Cooper',    'Border Collie',            '2021-11-30', 'male',   'neutered', 'black and white', 45.0),
+        (6,  'Luna',      'Labrador Retriever',       '2020-05-14', 'female', 'spayed',   'chocolate',       58.0),
+        (7,  'Charlie',   'Beagle',                   '2023-02-28', 'male',   'neutered', 'tricolor',        26.5),
+        (8,  'Daisy',     'Bernese Mountain Dog',     '2022-08-19', 'female', 'spayed',   'tricolor',        82.0),
+        (9,  'Max',       'German Shepherd',          '2021-04-03', 'male',   'neutered', 'black and tan',   75.0),
+        (10, 'Zoe',       'Shih Tzu',                 '2020-12-25', 'female', 'spayed',   'white and gold',  12.5)
 )
 INSERT INTO pets (household_id, name, species, breed, date_of_birth, sex, spay_neuter, color, weight_lbs)
 SELECT

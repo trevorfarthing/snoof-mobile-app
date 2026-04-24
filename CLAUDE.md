@@ -6,8 +6,6 @@
 
 The name "Snoof" is a coined word (a playful riff on "snoot/boop the snoof" dog culture).
 
-**Domain status:** snoof.com and snoof.app are taken. Target domains are snoof.pet (primary) and snoof.ai (secondary). snoof.tech is also available. Acquiring snoof.com is an open consideration.
-
 ## Tech Stack
 
 | Layer              | Technology                                                     |
@@ -48,6 +46,7 @@ src/
 │   │   └── app-header/     # Example: each component gets its own folder
 │   │       ├── index.tsx   # Component logic
 │   │       └── styles.ts   # StyleSheet definitions
+│   │       └── types.ts    # Types relevant to the component (e.g. prop types)
 │   ├── pet/                # Pet-related components (PetAvatar, PetSwitcher, HeroCard)
 │   ├── dashboard/          # Dashboard-specific components
 │   ├── health/             # Health module components
@@ -67,8 +66,10 @@ src/
 │   ├── pet.ts
 │   ├── health.ts
 │   ├── activity.ts
-│   └── database.ts         # Supabase-generated types
-└── assets/                 # Images, fonts, icons
+│   └── database.types.ts   # Supabase-generated types
+├── assets/                 # Images, fonts, icons
+├── supabase/               # Supabase migrations, seed scripts, snippets
+└── providers/
 ```
 
 ## Navigation Architecture
@@ -81,7 +82,7 @@ The app uses **5 horizontal pill tabs** at the top of the screen (inspired by th
 4. **Activity** — walks, potty, feeding, sleep, training logs
 5. **Training** — commands, training sessions, behaviors
 
-The pill tabs are horizontally swipeable when content overflows. Active tab is filled dark (#111) with white text. Settings lives as an icon in the top-left of the header bar — it is NOT a tab.
+The pill tabs are horizontally swipeable when content overflows. Active tab is filled dark (#111) with white text. Settings lives as an icon in the top-left of the header bar — it is NOT a tab. User messages, including AI chat lives in an icon in the top-right of the header bar.
 
 ### Pet Switching
 
@@ -112,7 +113,6 @@ Model the UX after these apps (NOT other pet apps — most have mediocre UX):
 ### Key UX Principles
 
 - Complete main tasks in **3 taps or fewer**
-- Quick-log should be **single-tap** where possible (walk, fed, potty, meds)
 - Use cards and progressive disclosure for complex data
 - Keep the tone warm and encouraging, not clinical
 - Show a toast confirmation for quick-log actions ("Walk logged ✓")
@@ -121,10 +121,11 @@ Model the UX after these apps (NOT other pet apps — most have mediocre UX):
 
 The Dashboard is the home screen and the most important view. It contains:
 
-1. **Hero Card** — active pet's photo/avatar, name, breed, age, weight. Three stat blocks showing today's progress (distance walked, meals logged, next medication) with progress bars.
-2. **Quick Log section** — 4 buttons in a row: Walk (🚶, green bg #E1F5EE), Fed (🍜, warm bg #FAEEDA), Potty (💧, pink bg #FAECE7), Meds (💊, blue bg #E6F1FB). Single-tap to log with toast confirmation.
+1. **Hero Card** — active pet's photo/avatar, name, breed, age, weight. Three stat blocks showing today's progress (distance/time walked, meals logged, next event) with progress bars. These stat blocks are editable for paying subscribers.
+2. **Quick Log section** — 4 buttons in a row: default to Walk, Feed, Potty, Meds. Editable for paying subscribers.
 3. **Today timeline** — chronological list of today's logged activities. Done items have teal dots (#4ECDC4) and timestamps. Pending items have gray dots (#ccc) and a blue "Log" action.
-4. **Upcoming section** — upcoming reminders (vet appointments, vaccinations due, flea/tick prevention) with color-coded urgency badges: Overdue (yellow #fef3c7), Soon (blue #dbeafe), On track (green #d1fae5).
+4. **Care streak** — 7 circles (one for each day of the past week) that are filled in once the user completes their daily care tasks for that day.
+5. **PawChat Insight** – A card with an important AI-generated insight based on historical data for the pet (e.g. Baxter's walks have been 12% longer this week).
 
 ## Supabase Database Schema
 
@@ -306,12 +307,14 @@ Snoof's advantages: comprehensive + beautiful + AI-native + dog-first + transpar
 - Use Zustand for global state management
 - Prefer composition over inheritance
 - Keep components small and focused (< 150 lines)
-- Each component lives in its own named folder with `index.tsx` for logic and `styles.ts` for StyleSheet definitions (e.g. `components/ui/app-header/index.tsx`)
+- Each component lives in its own named folder with `index.tsx` for logic, `styles.ts` for StyleSheet definitions and `types.ts` for component types (e.g. `components/ui/app-header/index.tsx`)
 - Co-locate tests with components
+- **Always** use ES6 arrow functions (`const func = () => {}` instead of `function func() {}`)
+- **Never** use single-line if-statements. Always wrap enclosed code in braces.
 
 ### Naming Conventions
 
-- Components: kebab-case (`pet-switcher.tsx`)
+- Components: kebab-case folders (`pet-switcher`)
 - Hooks: camelCase with `use` prefix (`usePetData.ts`)
 - Utils/helpers: camelCase (`formatWeight.ts`)
 - Constants: SCREAMING_SNAKE_CASE for values, PascalCase for files
@@ -366,4 +369,4 @@ EXPO_PUBLIC_SUPABASE_KEY=
 - **The daily dashboard is the most important screen** — it should load instantly and feel effortless.
 - **Quick Log must be zero-friction** — single tap to log, toast confirmation, done. No modals or forms for basic actions.
 - **PawChat is the differentiator** — invest in making the AI context-aware and genuinely useful, not a generic chatbot wrapper.
-- **Trevor's dogs Poppy (Cattle Dog, 2 yrs, 37 lbs) and Ruby (Springer Spaniel, 7 yrs, 40 lbs) are the test cases** — always think about multi-pet households when designing features.
+- **Dogs Poppy (Cattle Dog, 2 yrs, 37 lbs) and Ruby (Springer Spaniel, 7 yrs, 40 lbs) are the test cases** — always think about multi-pet households when designing features.

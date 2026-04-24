@@ -1,8 +1,9 @@
 import { colors, petColors } from "@/constants/colors";
+import { PetSwitcherSheet } from "@/components/pet/pet-switcher-sheet";
 import { usePetStore } from "@/lib/stores/use-pet-store";
 import { Database } from "@/types/database.types";
 import { ChevronDown, Cog, MessageSquare } from "lucide-react-native";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styles } from "./styles";
@@ -20,6 +21,7 @@ function getPetColor(pet: Pet, index: number): string {
 export function AppHeader() {
   const insets = useSafeAreaInsets();
   const { activePet, pets, fetchPets } = usePetStore();
+  const [switcherVisible, setSwitcherVisible] = useState(false);
 
   useEffect(() => {
     fetchPets();
@@ -52,9 +54,7 @@ export function AppHeader() {
         {/* Pet switcher pill */}
         <TouchableOpacity
           style={styles.petPill}
-          onPress={() => {
-            // TODO: open pet switcher bottom sheet
-          }}
+          onPress={() => setSwitcherVisible(true)}
           activeOpacity={0.7}
           accessibilityLabel={`Active pet: ${activePet?.name ?? "No pet selected"}. Tap to switch.`}
           accessibilityRole="button"
@@ -93,6 +93,11 @@ export function AppHeader() {
           <View style={styles.notificationDot} />
         </View>
       </View>
+
+      <PetSwitcherSheet
+        visible={switcherVisible}
+        onClose={() => setSwitcherVisible(false)}
+      />
     </View>
   );
 }
