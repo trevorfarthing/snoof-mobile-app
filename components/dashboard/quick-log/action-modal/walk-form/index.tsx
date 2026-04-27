@@ -4,7 +4,7 @@ import { usePetStore } from "@/lib/stores/use-pet-store";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Platform,
   Pressable,
@@ -45,11 +45,39 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
   const form = useWalkForm();
   const [picker, setPicker] = useState<PickerTarget>(null);
 
+  // Snapshot of the initial value at picker-open time. Stays referentially
+  // stable for the picker's entire lifetime — passing form.startedAt directly
+  // creates a new Date() on every render and causes the iOS spinner to reset
+  // its scroll position, so the user can only land on values close to the
+  // current time.
+  const startInitial = useRef<Date>(new Date());
+  const endInitial = useRef<Date>(new Date());
+
   const userId = session?.user?.id;
 
+  const openStartPicker = () => {
+    if (picker === "start") {
+      setPicker(null);
+      return;
+    }
+    startInitial.current = form.startedAt ?? new Date();
+    setPicker("start");
+  };
+
+  const openEndPicker = () => {
+    if (picker === "end") {
+      setPicker(null);
+      return;
+    }
+    endInitial.current =
+      form.endedAt ??
+      (form.startedAt ? addMinutes(form.startedAt, 30) : new Date());
+    setPicker("end");
+  };
+
   // Android's DateTimePicker is a one-shot modal — once the user picks or
-  // dismisses, we unmount it. iOS renders the picker inline (spinner), so we
-  // keep it mounted until the user taps the field again to close.
+  // dismisses, we unmount it. iOS renders the picker as an inline spinner, so
+  // we keep it mounted until the user taps the field again to close.
   //
   // The `date >= form.endedAt` check is belt-and-suspenders: `maximumDate` is
   // respected on iOS but not reliably in Android's time mode, so we also
@@ -58,28 +86,30 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
     if (Platform.OS !== "ios") {
       setPicker(null);
     }
-    if (date) {
-      if (form.endedAt && date >= form.endedAt) {
-        form.setError("End time must be after start time");
-        return;
-      }
-      form.setError(null);
-      form.setStartedAt(date);
+    if (!date) {
+      return;
     }
+    if (form.endedAt && date >= form.endedAt) {
+      form.setError("End time must be after start time");
+      return;
+    }
+    form.setError(null);
+    form.setStartedAt(date);
   };
 
   const handleEndChange = (_: DateTimePickerEvent, date?: Date) => {
     if (Platform.OS !== "ios") {
       setPicker(null);
     }
-    if (date) {
-      if (form.startedAt && date <= form.startedAt) {
-        form.setError("End time must be after start time");
-        return;
-      }
-      form.setError(null);
-      form.setEndedAt(date);
+    if (!date) {
+      return;
     }
+    if (form.startedAt && date <= form.startedAt) {
+      form.setError("End time must be after start time");
+      return;
+    }
+    form.setError(null);
+    form.setEndedAt(date);
   };
 
   const handleSubmit = async () => {
@@ -103,17 +133,14 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
   // One-minute buffer on each side so the user can never select equal times.
   const startMax =
     form.endedAt !== null ? subMinutes(form.endedAt, 1) : undefined;
-  const startMin = undefined;
   const endMin =
     form.startedAt !== null ? addMinutes(form.startedAt, 1) : undefined;
-  const endMax = undefined;
 
-  // Seed the end picker to +30min past start when opened first — saves the
-  // common case of scrolling forward from midnight.
-  const startPickerValue = form.startedAt ?? new Date();
-  const endPickerValue =
-    form.endedAt ??
-    (form.startedAt ? addMinutes(form.startedAt, 30) : new Date());
+  // Limit start and end to only the current day
+  const startMin = new Date();
+  startMin.setHours(0, 0, 0, 0);
+  const endMax = new Date();
+  endMax.setHours(23, 59, 0, 0);
 
   return (
     <>
@@ -176,10 +203,7 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
           <View style={styles.timeRow}>
             <View style={styles.timeField}>
               <Text style={styles.fieldLabel}>Time started</Text>
-              <Pressable
-                style={styles.timeButton}
-                onPress={() => setPicker(picker === "start" ? null : "start")}
-              >
+              <Pressable style={styles.timeButton} onPress={openStartPicker}>
                 <Text
                   style={
                     form.startedAt ? styles.timeValue : styles.timePlaceholder
@@ -192,10 +216,7 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
 
             <View style={styles.timeField}>
               <Text style={styles.fieldLabel}>Time ended</Text>
-              <Pressable
-                style={styles.timeButton}
-                onPress={() => setPicker(picker === "end" ? null : "end")}
-              >
+              <Pressable style={styles.timeButton} onPress={openEndPicker}>
                 <Text
                   style={
                     form.endedAt ? styles.timeValue : styles.timePlaceholder
@@ -206,28 +227,6 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
               </Pressable>
             </View>
           </View>
-
-          {picker === "start" ? (
-            <DateTimePicker
-              value={startPickerValue}
-              mode="time"
-              display={Platform.OS === "ios" ? "spinner" : "default"}
-              onChange={handleStartChange}
-              minimumDate={startMin}
-              maximumDate={startMax}
-            />
-          ) : null}
-
-          {picker === "end" ? (
-            <DateTimePicker
-              value={endPickerValue}
-              mode="time"
-              display={Platform.OS === "ios" ? "spinner" : "default"}
-              onChange={handleEndChange}
-              minimumDate={endMin}
-              maximumDate={endMax}
-            />
-          ) : null}
 
           <View style={styles.notesField}>
             <Text style={styles.fieldLabel}>Notes</Text>
@@ -247,6 +246,30 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
           </View>
         </CollapsibleSection>
       </ScrollView>
+
+      {/* Pickers render OUTSIDE the ScrollView so the spinner's vertical scroll
+          gestures aren't stolen by the parent ScrollView. */}
+      {picker === "start" ? (
+        <DateTimePicker
+          value={startInitial.current}
+          mode="time"
+          display={Platform.OS === "ios" ? "spinner" : "default"}
+          onChange={handleStartChange}
+          minimumDate={startMin}
+          maximumDate={startMax}
+        />
+      ) : null}
+
+      {picker === "end" ? (
+        <DateTimePicker
+          value={endInitial.current}
+          mode="time"
+          display={Platform.OS === "ios" ? "spinner" : "default"}
+          onChange={handleEndChange}
+          minimumDate={endMin}
+          maximumDate={endMax}
+        />
+      ) : null}
 
       <Pressable
         style={({ pressed }) => [
