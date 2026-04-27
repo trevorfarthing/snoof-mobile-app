@@ -1,6 +1,7 @@
 import { useWalkForm } from "@/lib/hooks/activity-logs/use-walk-form";
 import { useAuthContext } from "@/lib/hooks/use-auth-context";
 import { usePetStore } from "@/lib/stores/use-pet-store";
+import { NOTES_CHAR_LIMIT } from "@/lib/utils/constants";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -18,8 +19,6 @@ import { DurationInput } from "../shared/duration-input";
 import { SelectorGrid } from "../shared/selector-grid";
 import { ENVIRONMENT_OPTIONS, WEATHER_OPTIONS } from "./options";
 import { styles } from "./styles";
-
-const NOTES_LIMIT = 500;
 
 type Props = {
   onClose: () => void;
@@ -157,7 +156,7 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
               <TextInput
                 style={styles.distanceInput}
                 value={form.distanceMiles}
-                onChangeText={form.setDistanceMiles}
+                onChangeText={form.setDistanceMiles} // TODO: Validate this to 2 decimal places and prevent non-numeric input onChange
                 keyboardType="decimal-pad"
                 placeholder="0.0"
                 placeholderTextColor="#C8B9A4"
@@ -186,20 +185,6 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
           expanded={form.detailsExpanded}
           onToggle={() => form.setDetailsExpanded(!form.detailsExpanded)}
         >
-          <SelectorGrid
-            label="Environment"
-            options={ENVIRONMENT_OPTIONS}
-            value={form.environment}
-            onChange={form.setEnvironment}
-          />
-
-          <SelectorGrid
-            label="Weather"
-            options={WEATHER_OPTIONS}
-            value={form.weather}
-            onChange={form.setWeather}
-          />
-
           <View style={styles.timeRow}>
             <View style={styles.timeField}>
               <Text style={styles.fieldLabel}>Time started</Text>
@@ -228,6 +213,20 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
             </View>
           </View>
 
+          <SelectorGrid
+            label="Environment"
+            options={ENVIRONMENT_OPTIONS}
+            value={form.environment}
+            onChange={form.setEnvironment}
+          />
+
+          <SelectorGrid
+            label="Weather"
+            options={WEATHER_OPTIONS}
+            value={form.weather}
+            onChange={form.setWeather}
+          />
+
           <View style={styles.notesField}>
             <Text style={styles.fieldLabel}>Notes</Text>
             <TextInput
@@ -237,11 +236,11 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
               placeholder="Anything notable about this walk?"
               placeholderTextColor="#C8B9A4"
               multiline
-              maxLength={NOTES_LIMIT}
+              maxLength={NOTES_CHAR_LIMIT}
               textAlignVertical="top"
             />
             <Text style={styles.notesCounter}>
-              {form.notes.length}/{NOTES_LIMIT}
+              {form.notes.length}/{NOTES_CHAR_LIMIT}
             </Text>
           </View>
         </CollapsibleSection>

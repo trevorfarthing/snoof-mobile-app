@@ -1,6 +1,7 @@
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Pressable, Text, View } from "react-native";
 import { ACTIVITY_CONFIG, ActivityType } from "../activity-config";
+import { FeedingForm } from "./feeding-form";
 import { styles } from "./styles";
 import { WalkForm } from "./walk-form";
 
@@ -22,7 +23,40 @@ export function ActionModal({
   }
 
   const config = ACTIVITY_CONFIG[activityType];
-  const isWalk = activityType === "walk";
+  // Forms with many fields (Walk, Feeding) need a taller sheet so the submit
+  // button isn't pushed off-screen.
+  const isTallForm = activityType === "walk" || activityType === "feeding";
+
+  const renderForm = () => {
+    switch (activityType) {
+      case "walk": {
+        return (
+          <WalkForm
+            onClose={onClose}
+            onLogged={() => onLogged?.(activityType)}
+          />
+        );
+      }
+      case "feeding": {
+        return (
+          <FeedingForm
+            onClose={onClose}
+            onLogged={() => onLogged?.(activityType)}
+          />
+        );
+      }
+      default: {
+        return (
+          <PlaceholderForm
+            activityType={activityType}
+            label={config.label}
+            onClose={onClose}
+            onLogged={onLogged}
+          />
+        );
+      }
+    }
+  };
 
   return (
     <BottomSheet
@@ -30,18 +64,9 @@ export function ActionModal({
       onClose={onClose}
       title={config.label}
       subtitle={`Log a ${config.label.toLowerCase()} for your pet`}
-      snapHeight={isWalk ? 0.9 : 0.5}
+      snapHeight={isTallForm ? 0.9 : 0.5}
     >
-      {isWalk ? (
-        <WalkForm onClose={onClose} onLogged={() => onLogged?.(activityType)} />
-      ) : (
-        <PlaceholderForm
-          activityType={activityType}
-          label={config.label}
-          onClose={onClose}
-          onLogged={onLogged}
-        />
-      )}
+      {renderForm()}
     </BottomSheet>
   );
 }

@@ -34,7 +34,7 @@ export const ACTIVITY_CONFIG: Record<ActivityType, ActivityConfig> = {
     section: "daily_care",
   },
   feeding: {
-    label: "Feed",
+    label: "Feeding",
     IconComponent: UtensilsCrossed,
     iconBg: "#FAEEDA",
     iconColor: "#B8862D",
