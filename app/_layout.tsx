@@ -5,7 +5,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-function RootNavigator() {
+const RootNavigator = () => {
   const { isLoggedIn } = useAuthContext();
 
   return (
@@ -18,9 +18,9 @@ function RootNavigator() {
       </Stack.Protected>
     </Stack>
   );
-}
+};
 
-export default function RootLayout() {
+const RootLayout = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AuthProvider>
@@ -30,4 +30,6 @@ export default function RootLayout() {
       </AuthProvider>
     </GestureHandlerRootView>
   );
-}
+};
+
+export default RootLayout;

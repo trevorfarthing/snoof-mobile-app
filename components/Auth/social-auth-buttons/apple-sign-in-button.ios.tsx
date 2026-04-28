@@ -5,7 +5,7 @@ import { Platform } from "react-native";
 
 import { supabase } from "@/lib/utils/supabase";
 
-async function onAppleButtonPress() {
+const onAppleButtonPress = async () => {
   try {
     const credential = await AppleAuthentication.signInAsync({
       requestedScopes: [
@@ -49,9 +49,9 @@ async function onAppleButtonPress() {
       console.error("Apple sign-in error:", error);
     }
   }
-}
+};
 
-export default function AppleSignInButton() {
+const AppleSignInButton = () => {
   const [isAvailable, setIsAvailable] = useState(false);
 
   useEffect(() => {
@@ -71,4 +71,6 @@ export default function AppleSignInButton() {
       onPress={onAppleButtonPress}
     />
   );
-}
+};
+
+export default AppleSignInButton;

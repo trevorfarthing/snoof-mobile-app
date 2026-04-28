@@ -2,7 +2,7 @@ import { colors } from "@/constants/colors";
 import { fonts } from "@/constants/fonts";
 import { Text, View } from "react-native";
 
-export default function ActivityScreen() {
+const ActivityScreen = () => {
   return (
     <View
       style={{
@@ -23,4 +23,6 @@ export default function ActivityScreen() {
       </Text>
     </View>
   );
-}
+};
+
+export default ActivityScreen;

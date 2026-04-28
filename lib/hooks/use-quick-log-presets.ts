@@ -6,7 +6,7 @@ import { supabase } from "@/lib/utils/supabase";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "./use-auth-context";
 
-export function useQuickLogPresets() {
+export const useQuickLogPresets = () => {
   const { session } = useAuthContext();
   const userId = session?.user?.id;
 
@@ -54,4 +54,4 @@ export function useQuickLogPresets() {
   };
 
   return { presets, savePresets, loading };
-}
+};

@@ -32,12 +32,12 @@ type EditModalProps = {
   onSave: (presets: ActivityType[]) => void;
 };
 
-export function EditModal({
+export const EditModal = ({
   visible,
   onClose,
   presets,
   onSave,
-}: EditModalProps) {
+}: EditModalProps) => {
   const [localPresets, setLocalPresets] =
     useState<(ActivityType | null)[]>(presets);
 
@@ -145,9 +145,9 @@ export function EditModal({
       </Pressable>
     </BottomSheet>
   );
-}
+};
 
-function DragHint() {
+const DragHint = () => {
   return (
     <View style={styles.dragHint}>
       <GripHorizontal
@@ -158,7 +158,7 @@ function DragHint() {
       <Text style={styles.dragHintText}>Hold and drag to reorder</Text>
     </View>
   );
-}
+};
 
 type DraggablePresetsProps = {
   presets: (ActivityType | null)[];
@@ -166,11 +166,11 @@ type DraggablePresetsProps = {
   onReorder: (next: (ActivityType | null)[]) => void;
 };
 
-function DraggablePresets({
+const DraggablePresets = ({
   presets,
   onRemove,
   onReorder,
-}: DraggablePresetsProps) {
+}: DraggablePresetsProps) => {
   const [dragIndex, setDragIndex] = useState(-1);
   const itemWidth = useRef(0);
 
@@ -231,7 +231,7 @@ function DraggablePresets({
       })}
     </View>
   );
-}
+};
 
 type DraggableItemProps = {
   config: (typeof ACTIVITY_CONFIG)[ActivityType];
@@ -241,13 +241,13 @@ type DraggableItemProps = {
   onEndDrag: (translationX: number) => void;
 };
 
-function DraggableItem({
+const DraggableItem = ({
   config,
   isDragging,
   onRemove,
   onStartDrag,
   onEndDrag,
-}: DraggableItemProps) {
+}: DraggableItemProps) => {
   const tx = useSharedValue(0);
   const scale = useSharedValue(1);
 
@@ -329,4 +329,4 @@ function DraggableItem({
       </ReAnimated.View>
     </GestureDetector>
   );
-}
+};

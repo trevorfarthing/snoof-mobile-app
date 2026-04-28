@@ -7,7 +7,7 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 WebBrowser.maybeCompleteAuthSession();
 
-function extractParametersFromUrl(url: string) {
+const extractParametersFromUrl = (url: string) => {
   const parsedUrl = new URL(url);
   const hash = parsedUrl.hash.slice(1); // remove leading '#'
   const parameters = new URLSearchParams(hash);
@@ -19,9 +19,9 @@ function extractParametersFromUrl(url: string) {
     token_type: parameters.get("token_type"),
     provider_token: parameters.get("provider_token"),
   };
-}
+};
 
-async function onSignInButtonPress() {
+const onSignInButtonPress = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
@@ -59,9 +59,9 @@ async function onSignInButtonPress() {
       }
     }
   }
-}
+};
 
-export default function GoogleSignInButton() {
+const GoogleSignInButton = () => {
   useEffect(() => {
     WebBrowser.warmUpAsync();
     return () => {
@@ -87,7 +87,9 @@ export default function GoogleSignInButton() {
       </View>
     </TouchableOpacity>
   );
-}
+};
+
+export default GoogleSignInButton;
 
 const styles = StyleSheet.create({
   button: {

@@ -16,7 +16,7 @@ type MoreModalProps = {
   onLogged?: (type: ActivityType) => void;
 };
 
-export function MoreModal({ visible, onClose, onLogged }: MoreModalProps) {
+export const MoreModal = ({ visible, onClose, onLogged }: MoreModalProps) => {
   const [selected, setSelected] = useState<ActivityType | null>(null);
 
   const handleClose = () => {
@@ -71,9 +71,9 @@ export function MoreModal({ visible, onClose, onLogged }: MoreModalProps) {
       </Pressable>
     </BottomSheet>
   );
-}
+};
 
-function ActivitySection({
+const ActivitySection = ({
   label,
   types,
   selected,
@@ -83,7 +83,7 @@ function ActivitySection({
   types: ActivityType[];
   selected: ActivityType | null;
   onSelect: (t: ActivityType) => void;
-}) {
+}) => {
   return (
     <>
       <Text style={styles.sectionLabel}>{label}</Text>
@@ -127,4 +127,4 @@ function ActivitySection({
       </View>
     </>
   );
-}
+};

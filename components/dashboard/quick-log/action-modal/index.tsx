@@ -13,12 +13,12 @@ type ActionModalProps = {
   onLogged?: (type: ActivityType) => void;
 };
 
-export function ActionModal({
+export const ActionModal = ({
   activityType,
   visible,
   onClose,
   onLogged,
-}: ActionModalProps) {
+}: ActionModalProps) => {
   if (!activityType) {
     return null;
   }
@@ -81,7 +81,7 @@ export function ActionModal({
       {renderForm()}
     </BottomSheet>
   );
-}
+};
 
 type PlaceholderProps = {
   activityType: ActivityType;
@@ -90,12 +90,12 @@ type PlaceholderProps = {
   onLogged?: (type: ActivityType) => void;
 };
 
-function PlaceholderForm({
+const PlaceholderForm = ({
   activityType,
   label,
   onClose,
   onLogged,
-}: PlaceholderProps) {
+}: PlaceholderProps) => {
   const handleLog = () => {
     onLogged?.(activityType);
     onClose();
@@ -120,4 +120,4 @@ function PlaceholderForm({
       </Pressable>
     </>
   );
-}
+};

@@ -12,12 +12,12 @@ import AppleSignInButton from "./social-auth-buttons/apple-sign-in-button.ios";
 import GoogleSignInButton from "./social-auth-buttons/google-sign-in-button";
 import styles from "./styles";
 
-export default function Auth() {
+const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function signInWithEmail() {
+  const signInWithEmail = async () => {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -28,9 +28,9 @@ export default function Auth() {
       Alert.alert(error.message);
     }
     setLoading(false);
-  }
+  };
 
-  async function signUpWithEmail() {
+  const signUpWithEmail = async () => {
     setLoading(true);
     const {
       data: { session },
@@ -47,7 +47,7 @@ export default function Auth() {
       Alert.alert("Please check your inbox for email verification!");
     }
     setLoading(false);
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -105,4 +105,6 @@ export default function Auth() {
       )}
     </View>
   );
-}
+};
+
+export default Auth;

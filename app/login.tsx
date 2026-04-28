@@ -2,7 +2,7 @@ import Auth from "@/components/auth";
 import { Stack } from "expo-router";
 import { ScrollView } from "react-native";
 
-export default function LoginScreen() {
+const LoginScreen = () => {
   return (
     <>
       <Stack.Screen options={{ title: "Sign In", headerShown: false }} />
@@ -11,4 +11,6 @@ export default function LoginScreen() {
       </ScrollView>
     </>
   );
-}
+};
+
+export default LoginScreen;

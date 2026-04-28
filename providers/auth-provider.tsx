@@ -4,7 +4,7 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { AuthContext } from "@/lib/hooks/use-auth-context";
 import { supabase } from "@/lib/utils/supabase";
 
-export default function AuthProvider({ children }: PropsWithChildren) {
+const AuthProvider = ({ children }: PropsWithChildren) => {
   const [session, setSession] = useState<Session | null | undefined>();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -35,4 +35,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
       {children}
     </AuthContext.Provider>
   );
-}
+};
+
+export default AuthProvider;

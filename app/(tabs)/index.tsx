@@ -4,7 +4,7 @@ import { colors } from "@/constants/colors";
 import { useCallback, useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 
-export default function DashboardScreen() {
+const DashboardScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -37,4 +37,6 @@ export default function DashboardScreen() {
       <QuickLog onRefresh={onRefresh} />
     </ScrollView>
   );
-}
+};
+
+export default DashboardScreen;

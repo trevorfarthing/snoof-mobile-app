@@ -13,14 +13,14 @@ import { BottomSheetProps } from "./types";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
-export function BottomSheet({
+export const BottomSheet = ({
   visible,
   onClose,
   title,
   subtitle,
   snapHeight = 0.6,
   children,
-}: BottomSheetProps) {
+}: BottomSheetProps) => {
   const [modalVisible, setModalVisible] = useState(false);
   const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
 
@@ -101,4 +101,4 @@ export function BottomSheet({
       </View>
     </Modal>
   );
-}
+};

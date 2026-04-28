@@ -30,21 +30,21 @@ const BACKGROUNDS: Record<TimePeriod, any> = {
   night: HeroNight,
 };
 
-function buildSubtitle(
+const buildSubtitle = (
   breed: string | null,
   age: string,
   weight: string,
-): string {
+): string => {
   return [breed, age, weight].filter(Boolean).join(" · ");
-}
+};
 
-export function HeroCard({
+export const HeroCard = ({
   refreshKey = 0,
   onLoadingChange,
 }: {
   refreshKey?: number;
   onLoadingChange?: (loading: boolean) => void;
-}) {
+}) => {
   const { activePet } = usePetStore();
   const { goalProgress, upcomingEvent, loading } = useHeroStats(
     activePet?.id ?? null,
@@ -151,4 +151,4 @@ export function HeroCard({
       </View>
     </View>
   );
-}
+};

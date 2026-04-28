@@ -26,14 +26,14 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const SIDE_PADDING = SCREEN_WIDTH / 2;
 const SWIPE_THRESHOLD = 40;
 
-function getLabel(key: string, petName: string | null): string {
+const getLabel = (key: string, petName: string | null): string => {
   if (key === "pet") {
     return petName ?? "Pet";
   }
   return key.charAt(0).toUpperCase() + key.slice(1);
-}
+};
 
-export function AppNav({ navigationState, jumpTo, position }: Props) {
+export const AppNav = ({ navigationState, jumpTo, position }: Props) => {
   const { activePet } = usePetStore();
   const pillLayouts = useRef<(PillLayout | undefined)[]>([]);
   const hasInitialLayout = useRef(false);
@@ -136,4 +136,4 @@ export function AppNav({ navigationState, jumpTo, position }: Props) {
       </Animated.View>
     </View>
   );
-}
+};

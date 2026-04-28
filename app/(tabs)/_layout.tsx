@@ -31,7 +31,7 @@ const INITIAL_LAYOUT = { width: Dimensions.get("window").width };
 // Default to Dashboard (index 1)
 const DASHBOARD_INDEX = 1;
 
-export default function TabsLayout() {
+const TabsLayout = () => {
   const [index, setIndex] = useState(DASHBOARD_INDEX);
   const routes = useMemo(() => ROUTES, []);
 
@@ -47,4 +47,6 @@ export default function TabsLayout() {
       />
     </View>
   );
-}
+};
+
+export default TabsLayout;

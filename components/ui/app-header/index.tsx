@@ -10,15 +10,15 @@ import { styles } from "./styles";
 
 type Pet = Database["public"]["Tables"]["pets"]["Row"];
 
-function getPetColor(pet: Pet, index: number): string {
+const getPetColor = (pet: Pet, index: number): string => {
   const index_ =
     pet.sort_order != null
       ? pet.sort_order % petColors.length
       : index % petColors.length;
   return petColors[index_];
-}
+};
 
-export function AppHeader() {
+export const AppHeader = () => {
   const insets = useSafeAreaInsets();
   const { activePet, pets, fetchPets } = usePetStore();
   const [switcherVisible, setSwitcherVisible] = useState(false);
@@ -100,4 +100,4 @@ export function AppHeader() {
       />
     </View>
   );
-}
+};

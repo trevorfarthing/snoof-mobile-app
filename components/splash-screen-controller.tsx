@@ -21,7 +21,7 @@ import { useAuthContext } from "@/lib/hooks/use-auth-context";
 
 SplashScreen.preventAutoHideAsync();
 
-export function SplashScreenController(): null {
+export const SplashScreenController = (): null => {
   const { isLoading: authLoading } = useAuthContext();
   const [fontsLoaded] = useFonts({
     Nunito_400Regular,
@@ -41,4 +41,4 @@ export function SplashScreenController(): null {
   }
 
   return null;
-}
+};

@@ -3,7 +3,7 @@ import { colors } from "@/constants/colors";
 import { fonts } from "@/constants/fonts";
 import { Text, View } from "react-native";
 
-export default function PetScreen() {
+const PetScreen = () => {
   return (
     <View
       style={{
@@ -25,4 +25,6 @@ export default function PetScreen() {
       <SignOutButton />
     </View>
   );
-}
+};
+
+export default PetScreen;

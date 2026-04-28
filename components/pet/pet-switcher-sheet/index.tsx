@@ -9,15 +9,15 @@ import { styles } from "./styles";
 
 type Pet = Database["public"]["Tables"]["pets"]["Row"];
 
-function getPetColor(pet: Pet, index: number): string {
+const getPetColor = (pet: Pet, index: number): string => {
   const index_ =
     pet.sort_order != null
       ? pet.sort_order % petColors.length
       : index % petColors.length;
   return petColors[index_];
-}
+};
 
-function petMeta(pet: Pet): string {
+const petMeta = (pet: Pet): string => {
   const parts: string[] = [];
   if (pet.breed) {
     parts.push(pet.breed);
@@ -26,20 +26,20 @@ function petMeta(pet: Pet): string {
     parts.push(`${formatAge(pet.date_of_birth)}`);
   }
   return parts.join(" · ");
-}
+};
 
 type Props = {
   visible: boolean;
   onClose: () => void;
 };
 
-export function PetSwitcherSheet({ visible, onClose }: Props) {
+export const PetSwitcherSheet = ({ visible, onClose }: Props) => {
   const { pets, activePet, setActivePet } = usePetStore();
 
-  function handleSelect(pet: Pet) {
+  const handleSelect = (pet: Pet) => {
     setActivePet(pet);
     onClose();
-  }
+  };
 
   return (
     <BottomSheet
@@ -89,4 +89,4 @@ export function PetSwitcherSheet({ visible, onClose }: Props) {
       </ScrollView>
     </BottomSheet>
   );
-}
+};

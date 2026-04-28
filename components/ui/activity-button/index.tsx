@@ -5,7 +5,7 @@ import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 import { ActivityButtonProps } from "./types";
 
-export function ActivityButton({
+export const ActivityButton = ({
   label,
   IconComponent,
   iconBg,
@@ -14,7 +14,7 @@ export function ActivityButton({
   variant = "default",
   removable = false,
   onRemove,
-}: ActivityButtonProps) {
+}: ActivityButtonProps) => {
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
@@ -55,4 +55,4 @@ export function ActivityButton({
       )}
     </View>
   );
-}
+};
