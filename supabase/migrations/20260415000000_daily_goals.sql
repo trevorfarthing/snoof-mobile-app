@@ -165,11 +165,14 @@ BEGIN
       ), 0)
       WHEN 'meal_count' THEN COALESCE((
         SELECT COUNT(*)::NUMERIC
-        FROM activity_logs
-        WHERE pet_id  = p_pet_id
-          AND type    = 'feeding'
-          AND occurred_at >= today_start
-          AND occurred_at <  today_end
+        FROM activity_logs al
+        JOIN feedings f ON f.activity_log_id = al.id
+        WHERE al.pet_id  = p_pet_id
+          AND al.type    = 'feeding'
+          AND (f.food_type != 'treat' OR f.food_type IS NULL)
+          AND (f.meal_label != 'snack' OR f.meal_label IS NULL)
+          AND al.occurred_at >= today_start
+          AND al.occurred_at <  today_end
       ), 0)
     END AS current_value
   FROM pet_daily_goals g

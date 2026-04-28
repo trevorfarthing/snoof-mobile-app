@@ -11,7 +11,7 @@ import { MoreModal } from "./more-modal";
 import { styles } from "./styles";
 import { ActiveModal } from "./types";
 
-export function QuickLog() {
+export const QuickLog = ({ onRefresh }: { onRefresh: () => void }) => {
   const { presets, savePresets } = useQuickLogPresets();
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
   const [toastVisible, setToastVisible] = useState(false);
@@ -31,6 +31,8 @@ export function QuickLog() {
       setToastMessage(`${ACTIVITY_CONFIG[type].label} logged`);
       setToastVisible(true);
     }, 350);
+
+    onRefresh?.();
   };
 
   const openModal = (modal: ActiveModal) => setActiveModal(modal);
@@ -102,4 +104,4 @@ export function QuickLog() {
       />
     </View>
   );
-}
+};

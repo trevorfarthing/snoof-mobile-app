@@ -312,6 +312,7 @@ export type Database = {
       };
       medication_logs: {
         Row: {
+          activity_log_id: string;
           administered_at: string;
           administered_by: string | null;
           created_at: string;
@@ -323,6 +324,7 @@ export type Database = {
           skipped: boolean | null;
         };
         Insert: {
+          activity_log_id: string;
           administered_at?: string;
           administered_by?: string | null;
           created_at?: string;
@@ -334,6 +336,7 @@ export type Database = {
           skipped?: boolean | null;
         };
         Update: {
+          activity_log_id?: string;
           administered_at?: string;
           administered_by?: string | null;
           created_at?: string;
@@ -345,6 +348,13 @@ export type Database = {
           skipped?: boolean | null;
         };
         Relationships: [
+          {
+            foreignKeyName: "medication_logs_activity_log_id_fkey";
+            columns: ["activity_log_id"];
+            isOneToOne: true;
+            referencedRelation: "activity_logs";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "medication_logs_administered_by_fkey";
             columns: ["administered_by"];
@@ -685,6 +695,7 @@ export type Database = {
       };
       vaccinations: {
         Row: {
+          activity_log_id: string;
           administering_vet: string | null;
           created_at: string;
           date_given: string;
@@ -699,6 +710,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          activity_log_id: string;
           administering_vet?: string | null;
           created_at?: string;
           date_given: string;
@@ -713,6 +725,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          activity_log_id?: string;
           administering_vet?: string | null;
           created_at?: string;
           date_given?: string;
@@ -728,6 +741,13 @@ export type Database = {
         };
         Relationships: [
           {
+            foreignKeyName: "vaccinations_activity_log_id_fkey";
+            columns: ["activity_log_id"];
+            isOneToOne: true;
+            referencedRelation: "activity_logs";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "vaccinations_pet_id_fkey";
             columns: ["pet_id"];
             isOneToOne: false;
@@ -738,6 +758,7 @@ export type Database = {
       };
       vet_visits: {
         Row: {
+          activity_log_id: string;
           clinic_name: string | null;
           cost: number | null;
           created_at: string;
@@ -755,6 +776,7 @@ export type Database = {
           visit_date: string;
         };
         Insert: {
+          activity_log_id: string;
           clinic_name?: string | null;
           cost?: number | null;
           created_at?: string;
@@ -772,6 +794,7 @@ export type Database = {
           visit_date: string;
         };
         Update: {
+          activity_log_id?: string;
           clinic_name?: string | null;
           cost?: number | null;
           created_at?: string;
@@ -789,6 +812,13 @@ export type Database = {
           visit_date?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "vet_visits_activity_log_id_fkey";
+            columns: ["activity_log_id"];
+            isOneToOne: true;
+            referencedRelation: "activity_logs";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "vet_visits_created_by_fkey";
             columns: ["created_by"];
@@ -867,6 +897,7 @@ export type Database = {
       };
       weight_logs: {
         Row: {
+          activity_log_id: string;
           created_at: string;
           id: string;
           logged_by: string | null;
@@ -876,6 +907,7 @@ export type Database = {
           weight_lbs: number;
         };
         Insert: {
+          activity_log_id: string;
           created_at?: string;
           id?: string;
           logged_by?: string | null;
@@ -885,6 +917,7 @@ export type Database = {
           weight_lbs: number;
         };
         Update: {
+          activity_log_id?: string;
           created_at?: string;
           id?: string;
           logged_by?: string | null;
@@ -894,6 +927,13 @@ export type Database = {
           weight_lbs?: number;
         };
         Relationships: [
+          {
+            foreignKeyName: "weight_logs_activity_log_id_fkey";
+            columns: ["activity_log_id"];
+            isOneToOne: true;
+            referencedRelation: "activity_logs";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "weight_logs_logged_by_fkey";
             columns: ["logged_by"];
@@ -990,7 +1030,9 @@ export type Database = {
         | "grooming"
         | "vet_visit"
         | "play"
-        | "other";
+        | "other"
+        | "vaccination"
+        | "weight";
       document_type:
         | "vet_record"
         | "lab_result"
@@ -1168,6 +1210,8 @@ export const Constants = {
         "vet_visit",
         "play",
         "other",
+        "vaccination",
+        "weight",
       ],
       document_type: [
         "vet_record",

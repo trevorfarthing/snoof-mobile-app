@@ -10,8 +10,10 @@ import {
   Pill,
   Scissors,
   Stethoscope,
+  Syringe,
   Toilet,
   UtensilsCrossed,
+  Weight,
 } from "lucide-react-native";
 
 export type ActivityType = Database["public"]["Enums"]["activity_type"];
@@ -89,6 +91,20 @@ export const ACTIVITY_CONFIG: Record<ActivityType, ActivityConfig> = {
     iconColor: "#C46B4A",
     section: "health_notes",
   },
+  weight: {
+    label: "Weight",
+    IconComponent: Weight,
+    iconBg: "rgba(226, 226, 253, 0.62)",
+    iconColor: "#2d3365",
+    section: "health_notes",
+  },
+  vaccination: {
+    label: "Vaccination",
+    IconComponent: Syringe,
+    iconBg: "#fae7fa",
+    iconColor: "#cb5cba",
+    section: "health_notes",
+  },
   sleep: {
     label: "Sleep",
     IconComponent: Moon,
@@ -124,6 +140,8 @@ export const DAILY_CARE_TYPES: ActivityType[] = [
 
 export const HEALTH_NOTE_TYPES: ActivityType[] = [
   "vet_visit",
+  "weight",
+  "vaccination",
   "sleep",
   "other",
 ];

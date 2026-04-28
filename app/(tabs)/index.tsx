@@ -34,7 +34,7 @@ export default function DashboardScreen() {
         refreshKey={refreshKey}
         onLoadingChange={handleHeroLoadingChange}
       />
-      <QuickLog />
+      <QuickLog onRefresh={onRefresh} />
     </ScrollView>
   );
 }
