@@ -1,3 +1,4 @@
+import { usePetStore } from "@/lib/stores/use-pet-store";
 import { supabase } from "@/lib/utils/supabase";
 import type { Database } from "@/types/database.types";
 import { useEffect, useState } from "react";
@@ -30,22 +31,27 @@ export type HeroStats = {
 };
 
 export function useHeroStats(petId: string | null, refreshKey = 0): HeroStats {
+  const petStoreLoading = usePetStore((s) => s.isLoading);
   const [goalProgress, setGoalProgress] = useState<GoalProgress[]>([]);
   const [upcomingEvent, setUpcomingEvent] = useState<UpcomingEvent>(null);
-  const [loading, setLoading] = useState(true);
+  const [fetching, setFetching] = useState(false);
+
+  // Show loading skeleton while the pet store is still loading OR while fetching stats
+  const loading =
+    petStoreLoading || fetching || (!petId && goalProgress.length === 0);
 
   useEffect(() => {
     if (!petId) {
       setGoalProgress([]);
       setUpcomingEvent(null);
-      setLoading(false);
+      setFetching(false);
       return;
     }
 
     let cancelled = false;
 
     async function fetchStats() {
-      setLoading(true);
+      setFetching(true);
 
       const utcOffsetMinutes = -new Date().getTimezoneOffset();
 
@@ -86,7 +92,7 @@ export function useHeroStats(petId: string | null, refreshKey = 0): HeroStats {
         setUpcomingEvent(null);
       }
 
-      setLoading(false);
+      setFetching(false);
     }
 
     fetchStats();

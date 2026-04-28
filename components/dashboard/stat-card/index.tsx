@@ -110,8 +110,11 @@ export function StatCard(props: StatCardProps) {
       );
     }
 
-    if (props.variant === "progress" && props.goal) {
-      return <ProgressContent goal={props.goal} />;
+    if (props.variant === "progress") {
+      if (props.goal) {
+        return <ProgressContent goal={props.goal} />;
+      }
+      return <Text style={styles.label}>{"No goal set"}</Text>;
     }
     if (props.variant === "upcoming") {
       return <UpcomingContent event={props.event} />;
