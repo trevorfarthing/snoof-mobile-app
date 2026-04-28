@@ -1,47 +1,44 @@
 import { colors } from "@/constants/colors";
-import { LucideIcon } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
+import { SelectorOption } from "../selector-grid";
 import { styles } from "./styles";
-
-export type SelectorOption<T extends string> = {
-  value: T;
-  label: string;
-  Icon: LucideIcon;
-};
 
 type Props<T extends string> = {
   options: SelectorOption<T>[];
-  value: T | null;
-  onChange: (next: T | null) => void;
+  values: T[];
+  onChange: (next: T[]) => void;
   label?: string;
-  disabled?: boolean;
 };
 
-export const SelectorGrid = <T extends string>({
+export const MultiSelectorGrid = <T extends string>({
   options,
-  value,
+  values,
   onChange,
   label,
-  disabled = false,
 }: Props<T>) => {
+  const toggle = (value: T) => {
+    if (values.includes(value)) {
+      onChange(values.filter((v) => v !== value));
+      return;
+    }
+    onChange([...values, value]);
+  };
+
   return (
-    <View style={[styles.container, disabled && styles.containerDisabled]}>
+    <View style={styles.container}>
       {label ? <Text style={styles.label}>{label}</Text> : null}
       <View style={styles.grid}>
         {options.map((option) => {
-          const selected = option.value === value;
+          const selected = values.includes(option.value);
           return (
             <Pressable
               key={option.value}
-              disabled={disabled}
               style={({ pressed }) => [
                 styles.tile,
                 selected && styles.tileSelected,
-                { opacity: pressed && !disabled ? 0.7 : 1 },
+                { opacity: pressed ? 0.7 : 1 },
               ]}
-              // Tapping the currently selected tile deselects it — single-select
-              // with an "uncheck" escape hatch, since these fields are optional.
-              onPress={() => onChange(selected ? null : option.value)}
+              onPress={() => toggle(option.value)}
             >
               <View
                 style={[

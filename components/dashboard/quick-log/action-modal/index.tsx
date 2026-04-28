@@ -2,6 +2,7 @@ import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Pressable, Text, View } from "react-native";
 import { ACTIVITY_CONFIG, ActivityType } from "../activity-config";
 import { FeedingForm } from "./feeding-form";
+import { PottyForm } from "./potty-form";
 import { styles } from "./styles";
 import { WalkForm } from "./walk-form";
 
@@ -23,9 +24,12 @@ export function ActionModal({
   }
 
   const config = ACTIVITY_CONFIG[activityType];
-  // Forms with many fields (Walk, Feeding) need a taller sheet so the submit
-  // button isn't pushed off-screen.
-  const isTallForm = activityType === "walk" || activityType === "feeding";
+  // Forms with many fields (Walk, Feeding, Potty) need a taller sheet so the
+  // submit button isn't pushed off-screen.
+  const isTallForm =
+    activityType === "walk" ||
+    activityType === "feeding" ||
+    activityType === "potty";
 
   const renderForm = () => {
     switch (activityType) {
@@ -40,6 +44,14 @@ export function ActionModal({
       case "feeding": {
         return (
           <FeedingForm
+            onClose={onClose}
+            onLogged={() => onLogged?.(activityType)}
+          />
+        );
+      }
+      case "potty": {
+        return (
+          <PottyForm
             onClose={onClose}
             onLogged={() => onLogged?.(activityType)}
           />

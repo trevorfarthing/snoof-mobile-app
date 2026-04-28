@@ -6,9 +6,6 @@ export const styles = StyleSheet.create({
   container: {
     marginBottom: spacing[4],
   },
-  containerDisabled: {
-    opacity: 0.4,
-  },
   label: {
     fontFamily: fonts.nunitoBold,
     fontSize: 9,
