@@ -1,4 +1,3 @@
-import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { colors } from "@/constants/colors";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -8,39 +7,29 @@ import {
   DAILY_CARE_TYPES,
   HEALTH_NOTE_TYPES,
 } from "../activity-config";
+import { ActiveModal } from "../types";
 import { styles } from "./styles";
 
 type MoreModalProps = {
-  visible: boolean;
   onClose: () => void;
   onLogged?: (type: ActivityType) => void;
+  openModal: (modal: ActiveModal) => void;
 };
 
-export const MoreModal = ({ visible, onClose, onLogged }: MoreModalProps) => {
+export const MoreModal = ({ onClose, onLogged, openModal }: MoreModalProps) => {
   const [selected, setSelected] = useState<ActivityType | null>(null);
-
-  const handleClose = () => {
-    setSelected(null);
-    onClose();
-  };
 
   const handleLog = () => {
     if (!selected) {
       return;
     }
-    onLogged?.(selected);
     setSelected(null);
     onClose();
+    openModal(selected);
   };
 
   return (
-    <BottomSheet
-      visible={visible}
-      onClose={handleClose}
-      title="Log an activity"
-      subtitle="Tap an activity to log it"
-      snapHeight={0.85}
-    >
+    <>
       <ScrollView showsVerticalScrollIndicator={false}>
         <ActivitySection
           label="Daily care"
@@ -69,7 +58,7 @@ export const MoreModal = ({ visible, onClose, onLogged }: MoreModalProps) => {
           {selected ? `Log ${ACTIVITY_CONFIG[selected].label}` : "Log now"}
         </Text>
       </Pressable>
-    </BottomSheet>
+    </>
   );
 };
 

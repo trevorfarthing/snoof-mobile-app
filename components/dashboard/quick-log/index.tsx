@@ -1,8 +1,9 @@
 import { ActivityButton } from "@/components/ui/activity-button";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Toast } from "@/components/ui/toast";
 import { useQuickLogPresets } from "@/lib/hooks/use-quick-log-presets";
 import * as Haptics from "expo-haptics";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { ActionModal } from "./action-modal";
 import { ACTIVITY_CONFIG, ActivityType } from "./activity-config";
@@ -44,6 +45,46 @@ export const QuickLog = ({ onRefresh }: { onRefresh: () => void }) => {
       ? (activeModal as ActivityType)
       : null;
 
+  // Modal is visible for any of these conditions. Content is swapped in and out to prevent re-render flickering
+  const isModalVisible =
+    activePresetType !== null ||
+    activeModal === "more" ||
+    activeModal === "edit";
+
+  const getModalDetails = () => {
+    if (activePresetType) {
+      const config = ACTIVITY_CONFIG[activePresetType];
+      const isTallForm =
+        activePresetType === "walk" ||
+        activePresetType === "feeding" ||
+        activePresetType === "potty";
+
+      return {
+        title: config.label,
+        subtitle: `Log a ${config.label.toLowerCase()} for your pet`,
+        snapHeight: isTallForm ? 0.9 : 0.5,
+      };
+    } else if (activeModal === "more") {
+      return {
+        title: "Log an activity",
+        subtitle: "Tap an activity to log it",
+        snapHeight: 0.85,
+      };
+    } else if (activeModal === "edit") {
+      return {
+        title: "Quick log buttons",
+        subtitle: "Your 4 shortcuts — tap ✕ to remove",
+        snapHeight: 0.9,
+      };
+    }
+    return null;
+  };
+  const modalDetails = useMemo(getModalDetails, [
+    ,
+    activeModal,
+    activePresetType,
+  ]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -77,25 +118,38 @@ export const QuickLog = ({ onRefresh }: { onRefresh: () => void }) => {
         />
       </View>
 
-      <ActionModal
-        activityType={activePresetType}
-        visible={activePresetType !== null}
+      <BottomSheet
+        visible={isModalVisible}
         onClose={closeModal}
-        onLogged={handleLogged}
-      />
+        title={modalDetails?.title}
+        subtitle={modalDetails?.subtitle}
+        snapHeight={modalDetails?.snapHeight}
+      >
+        {activePresetType !== null && (
+          <ActionModal
+            activityType={activePresetType}
+            onClose={closeModal}
+            onLogged={handleLogged}
+          />
+        )}
 
-      <MoreModal
-        visible={activeModal === "more"}
-        onClose={closeModal}
-        onLogged={handleLogged}
-      />
+        {activeModal === "more" && (
+          <MoreModal
+            onClose={closeModal}
+            onLogged={handleLogged}
+            openModal={openModal}
+          />
+        )}
 
-      <EditModal
-        visible={activeModal === "edit"}
-        onClose={closeModal}
-        presets={presets}
-        onSave={savePresets}
-      />
+        {activeModal === "edit" && (
+          <EditModal
+            visible={activeModal === "edit"}
+            onClose={closeModal}
+            presets={presets}
+            onSave={savePresets}
+          />
+        )}
+      </BottomSheet>
 
       <Toast
         visible={toastVisible}

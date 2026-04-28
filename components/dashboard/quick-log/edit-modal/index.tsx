@@ -1,4 +1,3 @@
-import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { colors } from "@/constants/colors";
 import * as Haptics from "expo-haptics";
 import { GripHorizontal } from "lucide-react-native";
@@ -84,13 +83,7 @@ export const EditModal = ({
   };
 
   return (
-    <BottomSheet
-      visible={visible}
-      onClose={onClose}
-      title="Quick log buttons"
-      subtitle="Your 4 shortcuts — tap ✕ to remove"
-      snapHeight={0.9}
-    >
+    <>
       <ScrollView showsVerticalScrollIndicator={false}>
         <DragHint />
 
@@ -143,7 +136,9 @@ export const EditModal = ({
       >
         <Text style={styles.doneButtonText}>Done</Text>
       </Pressable>
-    </BottomSheet>
+
+      {/* //TODO: Add "Restore Defaults" button here*/}
+    </>
   );
 };
 
