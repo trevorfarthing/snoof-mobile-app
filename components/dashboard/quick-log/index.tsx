@@ -19,8 +19,18 @@ export function QuickLog() {
 
   const handleLogged = (type: ActivityType) => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    setToastMessage(`${ACTIVITY_CONFIG[type].label} logged`);
-    setToastVisible(true);
+    /* Toast and BottomSheet both render as <Modal>. iOS only reliably presents
+      one transparent modal at a time, so if the toast mounts in the same
+      commit that the bottom sheet is dismissing, iOS silently drops the
+      toast presentation. The race is hidden when the form's collapsible
+      details section is collapsed (no in-flight reanimated layout/exit
+      animations to extend the bottom sheet's dismiss window) but reliably
+      reproduces when it's expanded. Deferring past the native dismiss
+      animation (~280ms) lets the toast modal present cleanly.*/
+    setTimeout(() => {
+      setToastMessage(`${ACTIVITY_CONFIG[type].label} logged`);
+      setToastVisible(true);
+    }, 350);
   };
 
   const openModal = (modal: ActiveModal) => setActiveModal(modal);

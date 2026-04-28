@@ -10,3 +10,4 @@
 - Figure out how to use local-first data (expo-sqlite) and sync to Supabase. Reference Gemini chat on this.
 - Create a pixel art sprite customizer for your pet (Stardew Valley style) - check out PixelLab AI, can also do animations with this
 - Badges / achievements for the more things you do in the app
+- Potentially refactor toast to global context/provider
