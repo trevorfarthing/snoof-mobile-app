@@ -20,6 +20,7 @@ import {
   ACTIVITY_CONFIG,
   ActivityType,
   DAILY_CARE_TYPES,
+  DEFAULT_PRESETS,
   HEALTH_NOTE_TYPES,
 } from "../activity-config";
 import { styles } from "./styles";
@@ -82,6 +83,10 @@ export const EditModal = ({
     onClose();
   };
 
+  const handleRestoreDefaults = () => {
+    setLocalPresets(DEFAULT_PRESETS);
+  };
+
   return (
     <>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -137,7 +142,15 @@ export const EditModal = ({
         <Text style={styles.doneButtonText}>Done</Text>
       </Pressable>
 
-      {/* //TODO: Add "Restore Defaults" button here*/}
+      <Pressable
+        style={({ pressed }) => [
+          { opacity: pressed ? 0.7 : 1 },
+          styles.restoreButton,
+        ]}
+        onPress={handleRestoreDefaults}
+      >
+        <Text style={styles.doneButtonText}>Restore Defaults</Text>
+      </Pressable>
     </>
   );
 };

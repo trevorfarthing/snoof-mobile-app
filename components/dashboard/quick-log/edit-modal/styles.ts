@@ -35,6 +35,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderStyle: "dashed",
     borderColor: "#C8B9A4",
+    minHeight: 65,
   },
   sectionLabel: {
     fontFamily: fonts.nunitoBold,
@@ -91,6 +92,13 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.nunitoBold,
     fontSize: 15,
     color: "#fff",
+  },
+  restoreButton: {
+    backgroundColor: colors.accentSage,
+    borderRadius: radii.md,
+    paddingVertical: 14,
+    alignItems: "center",
+    marginTop: spacing[3],
   },
   dragging: {
     shadowColor: "#3D3224",
