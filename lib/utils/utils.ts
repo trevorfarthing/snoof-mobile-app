@@ -36,3 +36,17 @@ export const getTimePeriod = (hour: number): TimePeriod => {
   }
   return "night";
 };
+
+export const formatClockTime = (date: Date): string => {
+  return date.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+};
+
+export const capitalize = (word: string): string => {
+  if (!word) {
+    return "";
+  }
+  return word.charAt(0).toUpperCase() + word.slice(1);
+};

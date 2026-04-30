@@ -14,15 +14,36 @@ type SubmitParams = {
 
 type SubmitResult = { error: string | null };
 
-export const useFeedingForm = () => {
-  const [foodType, setFoodType] = useState<FeedingFoodType | null>(null);
-  const [mealLabel, setMealLabel] = useState<FeedingMealLabel | null>(null);
-  const [foodName, setFoodName] = useState("");
-  const [amount, setAmount] = useState("");
-  const [amountUnit, setAmountUnit] = useState<FeedingAmountUnit | null>(null);
-  const [occurredAt, setOccurredAt] = useState<Date | null>(null);
-  const [notes, setNotes] = useState("");
-  const [detailsExpanded, setDetailsExpanded] = useState(false);
+export type FeedingFormInitialValues = {
+  foodType?: FeedingFoodType | null;
+  mealLabel?: FeedingMealLabel | null;
+  foodName?: string;
+  amount?: string;
+  amountUnit?: FeedingAmountUnit | null;
+  occurredAt?: Date | null;
+  notes?: string;
+  detailsExpanded?: boolean;
+};
+
+export const useFeedingForm = (initialValues?: FeedingFormInitialValues) => {
+  const [foodType, setFoodType] = useState<FeedingFoodType | null>(
+    initialValues?.foodType ?? null,
+  );
+  const [mealLabel, setMealLabel] = useState<FeedingMealLabel | null>(
+    initialValues?.mealLabel ?? null,
+  );
+  const [foodName, setFoodName] = useState(initialValues?.foodName ?? "");
+  const [amount, setAmount] = useState(initialValues?.amount ?? "");
+  const [amountUnit, setAmountUnit] = useState<FeedingAmountUnit | null>(
+    initialValues?.amountUnit ?? null,
+  );
+  const [occurredAt, setOccurredAt] = useState<Date | null>(
+    initialValues?.occurredAt ?? null,
+  );
+  const [notes, setNotes] = useState(initialValues?.notes ?? "");
+  const [detailsExpanded, setDetailsExpanded] = useState(
+    initialValues?.detailsExpanded ?? false,
+  );
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 

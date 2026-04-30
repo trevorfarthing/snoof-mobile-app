@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   greeting: {
-    fontFamily: "Lora_500Medium",
+    fontFamily: fonts.loraMedium,
     fontSize: 13,
     color: "rgba(255,255,255,0.7)",
     marginBottom: 2,

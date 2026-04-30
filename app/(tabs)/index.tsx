@@ -1,12 +1,29 @@
 import { HeroCard } from "@/components/dashboard/hero-card";
 import { QuickLog } from "@/components/dashboard/quick-log";
+import { ActionModal } from "@/components/dashboard/quick-log/action-modal";
+import type { ActivityType } from "@/components/dashboard/quick-log/activity-config";
+import { TodayLogList } from "@/components/dashboard/today-log-list";
+import {
+  buildOptimisticLog,
+  mapLogToInitialValues,
+} from "@/components/dashboard/today-log-list/mapper";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { colors } from "@/constants/colors";
-import { useCallback, useState } from "react";
+import {
+  useTodayLogs,
+  type TodayLog,
+} from "@/lib/hooks/activity-logs/use-today-logs";
+import { usePetStore } from "@/lib/stores/use-pet-store";
+import { useCallback, useMemo, useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 
 const DashboardScreen = () => {
+  const { activePet } = usePetStore();
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [viewingLog, setViewingLog] = useState<TodayLog | null>(null);
+
+  const todayLogs = useTodayLogs(activePet?.id ?? null, refreshKey);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -22,20 +39,53 @@ const DashboardScreen = () => {
     [refreshing],
   );
 
+  const handleLogged = useCallback(
+    (type: ActivityType) => {
+      todayLogs.addOptimistic(buildOptimisticLog(type));
+    },
+    [todayLogs],
+  );
+
+  const closeViewModal = useCallback(() => setViewingLog(null), []);
+
+  const viewInitialValues = useMemo(
+    () => (viewingLog ? mapLogToInitialValues(viewingLog) : undefined),
+    [viewingLog],
+  );
+
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.bgBase }}
-      contentContainerStyle={{ paddingTop: 12, paddingBottom: 32 }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <HeroCard
-        refreshKey={refreshKey}
-        onLoadingChange={handleHeroLoadingChange}
-      />
-      <QuickLog onRefresh={onRefresh} />
-    </ScrollView>
+    <>
+      <ScrollView
+        style={{ flex: 1, backgroundColor: colors.bgBase }}
+        contentContainerStyle={{ paddingTop: 12, paddingBottom: 32 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <HeroCard
+          refreshKey={refreshKey}
+          onLoadingChange={handleHeroLoadingChange}
+        />
+        <QuickLog onRefresh={onRefresh} onLogged={handleLogged} />
+        <TodayLogList logs={todayLogs.logs} onRowPress={setViewingLog} />
+      </ScrollView>
+
+      <BottomSheet
+        visible={viewingLog !== null}
+        onClose={closeViewModal}
+        title={viewingLog ? "Log details" : undefined}
+        snapHeight={0.9}
+      >
+        {viewingLog ? (
+          <ActionModal
+            activityType={viewingLog.type}
+            onClose={closeViewModal}
+            readOnly
+            initialValues={viewInitialValues}
+          />
+        ) : null}
+      </BottomSheet>
+    </>
   );
 };
 

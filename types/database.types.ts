@@ -1015,6 +1015,18 @@ export type Database = {
           target_value: number;
         }[];
       };
+      get_today_activity_logs: {
+        Args: { p_pet_id: string; p_utc_offset_minutes?: number };
+        Returns: {
+          feeding: Json;
+          id: string;
+          notes: string;
+          occurred_at: string;
+          potty: Json;
+          type: string;
+          walk: Json;
+        }[];
+      };
       get_user_household_ids: { Args: never; Returns: string[] };
       is_household_admin: { Args: { h_id: string }; Returns: boolean };
     };

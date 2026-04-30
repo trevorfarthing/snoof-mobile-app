@@ -32,13 +32,30 @@ const resolvePottyType = (
   return null;
 };
 
-export const usePottyForm = () => {
-  const [pottyTypes, setPottyTypes] = useState<PottyTypeOption[]>([]);
-  const [consistency, setConsistency] = useState<PottyConsistency | null>(null);
-  const [location, setLocation] = useState("");
-  const [isAccident, setIsAccident] = useState(false);
-  const [notes, setNotes] = useState("");
-  const [detailsExpanded, setDetailsExpanded] = useState(false);
+export type PottyFormInitialValues = {
+  pottyTypes?: PottyTypeOption[];
+  consistency?: PottyConsistency | null;
+  location?: string;
+  isAccident?: boolean;
+  notes?: string;
+  detailsExpanded?: boolean;
+};
+
+export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
+  const [pottyTypes, setPottyTypes] = useState<PottyTypeOption[]>(
+    initialValues?.pottyTypes ?? [],
+  );
+  const [consistency, setConsistency] = useState<PottyConsistency | null>(
+    initialValues?.consistency ?? null,
+  );
+  const [location, setLocation] = useState(initialValues?.location ?? "");
+  const [isAccident, setIsAccident] = useState(
+    initialValues?.isAccident ?? false,
+  );
+  const [notes, setNotes] = useState(initialValues?.notes ?? "");
+  const [detailsExpanded, setDetailsExpanded] = useState(
+    initialValues?.detailsExpanded ?? false,
+  );
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 

@@ -1,4 +1,7 @@
-import { useFeedingForm } from "@/lib/hooks/activity-logs/use-feeding-form";
+import {
+  useFeedingForm,
+  type FeedingFormInitialValues,
+} from "@/lib/hooks/activity-logs/use-feeding-form";
 import { useAuthContext } from "@/lib/hooks/use-auth-context";
 import { usePetStore } from "@/lib/stores/use-pet-store";
 import { NOTES_CHAR_LIMIT } from "@/lib/utils/constants";
@@ -15,6 +18,7 @@ import {
   View,
 } from "react-native";
 import { CollapsibleSection } from "../shared/collapsible-section";
+import { ReadOnlyBanner } from "../shared/read-only-banner";
 import { SelectorGrid } from "../shared/selector-grid";
 import { FOOD_TYPE_OPTIONS, MEAL_OPTIONS, UNIT_OPTIONS } from "./options";
 import { styles } from "./styles";
@@ -22,16 +26,25 @@ import { styles } from "./styles";
 type Props = {
   onClose: () => void;
   onLogged?: () => void;
+  readOnly?: boolean;
+  initialValues?: FeedingFormInitialValues;
 };
 
 const formatTime = (d: Date): string =>
   d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
 
-export const FeedingForm = ({ onClose, onLogged }: Props) => {
+export const FeedingForm = ({
+  onClose,
+  onLogged,
+  readOnly = false,
+  initialValues,
+}: Props) => {
   const { activePet } = usePetStore();
   const { session } = useAuthContext();
-  const form = useFeedingForm();
+  const form = useFeedingForm(initialValues);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const inputsDisabled = readOnly && !editing;
 
   // Snapshot of the initial value at picker-open time. Stays referentially
   // stable for the picker's lifetime — passing form.occurredAt directly creates
@@ -95,113 +108,123 @@ export const FeedingForm = ({ onClose, onLogged }: Props) => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <SelectorGrid
-          label="Food type"
-          options={FOOD_TYPE_OPTIONS}
-          value={form.foodType}
-          onChange={form.setFoodType}
-        />
-
-        <CollapsibleSection
-          title="Details"
-          expanded={form.detailsExpanded}
-          onToggle={() => form.setDetailsExpanded(!form.detailsExpanded)}
+        {readOnly ? (
+          <ReadOnlyBanner editing={editing} onEdit={() => setEditing(true)} />
+        ) : null}
+        <View
+          pointerEvents={inputsDisabled ? "none" : "auto"}
+          style={{ opacity: inputsDisabled ? 0.65 : 1 }}
         >
           <SelectorGrid
-            label="Meal"
-            options={MEAL_OPTIONS}
-            value={form.mealLabel}
-            onChange={form.setMealLabel}
+            label="Food type"
+            options={FOOD_TYPE_OPTIONS}
+            value={form.foodType}
+            onChange={form.setFoodType}
           />
 
-          <View style={styles.nameField}>
-            <Text style={styles.fieldLabel}>Name</Text>
-            <TextInput
-              style={styles.nameInput}
-              value={form.foodName}
-              onChangeText={form.setFoodName}
-              placeholder="Brand / type, etc."
-              placeholderTextColor="#C8B9A4"
+          <CollapsibleSection
+            title="Details"
+            expanded={form.detailsExpanded}
+            onToggle={() => form.setDetailsExpanded(!form.detailsExpanded)}
+          >
+            <SelectorGrid
+              label="Meal"
+              options={MEAL_OPTIONS}
+              value={form.mealLabel}
+              onChange={form.setMealLabel}
             />
-          </View>
 
-          <View style={styles.amountRow}>
-            <View style={styles.amountField}>
-              <Text style={styles.fieldLabel}>Amount</Text>
+            <View style={styles.nameField}>
+              <Text style={styles.fieldLabel}>Name</Text>
               <TextInput
-                style={styles.amountInput}
-                value={form.amount}
-                onChangeText={form.setAmount} // TODO: Validate this to 2 decimal places and prevent non-numeric input onChange
-                keyboardType="decimal-pad"
-                placeholder="0"
+                style={styles.nameInput}
+                value={form.foodName}
+                onChangeText={form.setFoodName}
+                placeholder="Brand / type, etc."
                 placeholderTextColor="#C8B9A4"
               />
             </View>
 
-            <View style={styles.unitField}>
-              <Text style={styles.fieldLabel}>Unit</Text>
-              <View style={styles.unitSegment}>
-                {UNIT_OPTIONS.map((option) => {
-                  const selected = form.amountUnit === option.value;
-                  return (
-                    <Pressable
-                      key={option.value}
-                      style={[
-                        styles.unitPill,
-                        selected && styles.unitPillSelected,
-                      ]}
-                      // Same single-select-with-uncheck pattern as SelectorGrid.
-                      onPress={() =>
-                        form.setAmountUnit(selected ? null : option.value)
-                      }
-                    >
-                      <Text
+            <View style={styles.amountRow}>
+              <View style={styles.amountField}>
+                <Text style={styles.fieldLabel}>Amount</Text>
+                <TextInput
+                  style={styles.amountInput}
+                  value={form.amount}
+                  onChangeText={form.setAmount} // TODO: Validate this to 2 decimal places and prevent non-numeric input onChange
+                  keyboardType="decimal-pad"
+                  placeholder="0"
+                  placeholderTextColor="#C8B9A4"
+                />
+              </View>
+
+              <View style={styles.unitField}>
+                <Text style={styles.fieldLabel}>Unit</Text>
+                <View style={styles.unitSegment}>
+                  {UNIT_OPTIONS.map((option) => {
+                    const selected = form.amountUnit === option.value;
+                    return (
+                      <Pressable
+                        key={option.value}
                         style={[
-                          styles.unitPillLabel,
-                          selected && styles.unitPillLabelSelected,
+                          styles.unitPill,
+                          selected && styles.unitPillSelected,
                         ]}
+                        // Same single-select-with-uncheck pattern as SelectorGrid.
+                        onPress={() =>
+                          form.setAmountUnit(selected ? null : option.value)
+                        }
                       >
-                        {option.label}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
+                        <Text
+                          style={[
+                            styles.unitPillLabel,
+                            selected && styles.unitPillLabelSelected,
+                          ]}
+                        >
+                          {option.label}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
               </View>
             </View>
-          </View>
 
-          <View style={styles.timeField}>
-            <Text style={styles.fieldLabel}>Time</Text>
-            <Pressable style={styles.timeButton} onPress={togglePicker}>
-              <Text
-                style={
-                  form.occurredAt ? styles.timeValue : styles.timePlaceholder
-                }
-              >
-                {form.occurredAt ? formatTime(form.occurredAt) : "Now"}
+            <View style={styles.timeField}>
+              <Text style={styles.fieldLabel}>Time</Text>
+              <Pressable style={styles.timeButton} onPress={togglePicker}>
+                <Text
+                  style={
+                    form.occurredAt ? styles.timeValue : styles.timePlaceholder
+                  }
+                >
+                  {form.occurredAt ? formatTime(form.occurredAt) : "Now"}
+                </Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.notesField}>
+              <Text style={styles.fieldLabel}>Notes</Text>
+              <TextInput
+                style={styles.notesInput}
+                value={form.notes}
+                onChangeText={form.setNotes}
+                placeholder="Any notes about this feeding?"
+                placeholderTextColor="#C8B9A4"
+                multiline
+                maxLength={NOTES_CHAR_LIMIT}
+                textAlignVertical="top"
+              />
+              <Text style={styles.notesCounter}>
+                {form.notes.length}/{NOTES_CHAR_LIMIT}
               </Text>
-            </Pressable>
-          </View>
+            </View>
+          </CollapsibleSection>
 
-          <View style={styles.notesField}>
-            <Text style={styles.fieldLabel}>Notes</Text>
-            <TextInput
-              style={styles.notesInput}
-              value={form.notes}
-              onChangeText={form.setNotes}
-              placeholder="Any notes about this feeding?"
-              placeholderTextColor="#C8B9A4"
-              multiline
-              maxLength={NOTES_CHAR_LIMIT}
-              textAlignVertical="top"
-            />
-            <Text style={styles.notesCounter}>
-              {form.notes.length}/{NOTES_CHAR_LIMIT}
-            </Text>
-          </View>
-        </CollapsibleSection>
-
-        {form.error ? <Text style={styles.errorText}>{form.error}</Text> : null}
+          {form.error ? (
+            <Text style={styles.errorText}>{form.error}</Text>
+          ) : null}
+        </View>
       </ScrollView>
 
       {/* Picker renders OUTSIDE the ScrollView so the spinner's vertical scroll
@@ -217,18 +240,20 @@ export const FeedingForm = ({ onClose, onLogged }: Props) => {
         />
       ) : null}
 
-      <Pressable
-        style={({ pressed }) => [
-          { opacity: pressed || form.submitting ? 0.7 : 1 },
-          styles.logButton,
-        ]}
-        onPress={handleSubmit}
-        disabled={form.submitting}
-      >
-        <Text style={styles.logButtonText}>
-          {form.submitting ? "Logging…" : "Log Feeding"}
-        </Text>
-      </Pressable>
+      {!readOnly ? (
+        <Pressable
+          style={({ pressed }) => [
+            { opacity: pressed || form.submitting ? 0.7 : 1 },
+            styles.logButton,
+          ]}
+          onPress={handleSubmit}
+          disabled={form.submitting}
+        >
+          <Text style={styles.logButtonText}>
+            {form.submitting ? "Logging…" : "Log Feeding"}
+          </Text>
+        </Pressable>
+      ) : null}
     </>
   );
 };

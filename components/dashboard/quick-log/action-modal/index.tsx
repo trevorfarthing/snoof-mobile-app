@@ -1,3 +1,6 @@
+import type { FeedingFormInitialValues } from "@/lib/hooks/activity-logs/use-feeding-form";
+import type { PottyFormInitialValues } from "@/lib/hooks/activity-logs/use-potty-form";
+import type { WalkFormInitialValues } from "@/lib/hooks/activity-logs/use-walk-form";
 import { Pressable, Text, View } from "react-native";
 import { ACTIVITY_CONFIG, ActivityType } from "../activity-config";
 import { FeedingForm } from "./feeding-form";
@@ -5,16 +8,26 @@ import { PottyForm } from "./potty-form";
 import { styles } from "./styles";
 import { WalkForm } from "./walk-form";
 
+export type ActionModalInitialValues = {
+  walk?: WalkFormInitialValues;
+  feeding?: FeedingFormInitialValues;
+  potty?: PottyFormInitialValues;
+};
+
 type ActionModalProps = {
   activityType: ActivityType | null;
   onClose: () => void;
   onLogged?: (type: ActivityType) => void;
+  readOnly?: boolean;
+  initialValues?: ActionModalInitialValues;
 };
 
 export const ActionModal = ({
   activityType,
   onClose,
   onLogged,
+  readOnly = false,
+  initialValues,
 }: ActionModalProps) => {
   if (!activityType) {
     return null;
@@ -29,6 +42,8 @@ export const ActionModal = ({
           <WalkForm
             onClose={onClose}
             onLogged={() => onLogged?.(activityType)}
+            readOnly={readOnly}
+            initialValues={initialValues?.walk}
           />
         );
       }
@@ -37,6 +52,8 @@ export const ActionModal = ({
           <FeedingForm
             onClose={onClose}
             onLogged={() => onLogged?.(activityType)}
+            readOnly={readOnly}
+            initialValues={initialValues?.feeding}
           />
         );
       }
@@ -45,6 +62,8 @@ export const ActionModal = ({
           <PottyForm
             onClose={onClose}
             onLogged={() => onLogged?.(activityType)}
+            readOnly={readOnly}
+            initialValues={initialValues?.potty}
           />
         );
       }

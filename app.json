@@ -56,6 +56,7 @@
             "node_modules/@expo-google-fonts/nunito/700Bold/Nunito_700Bold.ttf",
             "node_modules/@expo-google-fonts/nunito/800ExtraBold/Nunito_800ExtraBold.ttf",
             "node_modules/@expo-google-fonts/lora/400Regular/Lora_400Regular.ttf",
+            "node_modules/@expo-google-fonts/lora/500Medium/Lora_500Medium.ttf",
             "node_modules/@expo-google-fonts/dm-mono/400Regular/DMMono_400Regular.ttf"
           ]
         }

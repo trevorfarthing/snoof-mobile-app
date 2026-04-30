@@ -1,4 +1,7 @@
-import { useWalkForm } from "@/lib/hooks/activity-logs/use-walk-form";
+import {
+  useWalkForm,
+  type WalkFormInitialValues,
+} from "@/lib/hooks/activity-logs/use-walk-form";
 import { useAuthContext } from "@/lib/hooks/use-auth-context";
 import { usePetStore } from "@/lib/stores/use-pet-store";
 import { NOTES_CHAR_LIMIT } from "@/lib/utils/constants";
@@ -16,6 +19,7 @@ import {
 } from "react-native";
 import { CollapsibleSection } from "../shared/collapsible-section";
 import { DurationInput } from "../shared/duration-input";
+import { ReadOnlyBanner } from "../shared/read-only-banner";
 import { SelectorGrid } from "../shared/selector-grid";
 import { ENVIRONMENT_OPTIONS, WEATHER_OPTIONS } from "./options";
 import { styles } from "./styles";
@@ -23,6 +27,8 @@ import { styles } from "./styles";
 type Props = {
   onClose: () => void;
   onLogged?: () => void;
+  readOnly?: boolean;
+  initialValues?: WalkFormInitialValues;
 };
 
 type PickerTarget = null | "start" | "end";
@@ -38,11 +44,18 @@ const addMinutes = (d: Date, m: number): Date => {
 
 const subMinutes = (d: Date, m: number): Date => addMinutes(d, -m);
 
-export const WalkForm = ({ onClose, onLogged }: Props) => {
+export const WalkForm = ({
+  onClose,
+  onLogged,
+  readOnly = false,
+  initialValues,
+}: Props) => {
   const { activePet } = usePetStore();
   const { session } = useAuthContext();
-  const form = useWalkForm();
+  const form = useWalkForm(initialValues);
   const [picker, setPicker] = useState<PickerTarget>(null);
+  const [editing, setEditing] = useState(false);
+  const inputsDisabled = readOnly && !editing;
 
   // Snapshot of the initial value at picker-open time. Stays referentially
   // stable for the picker's entire lifetime — passing form.startedAt directly
@@ -149,101 +162,111 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.requiredRow}>
-          <View style={styles.requiredField}>
-            <Text style={styles.fieldLabel}>Distance</Text>
-            <View style={styles.distanceField}>
-              <TextInput
-                style={styles.distanceInput}
-                value={form.distanceMiles}
-                onChangeText={form.setDistanceMiles} // TODO: Validate this to 2 decimal places and prevent non-numeric input onChange
-                keyboardType="decimal-pad"
-                placeholder="0.0"
-                placeholderTextColor="#C8B9A4"
-              />
-              <Text style={styles.distanceSuffix}>mi</Text>
-            </View>
-          </View>
-
-          <View style={styles.requiredField}>
-            <Text style={styles.fieldLabel}>Duration</Text>
-            <DurationInput
-              hours={form.hours}
-              minutes={form.minutes}
-              onHoursChange={form.setHours}
-              onMinutesChange={form.setMinutes}
-              disabled={form.isDurationLocked}
-              computedMinutes={form.computedDurationMinutes}
-            />
-          </View>
-        </View>
-
-        {form.error ? <Text style={styles.errorText}>{form.error}</Text> : null}
-
-        <CollapsibleSection
-          title="Details"
-          expanded={form.detailsExpanded}
-          onToggle={() => form.setDetailsExpanded(!form.detailsExpanded)}
+        {readOnly ? (
+          <ReadOnlyBanner editing={editing} onEdit={() => setEditing(true)} />
+        ) : null}
+        <View
+          pointerEvents={inputsDisabled ? "none" : "auto"}
+          style={{ opacity: inputsDisabled ? 0.65 : 1 }}
         >
-          <View style={styles.timeRow}>
-            <View style={styles.timeField}>
-              <Text style={styles.fieldLabel}>Time started</Text>
-              <Pressable style={styles.timeButton} onPress={openStartPicker}>
-                <Text
-                  style={
-                    form.startedAt ? styles.timeValue : styles.timePlaceholder
-                  }
-                >
-                  {form.startedAt ? formatTime(form.startedAt) : "Select"}
-                </Text>
-              </Pressable>
+          <View style={styles.requiredRow}>
+            <View style={styles.requiredField}>
+              <Text style={styles.fieldLabel}>Distance</Text>
+              <View style={styles.distanceField}>
+                <TextInput
+                  style={styles.distanceInput}
+                  value={form.distanceMiles}
+                  onChangeText={form.setDistanceMiles} // TODO: Validate this to 2 decimal places and prevent non-numeric input onChange
+                  keyboardType="decimal-pad"
+                  placeholder="0.0"
+                  placeholderTextColor="#C8B9A4"
+                />
+                <Text style={styles.distanceSuffix}>mi</Text>
+              </View>
             </View>
 
-            <View style={styles.timeField}>
-              <Text style={styles.fieldLabel}>Time ended</Text>
-              <Pressable style={styles.timeButton} onPress={openEndPicker}>
-                <Text
-                  style={
-                    form.endedAt ? styles.timeValue : styles.timePlaceholder
-                  }
-                >
-                  {form.endedAt ? formatTime(form.endedAt) : "Select"}
-                </Text>
-              </Pressable>
+            <View style={styles.requiredField}>
+              <Text style={styles.fieldLabel}>Duration</Text>
+              <DurationInput
+                hours={form.hours}
+                minutes={form.minutes}
+                onHoursChange={form.setHours}
+                onMinutesChange={form.setMinutes}
+                disabled={form.isDurationLocked}
+                computedMinutes={form.computedDurationMinutes}
+              />
             </View>
           </View>
 
-          <SelectorGrid
-            label="Environment"
-            options={ENVIRONMENT_OPTIONS}
-            value={form.environment}
-            onChange={form.setEnvironment}
-          />
+          {form.error ? (
+            <Text style={styles.errorText}>{form.error}</Text>
+          ) : null}
 
-          <SelectorGrid
-            label="Weather"
-            options={WEATHER_OPTIONS}
-            value={form.weather}
-            onChange={form.setWeather}
-          />
+          <CollapsibleSection
+            title="Details"
+            expanded={form.detailsExpanded}
+            onToggle={() => form.setDetailsExpanded(!form.detailsExpanded)}
+          >
+            <View style={styles.timeRow}>
+              <View style={styles.timeField}>
+                <Text style={styles.fieldLabel}>Time started</Text>
+                <Pressable style={styles.timeButton} onPress={openStartPicker}>
+                  <Text
+                    style={
+                      form.startedAt ? styles.timeValue : styles.timePlaceholder
+                    }
+                  >
+                    {form.startedAt ? formatTime(form.startedAt) : "Select"}
+                  </Text>
+                </Pressable>
+              </View>
 
-          <View style={styles.notesField}>
-            <Text style={styles.fieldLabel}>Notes</Text>
-            <TextInput
-              style={styles.notesInput}
-              value={form.notes}
-              onChangeText={form.setNotes}
-              placeholder="Anything notable about this walk?"
-              placeholderTextColor="#C8B9A4"
-              multiline
-              maxLength={NOTES_CHAR_LIMIT}
-              textAlignVertical="top"
+              <View style={styles.timeField}>
+                <Text style={styles.fieldLabel}>Time ended</Text>
+                <Pressable style={styles.timeButton} onPress={openEndPicker}>
+                  <Text
+                    style={
+                      form.endedAt ? styles.timeValue : styles.timePlaceholder
+                    }
+                  >
+                    {form.endedAt ? formatTime(form.endedAt) : "Select"}
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+
+            <SelectorGrid
+              label="Environment"
+              options={ENVIRONMENT_OPTIONS}
+              value={form.environment}
+              onChange={form.setEnvironment}
             />
-            <Text style={styles.notesCounter}>
-              {form.notes.length}/{NOTES_CHAR_LIMIT}
-            </Text>
-          </View>
-        </CollapsibleSection>
+
+            <SelectorGrid
+              label="Weather"
+              options={WEATHER_OPTIONS}
+              value={form.weather}
+              onChange={form.setWeather}
+            />
+
+            <View style={styles.notesField}>
+              <Text style={styles.fieldLabel}>Notes</Text>
+              <TextInput
+                style={styles.notesInput}
+                value={form.notes}
+                onChangeText={form.setNotes}
+                placeholder="Anything notable about this walk?"
+                placeholderTextColor="#C8B9A4"
+                multiline
+                maxLength={NOTES_CHAR_LIMIT}
+                textAlignVertical="top"
+              />
+              <Text style={styles.notesCounter}>
+                {form.notes.length}/{NOTES_CHAR_LIMIT}
+              </Text>
+            </View>
+          </CollapsibleSection>
+        </View>
       </ScrollView>
 
       {/* Pickers render OUTSIDE the ScrollView so the spinner's vertical scroll
@@ -270,18 +293,20 @@ export const WalkForm = ({ onClose, onLogged }: Props) => {
         />
       ) : null}
 
-      <Pressable
-        style={({ pressed }) => [
-          { opacity: pressed || form.submitting ? 0.7 : 1 },
-          styles.logButton,
-        ]}
-        onPress={handleSubmit}
-        disabled={form.submitting}
-      >
-        <Text style={styles.logButtonText}>
-          {form.submitting ? "Logging…" : "Log Walk"}
-        </Text>
-      </Pressable>
+      {!readOnly ? (
+        <Pressable
+          style={({ pressed }) => [
+            { opacity: pressed || form.submitting ? 0.7 : 1 },
+            styles.logButton,
+          ]}
+          onPress={handleSubmit}
+          disabled={form.submitting}
+        >
+          <Text style={styles.logButtonText}>
+            {form.submitting ? "Logging…" : "Log Walk"}
+          </Text>
+        </Pressable>
+      ) : null}
     </>
   );
 };

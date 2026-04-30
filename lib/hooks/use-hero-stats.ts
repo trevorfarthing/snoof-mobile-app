@@ -30,7 +30,10 @@ export type HeroStats = {
   loading: boolean;
 };
 
-export const useHeroStats = (petId: string | null, refreshKey = 0): HeroStats => {
+export const useHeroStats = (
+  petId: string | null,
+  refreshKey = 0,
+): HeroStats => {
   const petStoreLoading = usePetStore((s) => s.isLoading);
   const [goalProgress, setGoalProgress] = useState<GoalProgress[]>([]);
   const [upcomingEvent, setUpcomingEvent] = useState<UpcomingEvent>(null);

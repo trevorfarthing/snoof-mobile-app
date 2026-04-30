@@ -28,16 +28,40 @@ const parseManualDurationMinutes = (
   return total > 0 ? total : null;
 };
 
-export const useWalkForm = () => {
-  const [distanceMiles, setDistanceMiles] = useState("");
-  const [hours, setHours] = useState("");
-  const [minutes, setMinutes] = useState("");
-  const [startedAt, setStartedAt] = useState<Date | null>(null);
-  const [endedAt, setEndedAt] = useState<Date | null>(null);
-  const [environment, setEnvironment] = useState<WalkEnvironment | null>(null);
-  const [weather, setWeather] = useState<WalkWeather | null>(null);
-  const [notes, setNotes] = useState("");
-  const [detailsExpanded, setDetailsExpanded] = useState(false);
+export type WalkFormInitialValues = {
+  distanceMiles?: string;
+  hours?: string;
+  minutes?: string;
+  startedAt?: Date | null;
+  endedAt?: Date | null;
+  environment?: WalkEnvironment | null;
+  weather?: WalkWeather | null;
+  notes?: string;
+  detailsExpanded?: boolean;
+};
+
+export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
+  const [distanceMiles, setDistanceMiles] = useState(
+    initialValues?.distanceMiles ?? "",
+  );
+  const [hours, setHours] = useState(initialValues?.hours ?? "");
+  const [minutes, setMinutes] = useState(initialValues?.minutes ?? "");
+  const [startedAt, setStartedAt] = useState<Date | null>(
+    initialValues?.startedAt ?? null,
+  );
+  const [endedAt, setEndedAt] = useState<Date | null>(
+    initialValues?.endedAt ?? null,
+  );
+  const [environment, setEnvironment] = useState<WalkEnvironment | null>(
+    initialValues?.environment ?? null,
+  );
+  const [weather, setWeather] = useState<WalkWeather | null>(
+    initialValues?.weather ?? null,
+  );
+  const [notes, setNotes] = useState(initialValues?.notes ?? "");
+  const [detailsExpanded, setDetailsExpanded] = useState(
+    initialValues?.detailsExpanded ?? false,
+  );
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 

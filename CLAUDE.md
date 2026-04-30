@@ -313,6 +313,7 @@ Snoof's advantages: comprehensive + beautiful + AI-native + dog-first + transpar
 - **Never** use single-line if-statements. Always wrap enclosed code in braces.
 - Use comments where appropriate especially above main blocks of code.
 - **Always** re-use functions, components and constants when possible. If needed, extract parts of components or functions out to their own shared files/folders. For utility functions, use @lib/utils/utils.ts. For constants, use @lib/utils/constants.ts.
+- Prefer re-using types from @types/database/types.ts rather than creating new type definitions when possible.
 
 ### Naming Conventions
 

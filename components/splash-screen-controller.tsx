@@ -3,6 +3,7 @@ import {
   DMMono_500Medium,
 } from "@expo-google-fonts/dm-mono";
 import {
+  Lora_400Regular,
   Lora_500Medium,
   Lora_600SemiBold,
   Lora_700Bold,
@@ -29,6 +30,7 @@ export const SplashScreenController = (): null => {
     Nunito_600SemiBold,
     Nunito_700Bold,
     Nunito_800ExtraBold,
+    Lora_400Regular,
     Lora_500Medium,
     Lora_600SemiBold,
     Lora_700Bold,
