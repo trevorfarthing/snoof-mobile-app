@@ -1,3 +1,4 @@
+import ActionButton from "@/components/ui/action-button";
 import { colors } from "@/constants/colors";
 import * as Haptics from "expo-haptics";
 import { GripHorizontal } from "lucide-react-native";
@@ -132,25 +133,12 @@ export const EditModal = ({
         )}
       </ScrollView>
 
-      <Pressable
-        style={({ pressed }) => [
-          { opacity: pressed ? 0.7 : 1 },
-          styles.doneButton,
-        ]}
-        onPress={handleDone}
-      >
-        <Text style={styles.doneButtonText}>Done</Text>
-      </Pressable>
-
-      <Pressable
-        style={({ pressed }) => [
-          { opacity: pressed ? 0.7 : 1 },
-          styles.restoreButton,
-        ]}
+      <ActionButton onPress={handleDone} label={"Done"} />
+      <ActionButton
         onPress={handleRestoreDefaults}
-      >
-        <Text style={styles.doneButtonText}>Restore Defaults</Text>
-      </Pressable>
+        label={"Restore Defaults"}
+        backgroundColor={colors.textSecondary}
+      />
     </>
   );
 };
@@ -314,24 +302,8 @@ const DraggableItem = ({
             <Text style={styles.availableLabel}>{config.label}</Text>
           </View>
 
-          <Pressable
-            style={{
-              position: "absolute",
-              top: -5,
-              left: -5,
-              width: 16,
-              height: 16,
-              borderRadius: 8,
-              backgroundColor: colors.error,
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 10,
-            }}
-            onPress={onRemove}
-          >
-            <Text style={{ color: "#fff", fontSize: 9, fontWeight: "700" }}>
-              ✕
-            </Text>
+          <Pressable style={styles.xButton} onPress={onRemove}>
+            <Text style={styles.xButtonText}>✕</Text>
           </Pressable>
         </View>
       </ReAnimated.View>

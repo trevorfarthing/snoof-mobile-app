@@ -96,16 +96,4 @@ export const styles = StyleSheet.create({
     textAlign: "right",
     marginTop: spacing[1],
   },
-  logButton: {
-    backgroundColor: colors.primary,
-    borderRadius: radii.md,
-    paddingVertical: 14,
-    alignItems: "center",
-    marginTop: spacing[2],
-  },
-  logButtonText: {
-    fontFamily: fonts.nunitoBold,
-    fontSize: fontSizes.body,
-    color: "#fff",
-  },
 });

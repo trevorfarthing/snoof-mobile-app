@@ -1,3 +1,4 @@
+import ActionButton from "@/components/ui/action-button";
 import { colors } from "@/constants/colors";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -45,19 +46,11 @@ export const MoreModal = ({ onClose, onLogged, openModal }: MoreModalProps) => {
         />
       </ScrollView>
 
-      <Pressable
-        style={({ pressed }) => [
-          styles.logButton,
-          !selected && styles.logButtonDisabled,
-          pressed && selected && styles.logButtonPressed,
-        ]}
+      <ActionButton
         onPress={handleLog}
+        label={selected ? `Log ${ACTIVITY_CONFIG[selected].label}` : "Log now"}
         disabled={!selected}
-      >
-        <Text style={styles.logButtonText}>
-          {selected ? `Log ${ACTIVITY_CONFIG[selected].label}` : "Log now"}
-        </Text>
-      </Pressable>
+      />
     </>
   );
 };

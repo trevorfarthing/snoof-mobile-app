@@ -1,3 +1,4 @@
+import ActionButton from "@/components/ui/action-button";
 import {
   useWalkForm,
   type WalkFormInitialValues,
@@ -293,20 +294,12 @@ export const WalkForm = ({
         />
       ) : null}
 
-      {/* TODO: Replace all instances in forms with ActionButton */}
       {!readOnly ? (
-        <Pressable
-          style={({ pressed }) => [
-            { opacity: pressed || form.submitting ? 0.7 : 1 },
-            styles.logButton,
-          ]}
+        <ActionButton
           onPress={handleSubmit}
+          label={form.submitting ? "Logging…" : "Log Walk"}
           disabled={form.submitting}
-        >
-          <Text style={styles.logButtonText}>
-            {form.submitting ? "Logging…" : "Log Walk"}
-          </Text>
-        </Pressable>
+        />
       ) : null}
     </>
   );

@@ -82,24 +82,6 @@ export const styles = StyleSheet.create({
     color: colors.textSecondary,
     textAlign: "center",
   },
-  doneButton: {
-    backgroundColor: colors.primary,
-    borderRadius: radii.md,
-    paddingVertical: 14,
-    alignItems: "center",
-  },
-  doneButtonText: {
-    fontFamily: fonts.nunitoBold,
-    fontSize: fontSizes.body,
-    color: "#fff",
-  },
-  restoreButton: {
-    backgroundColor: colors.accentSage,
-    borderRadius: radii.md,
-    paddingVertical: fontSizes.body,
-    alignItems: "center",
-    marginTop: spacing[3],
-  },
   dragging: {
     shadowColor: "#3D3224",
     shadowOffset: { width: 0, height: 4 },
@@ -107,5 +89,22 @@ export const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
     zIndex: 100,
+  },
+  xButton: {
+    position: "absolute",
+    top: -5,
+    left: -5,
+    width: 18,
+    height: 18,
+    borderRadius: 10,
+    backgroundColor: colors.error,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 10,
+  },
+  xButtonText: {
+    color: "#fff",
+    fontSize: fontSizes.minimum,
+    fontWeight: "700",
   },
 });

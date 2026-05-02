@@ -50,22 +50,4 @@ export const styles = StyleSheet.create({
     color: colors.primary,
     fontFamily: fonts.nunitoBold,
   },
-  logButton: {
-    backgroundColor: colors.primary,
-    borderRadius: radii.md,
-    paddingVertical: 14,
-    alignItems: "center",
-    marginTop: spacing[2],
-  },
-  logButtonDisabled: {
-    opacity: 0.4,
-  },
-  logButtonPressed: {
-    opacity: 0.7,
-  },
-  logButtonText: {
-    fontFamily: fonts.nunitoBold,
-    fontSize: fontSizes.body,
-    color: "#fff",
-  },
 });

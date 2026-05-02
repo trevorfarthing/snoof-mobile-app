@@ -1,3 +1,4 @@
+import ActionButton from "@/components/ui/action-button";
 import {
   useFeedingForm,
   type FeedingFormInitialValues,
@@ -241,18 +242,11 @@ export const FeedingForm = ({
       ) : null}
 
       {!readOnly ? (
-        <Pressable
-          style={({ pressed }) => [
-            { opacity: pressed || form.submitting ? 0.7 : 1 },
-            styles.logButton,
-          ]}
+        <ActionButton
           onPress={handleSubmit}
+          label={form.submitting ? "Logging…" : "Log Feeding"}
           disabled={form.submitting}
-        >
-          <Text style={styles.logButtonText}>
-            {form.submitting ? "Logging…" : "Log Feeding"}
-          </Text>
-        </Pressable>
+        />
       ) : null}
     </>
   );

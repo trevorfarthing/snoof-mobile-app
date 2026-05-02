@@ -1,3 +1,4 @@
+import ActionButton from "@/components/ui/action-button";
 import {
   usePottyForm,
   type PottyFormInitialValues,
@@ -145,18 +146,11 @@ export const PottyForm = ({
       </ScrollView>
 
       {!readOnly ? (
-        <Pressable
-          style={({ pressed }) => [
-            { opacity: pressed || form.submitting ? 0.7 : 1 },
-            styles.logButton,
-          ]}
+        <ActionButton
           onPress={handleSubmit}
+          label={form.submitting ? "Logging…" : "Log Potty"}
           disabled={form.submitting}
-        >
-          <Text style={styles.logButtonText}>
-            {form.submitting ? "Logging…" : "Log Potty"}
-          </Text>
-        </Pressable>
+        />
       ) : null}
     </>
   );
