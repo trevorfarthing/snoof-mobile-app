@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     gap: 6,
   },
   tile: {
-    width: "18.5%",
+    width: "23%",
     alignItems: "center",
     gap: 5,
     paddingVertical: 10,

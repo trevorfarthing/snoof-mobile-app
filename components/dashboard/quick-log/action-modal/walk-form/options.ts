@@ -1,6 +1,7 @@
 import {
   Building2,
   Cloud,
+  CloudFog,
   CloudRain,
   CloudSnow,
   CloudSun,
@@ -18,7 +19,8 @@ export type WalkWeather =
   | "partly_cloudy"
   | "overcast"
   | "rain"
-  | "snow";
+  | "snow"
+  | "fog";
 
 export const ENVIRONMENT_OPTIONS: SelectorOption<WalkEnvironment>[] = [
   { value: "city", label: "City", Icon: Building2 },
@@ -34,4 +36,5 @@ export const WEATHER_OPTIONS: SelectorOption<WalkWeather>[] = [
   { value: "overcast", label: "Overcast", Icon: Cloud },
   { value: "rain", label: "Rain", Icon: CloudRain },
   { value: "snow", label: "Snow", Icon: CloudSnow },
+  { value: "fog", label: "Fog", Icon: CloudFog },
 ];
