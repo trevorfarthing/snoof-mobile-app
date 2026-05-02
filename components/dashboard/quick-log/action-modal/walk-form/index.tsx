@@ -177,7 +177,7 @@ export const WalkForm = ({
                 <TextInput
                   style={styles.distanceInput}
                   value={form.distanceMiles}
-                  onChangeText={form.setDistanceMiles} // TODO: Validate this to 2 decimal places and prevent non-numeric input onChange
+                  onChangeText={form.onChangeDistance}
                   keyboardType="decimal-pad"
                   placeholder="0.0"
                   placeholderTextColor="#C8B9A4"

@@ -59,6 +59,14 @@ export const useFeedingForm = (initialValues?: FeedingFormInitialValues) => {
     setSubmitting(false);
   };
 
+  const onChangeAmount = (text: string) => {
+    // Validate only 2 decimal places
+    const validated = text.match(/^\d*\.?\d{0,2}/);
+    if (validated) {
+      setAmount(validated[0]);
+    }
+  };
+
   const submit = async ({
     petId,
     householdId,
@@ -146,5 +154,6 @@ export const useFeedingForm = (initialValues?: FeedingFormInitialValues) => {
     submitting,
     submit,
     reset,
+    onChangeAmount,
   };
 };

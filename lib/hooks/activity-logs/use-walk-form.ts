@@ -140,6 +140,14 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     setSubmitting(false);
   };
 
+  const onChangeDistance = (text: string) => {
+    // Validate only 2 decimal places
+    const validated = text.match(/^\d*\.?\d{0,2}/);
+    if (validated) {
+      setDistanceMiles(validated[0]);
+    }
+  };
+
   const submit = async ({
     petId,
     householdId,
@@ -242,5 +250,6 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     computedDurationMinutes,
     submit,
     reset,
+    onChangeDistance,
   };
 };

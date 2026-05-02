@@ -152,7 +152,7 @@ export const FeedingForm = ({
                 <TextInput
                   style={styles.amountInput}
                   value={form.amount}
-                  onChangeText={form.setAmount} // TODO: Validate this to 2 decimal places and prevent non-numeric input onChange
+                  onChangeText={form.onChangeAmount}
                   keyboardType="decimal-pad"
                   placeholder="0"
                   placeholderTextColor="#C8B9A4"

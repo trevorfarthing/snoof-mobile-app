@@ -100,6 +100,7 @@ export const PottyForm = ({
                 style={styles.locationInput}
                 value={form.location}
                 onChangeText={form.setLocation}
+                maxLength={150}
                 placeholder="Backyard, sidewalk, etc."
                 placeholderTextColor="#C8B9A4"
               />
