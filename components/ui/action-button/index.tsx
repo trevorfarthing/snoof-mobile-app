@@ -1,10 +1,5 @@
-import {
-  Pressable,
-  PressableStateCallbackType,
-  StyleProp,
-  Text,
-  ViewStyle,
-} from "react-native";
+import { colors } from "@/constants/colors";
+import { Pressable, StyleProp, Text, ViewStyle } from "react-native";
 import { styles } from "./styles";
 
 type ActionButtonProps = {
@@ -12,9 +7,8 @@ type ActionButtonProps = {
   onPress: () => void;
   backgroundColor?: string;
   disabled?: boolean;
-  style?:
-    | StyleProp<ViewStyle>
-    | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>);
+  style?: StyleProp<ViewStyle>;
+  isTextButton?: boolean;
 };
 
 const ActionButton = ({
@@ -23,6 +17,7 @@ const ActionButton = ({
   backgroundColor,
   disabled,
   style,
+  isTextButton,
 }: ActionButtonProps) => {
   return (
     <Pressable
@@ -33,11 +28,20 @@ const ActionButton = ({
           backgroundColor:
             backgroundColor ?? styles.actionButton.backgroundColor,
         },
+        { ...(isTextButton ? { backgroundColor: colors.transparent } : {}) },
+        style,
       ]}
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={styles.actionButtonText}>{label}</Text>
+      <Text
+        style={{
+          ...styles.actionButtonText,
+          ...(isTextButton ? { color: colors.textPrimary } : {}),
+        }}
+      >
+        {label}
+      </Text>
     </Pressable>
   );
 };

@@ -5,14 +5,7 @@ import type {
 } from "@/components/dashboard/quick-log/action-modal/feeding-form/options";
 import { supabase } from "@/lib/utils/supabase";
 import { useState } from "react";
-
-type SubmitParams = {
-  petId: string;
-  householdId: string;
-  userId: string;
-};
-
-type SubmitResult = { error: string | null };
+import { SubmitParams, SubmitResult } from "./types";
 
 export type FeedingFormInitialValues = {
   foodType?: FeedingFoodType | null;

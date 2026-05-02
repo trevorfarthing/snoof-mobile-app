@@ -135,6 +135,7 @@ export const WalkForm = ({
       householdId: activePet.household_id,
       userId,
     });
+
     if (error) {
       return;
     }
@@ -301,6 +302,24 @@ export const WalkForm = ({
           disabled={form.submitting}
         />
       ) : null}
+
+      {editing && (
+        <>
+          <ActionButton
+            onPress={handleSubmit}
+            label={form.submitting ? "Updating..." : "Update Log"}
+            disabled={form.submitting}
+          />
+          <ActionButton
+            onPress={() => {
+              onClose?.();
+            }}
+            label="Cancel"
+            isTextButton={true}
+            disabled={form.submitting}
+          />
+        </>
+      )}
     </>
   );
 };

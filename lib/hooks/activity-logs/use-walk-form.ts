@@ -4,14 +4,7 @@ import type {
 } from "@/components/dashboard/quick-log/action-modal/walk-form/options";
 import { supabase } from "@/lib/utils/supabase";
 import { useMemo, useState } from "react";
-
-type SubmitParams = {
-  petId: string;
-  householdId: string;
-  userId: string;
-};
-
-type SubmitResult = { error: string | null };
+import { SubmitParams, SubmitResult } from "./types";
 
 const METERS_PER_MILE = 1609.344;
 

@@ -12,6 +12,7 @@ export const colors = {
   bgElevated: "#F2EDE6",
   bgSubtle: "#F3EDE4",
   bgWarm: "#EDE5D8",
+  transparent: "rgba(255,255,255,0)",
 
   // Text
   textPrimary: "#3D3224",

@@ -312,7 +312,7 @@ Snoof's advantages: comprehensive + beautiful + AI-native + dog-first + transpar
 - **Always** use ES6 arrow functions (`const func = () => {}` instead of `function func() {}`)
 - **Never** use single-line if-statements. Always wrap enclosed code in braces.
 - Use comments where appropriate especially above main blocks of code.
-- **Always** re-use functions, components and constants when possible. If needed, extract parts of components or functions out to their own shared files/folders. For utility functions, use @lib/utils/utils.ts. For constants, use @lib/utils/constants.ts.
+- **Always** re-use functions, components, types and constants when possible. If needed, extract parts of components or functions out to their own shared files/folders. For utility functions, use @lib/utils/utils.ts. For constants, use @lib/utils/constants.ts.
 - Prefer re-using types from @types/database/types.ts rather than creating new type definitions when possible.
 - When styling components, use colors / spacing constants from @constants/colors.ts and fonts / font sizes from @constants/fonts.ts
 

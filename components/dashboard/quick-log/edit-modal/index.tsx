@@ -137,7 +137,7 @@ export const EditModal = ({
       <ActionButton
         onPress={handleRestoreDefaults}
         label={"Restore Defaults"}
-        backgroundColor={colors.textSecondary}
+        isTextButton={true}
       />
     </>
   );

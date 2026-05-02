@@ -248,6 +248,24 @@ export const FeedingForm = ({
           disabled={form.submitting}
         />
       ) : null}
+
+      {editing && (
+        <>
+          <ActionButton
+            onPress={handleSubmit}
+            label={form.submitting ? "Updating..." : "Update Log"}
+            disabled={form.submitting}
+          />
+          <ActionButton
+            onPress={() => {
+              onClose?.();
+            }}
+            label="Cancel"
+            isTextButton={true}
+            disabled={form.submitting}
+          />
+        </>
+      )}
     </>
   );
 };
