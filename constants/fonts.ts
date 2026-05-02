@@ -6,3 +6,13 @@ export const fonts = {
   lora: "Lora_400Regular",
   loraMedium: "Lora_500Medium",
 };
+
+export const fontSizes = {
+  body: 17,
+  secondary: 15,
+  caption: 13,
+  minimum: 11,
+  header1: 34,
+  header2: 28,
+  header3: 22,
+};

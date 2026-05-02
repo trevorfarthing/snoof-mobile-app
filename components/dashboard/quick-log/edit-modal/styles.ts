@@ -1,5 +1,5 @@
 import { colors, radii, spacing } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   },
   dragHintText: {
     fontFamily: fonts.nunito,
-    fontSize: 11,
+    fontSize: fontSizes.secondary,
     color: colors.textTertiary,
   },
   presetsRow: {
@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 9,
+    fontSize: fontSizes.minimum,
     color: colors.textTertiary,
     letterSpacing: 0.5,
     textTransform: "uppercase",
@@ -78,7 +78,7 @@ export const styles = StyleSheet.create({
   },
   availableLabel: {
     fontFamily: fonts.nunitoSemiBold,
-    fontSize: 9,
+    fontSize: fontSizes.caption,
     color: colors.textSecondary,
     textAlign: "center",
   },
@@ -90,13 +90,13 @@ export const styles = StyleSheet.create({
   },
   doneButtonText: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 15,
+    fontSize: fontSizes.body,
     color: "#fff",
   },
   restoreButton: {
     backgroundColor: colors.accentSage,
     borderRadius: radii.md,
-    paddingVertical: 14,
+    paddingVertical: fontSizes.body,
     alignItems: "center",
     marginTop: spacing[3],
   },

@@ -1,5 +1,5 @@
 import { colors, radii, spacing } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 9,
+    fontSize: fontSizes.minimum,
     color: colors.textTertiary,
     letterSpacing: 0.5,
     textTransform: "uppercase",
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing[3],
     paddingVertical: 10,
     fontFamily: fonts.nunito,
-    fontSize: 14,
+    fontSize: fontSizes.secondary,
     color: colors.textPrimary,
   },
   accidentRow: {
@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontFamily: fonts.nunitoSemiBold,
-    fontSize: 14,
+    fontSize: fontSizes.secondary,
     color: colors.textPrimary,
   },
   notesField: {
@@ -64,19 +64,19 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     minHeight: 80,
     fontFamily: fonts.nunito,
-    fontSize: 14,
+    fontSize: fontSizes.secondary,
     color: colors.textPrimary,
   },
   notesCounter: {
     fontFamily: fonts.nunito,
-    fontSize: 11,
+    fontSize: fontSizes.minimum,
     color: colors.textTertiary,
     textAlign: "right",
     marginTop: spacing[1],
   },
   errorText: {
     fontFamily: fonts.nunitoSemiBold,
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: colors.error,
     marginBottom: spacing[3],
   },
@@ -89,7 +89,7 @@ export const styles = StyleSheet.create({
   },
   logButtonText: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 15,
+    fontSize: fontSizes.body,
     color: "#fff",
   },
 });

@@ -1,5 +1,5 @@
 import { colors, radii } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
   },
   label: {
     fontFamily: fonts.nunitoSemiBold,
-    fontSize: 9,
+    fontSize: fontSizes.caption,
     color: colors.textSecondary,
     textAlign: "center",
   },

@@ -1,4 +1,4 @@
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   avatarInitial: {
-    fontSize: 18,
+    fontSize: fontSizes.body,
     fontFamily: fonts.nunitoBold,
     color: "#ffffff",
   },
@@ -41,19 +41,19 @@ export const styles = StyleSheet.create({
   },
   greeting: {
     fontFamily: fonts.loraMedium,
-    fontSize: 13,
+    fontSize: fontSizes.secondary,
     color: "rgba(255,255,255,0.7)",
     marginBottom: 2,
   },
   petName: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 20,
+    fontSize: fontSizes.header3,
     color: "#ffffff",
     letterSpacing: -0.3,
   },
   subtitle: {
     fontFamily: fonts.nunito,
-    fontSize: 11,
+    fontSize: fontSizes.caption,
     color: "rgba(255,255,255,0.5)",
     marginTop: 1,
   },

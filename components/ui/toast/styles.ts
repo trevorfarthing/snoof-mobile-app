@@ -1,5 +1,5 @@
 import { colors, radii, spacing } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
   },
   message: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 14,
+    fontSize: fontSizes.secondary,
     color: colors.textPrimary,
   },
 });

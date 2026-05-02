@@ -1,5 +1,5 @@
 import { colors, radii, spacing } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   },
   label: {
     fontFamily: fonts.nunitoSemiBold,
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: colors.textTertiary,
     textTransform: "uppercase",
     letterSpacing: 0.6,
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 12,
+    fontSize: fontSizes.secondary,
     color: colors.primary,
   },
 });

@@ -1,5 +1,5 @@
 import { colors, spacing } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -15,14 +15,14 @@ export const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 10,
+    fontSize: fontSizes.minimum,
     color: colors.textTertiary,
     letterSpacing: 0.7,
     textTransform: "uppercase",
   },
   editLink: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 12,
+    fontSize: fontSizes.secondary,
     color: colors.primary,
   },
   row: {

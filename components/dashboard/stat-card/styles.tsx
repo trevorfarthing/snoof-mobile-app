@@ -1,5 +1,5 @@
 import { colors } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -22,13 +22,13 @@ export const styles = StyleSheet.create({
   },
   value: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 13,
+    fontSize: fontSizes.secondary,
     color: "#ffffff",
     letterSpacing: -0.2,
   },
   label: {
     fontFamily: fonts.nunito,
-    fontSize: 10,
+    fontSize: fontSizes.caption,
     color: "rgba(255,255,255,0.5)",
     marginTop: 2,
   },

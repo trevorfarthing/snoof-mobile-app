@@ -1,5 +1,5 @@
 import { colors, radii, spacing } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -15,20 +15,20 @@ export const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 10,
+    fontSize: fontSizes.minimum,
     color: colors.textTertiary,
     letterSpacing: 0.7,
     textTransform: "uppercase",
   },
   viewAllLink: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 12,
+    fontSize: fontSizes.secondary,
     color: colors.primary,
   },
   empty: {
     paddingVertical: spacing[4],
     fontFamily: fonts.nunito,
-    fontSize: 13,
+    fontSize: fontSizes.caption,
     color: colors.textTertiary,
     textAlign: "center",
   },
@@ -64,12 +64,12 @@ export const styles = StyleSheet.create({
   label: {
     flex: 1,
     fontFamily: fonts.nunito,
-    fontSize: 14,
+    fontSize: fontSizes.secondary,
     color: colors.textPrimary,
   },
   time: {
     fontFamily: fonts.nunito,
-    fontSize: 13,
+    fontSize: fontSizes.secondary,
     color: colors.textSecondary,
   },
 });

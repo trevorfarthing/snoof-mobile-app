@@ -1,5 +1,5 @@
 import { colors, radii, spacing } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
   },
   placeholderText: {
     fontFamily: fonts.nunito,
-    fontSize: 14,
+    fontSize: fontSizes.secondary,
     color: colors.textTertiary,
     textAlign: "center",
   },
@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   },
   logButtonText: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 15,
+    fontSize: fontSizes.body,
     color: "#fff",
   },
 });

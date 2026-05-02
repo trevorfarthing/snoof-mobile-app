@@ -1,5 +1,5 @@
 import { colors, radii, spacing } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -41,13 +41,13 @@ export const styles = StyleSheet.create({
   },
   petAvatarInitial: {
     fontFamily: fonts.nunitoSemiBold,
-    fontSize: 11,
+    fontSize: fontSizes.caption,
     fontWeight: "600",
     color: colors.textInverse,
   },
   petName: {
     fontFamily: fonts.nunitoSemiBold,
-    fontSize: 13,
+    fontSize: fontSizes.secondary,
     fontWeight: "600",
     color: colors.textPrimary,
   },

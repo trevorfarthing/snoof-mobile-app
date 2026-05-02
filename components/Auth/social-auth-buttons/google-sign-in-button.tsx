@@ -1,4 +1,5 @@
 import { expo } from "@/app.json";
+import { fontSizes } from "@/constants/fonts";
 import { supabase } from "@/lib/utils/supabase";
 import { Image } from "expo-image";
 import * as WebBrowser from "expo-web-browser";
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     height: 20,
   },
   text: {
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: "#757575",
     fontWeight: "500",
   },

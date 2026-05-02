@@ -1,7 +1,8 @@
+import ActionButton from "@/components/ui/action-button";
 import type { FeedingFormInitialValues } from "@/lib/hooks/activity-logs/use-feeding-form";
 import type { PottyFormInitialValues } from "@/lib/hooks/activity-logs/use-potty-form";
 import type { WalkFormInitialValues } from "@/lib/hooks/activity-logs/use-walk-form";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { ACTIVITY_CONFIG, ActivityType } from "../activity-config";
 import { FeedingForm } from "./feeding-form";
 import { PottyForm } from "./potty-form";
@@ -109,15 +110,7 @@ const PlaceholderForm = ({
         </Text>
       </View>
 
-      <Pressable
-        style={({ pressed }) => [
-          { opacity: pressed ? 0.7 : 1 },
-          styles.logButton,
-        ]}
-        onPress={handleLog}
-      >
-        <Text style={styles.logButtonText}>Log {label}</Text>
-      </Pressable>
+      <ActionButton label={`Log ${label}`} onPress={handleLog} />
     </>
   );
 };

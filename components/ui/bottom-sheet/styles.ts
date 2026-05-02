@@ -1,5 +1,5 @@
 import { colors, radii, spacing } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -26,13 +26,13 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.textPrimary,
     marginBottom: 2,
   },
   subtitle: {
     fontFamily: fonts.nunito,
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: colors.textTertiary,
     marginBottom: spacing[3],
   },

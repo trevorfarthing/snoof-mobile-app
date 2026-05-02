@@ -1,5 +1,5 @@
 import { colors, radii, spacing } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
+import { fonts, fontSizes } from "@/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -19,13 +19,13 @@ export const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontFamily: fonts.nunitoBold,
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.textPrimary,
     padding: 0,
   },
   suffix: {
     fontFamily: fonts.nunitoSemiBold,
-    fontSize: 13,
+    fontSize: fontSizes.caption,
     color: colors.textTertiary,
   },
   containerDisabled: {
@@ -39,12 +39,12 @@ export const styles = StyleSheet.create({
   },
   disabledValue: {
     fontFamily: fonts.nunitoBold,
-    fontSize: 16,
+    fontSize: fontSizes.body,
     color: colors.textPrimary,
   },
   disabledHint: {
     fontFamily: fonts.nunito,
-    fontSize: 11,
+    fontSize: fontSizes.caption,
     color: colors.textTertiary,
   },
 });

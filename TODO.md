@@ -12,6 +12,7 @@
 - Badges / achievements for the more things you do in the app
 - Animate the progress bars for goals increasing after you log an activity
 - Fade transition between SVG hero backgrounds when time changes
+- Add haptics everywhere that needs it
 
 ## Refactor
 
@@ -20,3 +21,8 @@
 - Create shared button component that's reused across forms
 - Set up Supabase Realtime in some areas to sync households between users
 - CREATE TESTS
+
+## Bugs
+
+- Number input on Walk distance/duration hides the whole card when you type in number
+- After selecting a time started / ended, if you click on another field without clicking the time field again, the time selector doesn't close
