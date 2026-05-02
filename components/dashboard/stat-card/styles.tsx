@@ -12,8 +12,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 12,
     overflow: "hidden",
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "rgba(255,255,255,0.08)",
+    borderColor: "1px solid rgba(255, 255, 255, 0.3)",
+    borderWidth: 0.7,
+    boxShadow:
+      "inset 0 4px 20px rgba(255, 255, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.1)",
   },
   card: {
     flex: 1,

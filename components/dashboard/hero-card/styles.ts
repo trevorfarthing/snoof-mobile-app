@@ -27,9 +27,11 @@ export const styles = StyleSheet.create({
     borderRadius: 24,
     overflow: "hidden",
     borderWidth: 2,
-    borderColor: "rgba(255,255,255,0.25)",
+    borderColor: "rgba(255,255,255,0.3)",
     alignItems: "center",
     justifyContent: "center",
+    boxShadow:
+      "inset 0 4px 20px rgba(255, 255, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.1)",
   },
   avatarInitial: {
     fontSize: fontSizes.body,
