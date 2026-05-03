@@ -1,4 +1,5 @@
 import ActionButton from "@/components/ui/action-button";
+import { useDeleteActivityLog } from "@/lib/hooks/activity-logs/use-delete-activity-log";
 import {
   useFeedingForm,
   type FeedingFormInitialValues,
@@ -11,6 +12,7 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import { useRef, useState } from "react";
 import {
+  Alert,
   Platform,
   Pressable,
   ScrollView,
@@ -43,6 +45,7 @@ export const FeedingForm = ({
   const { activePet } = usePetStore();
   const { session } = useAuthContext();
   const form = useFeedingForm(initialValues);
+  const deleteHook = useDeleteActivityLog();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const inputsDisabled = readOnly && !editing;
@@ -94,6 +97,49 @@ export const FeedingForm = ({
     onClose();
   };
 
+  const handleUpdate = async () => {
+    if (!activePet || !userId) {
+      form.setError("You must be signed in with an active pet");
+      return;
+    }
+    const { error } = await form.update({
+      petId: activePet.id,
+      householdId: activePet.household_id,
+      userId,
+    });
+    if (error) {
+      return;
+    }
+    onLogged?.();
+    onClose();
+  };
+
+  const handleDelete = () => {
+    if (!form.activityLogId) {
+      return;
+    }
+    Alert.alert(
+      "Delete this feeding log?",
+      "It will disappear for everyone in your household.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            const { error } = await deleteHook.remove(form.activityLogId!);
+            if (error) {
+              form.setError(error);
+              return;
+            }
+            onLogged?.();
+            onClose();
+          },
+        },
+      ],
+    );
+  };
+
   // Bound the picker to today so users can backfill earlier in the day but
   // can't pick a future time or wander to other days.
   const dayStart = new Date();
@@ -110,7 +156,11 @@ export const FeedingForm = ({
         keyboardShouldPersistTaps="handled"
       >
         {readOnly ? (
-          <ReadOnlyBanner editing={editing} onEdit={() => setEditing(true)} />
+          <ReadOnlyBanner
+            editing={editing}
+            onEdit={() => setEditing(true)}
+            onDelete={handleDelete}
+          />
         ) : null}
         <View
           pointerEvents={inputsDisabled ? "none" : "auto"}
@@ -252,7 +302,7 @@ export const FeedingForm = ({
       {editing && (
         <>
           <ActionButton
-            onPress={handleSubmit}
+            onPress={handleUpdate}
             label={form.submitting ? "Updating..." : "Update Log"}
             disabled={form.submitting}
           />

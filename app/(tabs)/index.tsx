@@ -48,6 +48,14 @@ const DashboardScreen = () => {
 
   const closeViewModal = useCallback(() => setViewingLog(null), []);
 
+  // Edit and delete from the view-modal both flow through onLogged: the form
+  // calls it after a successful update or delete. Bumping refreshKey reloads
+  // HeroCard daily stats and refetches today's logs — same path as creation.
+  const handleViewModalChanged = useCallback(() => {
+    onRefresh();
+    closeViewModal();
+  }, [onRefresh, closeViewModal]);
+
   const viewInitialValues = useMemo(
     () => (viewingLog ? mapLogToInitialValues(viewingLog) : undefined),
     [viewingLog],
@@ -80,6 +88,7 @@ const DashboardScreen = () => {
           <ActionModal
             activityType={viewingLog.type}
             onClose={closeViewModal}
+            onLogged={handleViewModalChanged}
             readOnly
             initialValues={viewInitialValues}
           />

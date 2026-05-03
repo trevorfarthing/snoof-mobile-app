@@ -22,6 +22,7 @@ const parseManualDurationMinutes = (
 };
 
 export type WalkFormInitialValues = {
+  id?: string;
   distanceMiles?: string;
   hours?: string;
   minutes?: string;
@@ -34,6 +35,7 @@ export type WalkFormInitialValues = {
 };
 
 export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
+  const activityLogId = initialValues?.id ?? null;
   const [distanceMiles, setDistanceMiles] = useState(
     initialValues?.distanceMiles ?? "",
   );
@@ -141,6 +143,46 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     }
   };
 
+  // Shared between submit (insert) and update — produces only the mutable
+  // field payloads. Caller adds immutable fields (pet_id, household_id, etc.)
+  // for inserts.
+  const buildPayloads = () => {
+    // `walks.distance_meters` is decimal(10,2); round to 2 decimals to match.
+    const distanceMeters =
+      distanceMiles.trim() === ""
+        ? null
+        : Math.round(Number(distanceMiles) * METERS_PER_MILE * 100) / 100;
+    const durationMin = effectiveDurationMinutes;
+    const durationSec = durationMin !== null ? durationMin * 60 : null;
+    // Prefer the user's stated start time as the canonical "when" for the log;
+    // fall back to end time, then to now.
+    const occurredAt = startedAt ?? endedAt ?? new Date();
+    const trimmedNotes = notes.trim();
+
+    const metadata: Record<string, string> = {};
+    if (environment) {
+      metadata.environment = environment;
+    }
+    if (weather) {
+      metadata.weather = weather;
+    }
+
+    return {
+      occurredAt,
+      log: {
+        occurred_at: occurredAt.toISOString(),
+        notes: trimmedNotes === "" ? null : trimmedNotes,
+      },
+      walk: {
+        started_at: (startedAt ?? occurredAt).toISOString(),
+        ended_at: endedAt ? endedAt.toISOString() : null,
+        duration_sec: durationSec,
+        distance_meters: distanceMeters,
+        metadata,
+      },
+    };
+  };
+
   const submit = async ({
     petId,
     householdId,
@@ -154,17 +196,7 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     setError(null);
     setSubmitting(true);
 
-    // `walks.distance_meters` is decimal(10,2); round to 2 decimals to match.
-    const distanceMeters =
-      distanceMiles.trim() === ""
-        ? null
-        : Math.round(Number(distanceMiles) * METERS_PER_MILE * 100) / 100;
-    const durationMin = effectiveDurationMinutes;
-    const durationSec = durationMin !== null ? durationMin * 60 : null;
-    // Prefer the user's stated start time as the canonical "when" for the log;
-    // fall back to end time, then to now.
-    const occurredAt = startedAt ?? endedAt ?? new Date();
-    const trimmedNotes = notes.trim();
+    const { log, walk } = buildPayloads();
 
     const { data: logRow, error: logErr } = await supabase
       .from("activity_logs")
@@ -172,9 +204,8 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
         pet_id: petId,
         household_id: householdId,
         type: "walk",
-        occurred_at: occurredAt.toISOString(),
         logged_by: userId,
-        notes: trimmedNotes === "" ? null : trimmedNotes,
+        ...log,
       })
       .select("id")
       .single();
@@ -186,22 +217,10 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
       return { error: msg };
     }
 
-    const metadata: Record<string, string> = {};
-    if (environment) {
-      metadata.environment = environment;
-    }
-    if (weather) {
-      metadata.weather = weather;
-    }
-
     const { error: walkErr } = await supabase.from("walks").insert({
       activity_log_id: logRow.id,
       pet_id: petId,
-      started_at: (startedAt ?? occurredAt).toISOString(),
-      ended_at: endedAt ? endedAt.toISOString() : null,
-      duration_sec: durationSec,
-      distance_meters: distanceMeters,
-      metadata,
+      ...walk,
     });
 
     // If the walks insert fails after the activity_logs insert succeeded we
@@ -217,7 +236,50 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     return { error: null };
   };
 
+  const update = async ({ userId }: SubmitParams): Promise<SubmitResult> => {
+    if (!activityLogId) {
+      const msg = "Missing activity log id";
+      setError(msg);
+      return { error: msg };
+    }
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
+      return { error: validationError };
+    }
+    setError(null);
+    setSubmitting(true);
+
+    const { log, walk } = buildPayloads();
+
+    const { error: logErr } = await supabase
+      .from("activity_logs")
+      .update({ ...log, updated_by: userId })
+      .eq("id", activityLogId);
+
+    if (logErr) {
+      setError(logErr.message);
+      setSubmitting(false);
+      return { error: logErr.message };
+    }
+
+    const { error: walkErr } = await supabase
+      .from("walks")
+      .update(walk)
+      .eq("activity_log_id", activityLogId);
+
+    if (walkErr) {
+      setError(walkErr.message);
+      setSubmitting(false);
+      return { error: walkErr.message };
+    }
+
+    setSubmitting(false);
+    return { error: null };
+  };
+
   return {
+    activityLogId,
     distanceMiles,
     setDistanceMiles,
     hours,
@@ -242,6 +304,7 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     isDurationLocked,
     computedDurationMinutes,
     submit,
+    update,
     reset,
     onChangeDistance,
   };

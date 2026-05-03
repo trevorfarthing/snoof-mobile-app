@@ -16,7 +16,12 @@ export const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 0.6,
   },
-  button: {
+  actions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing[2],
+  },
+  editButton: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
@@ -26,9 +31,26 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.primary,
   },
-  buttonText: {
+  editButtonText: {
     fontFamily: fonts.nunitoBold,
     fontSize: fontSizes.secondary,
     color: colors.primary,
+  },
+  deleteButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: spacing[3],
+    paddingVertical: 6,
+    borderRadius: radii.pill,
+    backgroundColor: colors.error,
+    borderWidth: 1,
+    borderColor: colors.error,
+    gap: 6,
+  },
+  deleteButtonText: {
+    fontFamily: fonts.nunitoBold,
+    fontSize: fontSizes.secondary,
+    color: colors.textInverse,
   },
 });

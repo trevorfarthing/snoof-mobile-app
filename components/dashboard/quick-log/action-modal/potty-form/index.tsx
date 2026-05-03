@@ -1,4 +1,5 @@
 import ActionButton from "@/components/ui/action-button";
+import { useDeleteActivityLog } from "@/lib/hooks/activity-logs/use-delete-activity-log";
 import {
   usePottyForm,
   type PottyFormInitialValues,
@@ -8,7 +9,14 @@ import { usePetStore } from "@/lib/stores/use-pet-store";
 import { NOTES_CHAR_LIMIT } from "@/lib/utils/constants";
 import { Check } from "lucide-react-native";
 import { useState } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { CollapsibleSection } from "../shared/collapsible-section";
 import { MultiSelectorGrid } from "../shared/multi-selector-grid";
 import { ReadOnlyBanner } from "../shared/read-only-banner";
@@ -32,6 +40,7 @@ export const PottyForm = ({
   const { activePet } = usePetStore();
   const { session } = useAuthContext();
   const form = usePottyForm(initialValues);
+  const deleteHook = useDeleteActivityLog();
   const [editing, setEditing] = useState(false);
   const inputsDisabled = readOnly && !editing;
 
@@ -55,6 +64,49 @@ export const PottyForm = ({
     onClose();
   };
 
+  const handleUpdate = async () => {
+    if (!activePet || !userId) {
+      form.setError("You must be signed in with an active pet");
+      return;
+    }
+    const { error } = await form.update({
+      petId: activePet.id,
+      householdId: activePet.household_id,
+      userId,
+    });
+    if (error) {
+      return;
+    }
+    onLogged?.();
+    onClose();
+  };
+
+  const handleDelete = () => {
+    if (!form.activityLogId) {
+      return;
+    }
+    Alert.alert(
+      "Delete this potty log?",
+      "It will disappear for everyone in your household.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            const { error } = await deleteHook.remove(form.activityLogId!);
+            if (error) {
+              form.setError(error);
+              return;
+            }
+            onLogged?.();
+            onClose();
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <>
       <ScrollView
@@ -64,7 +116,11 @@ export const PottyForm = ({
         keyboardShouldPersistTaps="handled"
       >
         {readOnly ? (
-          <ReadOnlyBanner editing={editing} onEdit={() => setEditing(true)} />
+          <ReadOnlyBanner
+            editing={editing}
+            onEdit={() => setEditing(true)}
+            onDelete={handleDelete}
+          />
         ) : null}
         <View
           pointerEvents={inputsDisabled ? "none" : "auto"}
@@ -157,7 +213,7 @@ export const PottyForm = ({
       {editing && (
         <>
           <ActionButton
-            onPress={handleSubmit}
+            onPress={handleUpdate}
             label={form.submitting ? "Updating..." : "Update Log"}
             disabled={form.submitting}
           />

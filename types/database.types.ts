@@ -25,6 +25,8 @@ export type Database = {
           occurred_at: string;
           pet_id: string;
           type: Database["public"]["Enums"]["activity_type"];
+          updated_at: string;
+          updated_by: string | null;
         };
         Insert: {
           created_at?: string;
@@ -36,6 +38,8 @@ export type Database = {
           occurred_at?: string;
           pet_id: string;
           type: Database["public"]["Enums"]["activity_type"];
+          updated_at?: string;
+          updated_by?: string | null;
         };
         Update: {
           created_at?: string;
@@ -47,6 +51,8 @@ export type Database = {
           occurred_at?: string;
           pet_id?: string;
           type?: Database["public"]["Enums"]["activity_type"];
+          updated_at?: string;
+          updated_by?: string | null;
         };
         Relationships: [
           {
@@ -150,6 +156,7 @@ export type Database = {
           id: string;
           meal_label: string | null;
           pet_id: string;
+          updated_at: string;
         };
         Insert: {
           activity_log_id: string;
@@ -161,6 +168,7 @@ export type Database = {
           id?: string;
           meal_label?: string | null;
           pet_id: string;
+          updated_at?: string;
         };
         Update: {
           activity_log_id?: string;
@@ -172,6 +180,7 @@ export type Database = {
           id?: string;
           meal_label?: string | null;
           pet_id?: string;
+          updated_at?: string;
         };
         Relationships: [
           {
@@ -322,6 +331,7 @@ export type Database = {
           pet_id: string;
           skip_reason: string | null;
           skipped: boolean | null;
+          updated_at: string;
         };
         Insert: {
           activity_log_id: string;
@@ -334,6 +344,7 @@ export type Database = {
           pet_id: string;
           skip_reason?: string | null;
           skipped?: boolean | null;
+          updated_at?: string;
         };
         Update: {
           activity_log_id?: string;
@@ -346,6 +357,7 @@ export type Database = {
           pet_id?: string;
           skip_reason?: string | null;
           skipped?: boolean | null;
+          updated_at?: string;
         };
         Relationships: [
           {
@@ -610,6 +622,7 @@ export type Database = {
           location: string | null;
           pet_id: string;
           potty_type: Database["public"]["Enums"]["potty_type"];
+          updated_at: string;
         };
         Insert: {
           activity_log_id: string;
@@ -620,6 +633,7 @@ export type Database = {
           location?: string | null;
           pet_id: string;
           potty_type?: Database["public"]["Enums"]["potty_type"];
+          updated_at?: string;
         };
         Update: {
           activity_log_id?: string;
@@ -630,6 +644,7 @@ export type Database = {
           location?: string | null;
           pet_id?: string;
           potty_type?: Database["public"]["Enums"]["potty_type"];
+          updated_at?: string;
         };
         Relationships: [
           {
@@ -849,6 +864,7 @@ export type Database = {
           pet_id: string;
           route: unknown;
           started_at: string;
+          updated_at: string;
         };
         Insert: {
           activity_log_id: string;
@@ -863,6 +879,7 @@ export type Database = {
           pet_id: string;
           route?: unknown;
           started_at: string;
+          updated_at?: string;
         };
         Update: {
           activity_log_id?: string;
@@ -877,6 +894,7 @@ export type Database = {
           pet_id?: string;
           route?: unknown;
           started_at?: string;
+          updated_at?: string;
         };
         Relationships: [
           {
@@ -904,6 +922,7 @@ export type Database = {
           measured_at: string;
           notes: string | null;
           pet_id: string;
+          updated_at: string;
           weight_lbs: number;
         };
         Insert: {
@@ -914,6 +933,7 @@ export type Database = {
           measured_at?: string;
           notes?: string | null;
           pet_id: string;
+          updated_at?: string;
           weight_lbs: number;
         };
         Update: {
@@ -924,6 +944,7 @@ export type Database = {
           measured_at?: string;
           notes?: string | null;
           pet_id?: string;
+          updated_at?: string;
           weight_lbs?: number;
         };
         Relationships: [

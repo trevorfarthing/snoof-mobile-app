@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
     overflow: "hidden",
   },
   progressFill: {
-    backgroundColor: colors.accentSage,
+    backgroundColor: colors.accentForestGreen,
     borderRadius: 2,
   },
   urgencyDot: {

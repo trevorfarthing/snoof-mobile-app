@@ -28,6 +28,7 @@ export const mapLogToInitialValues = (
 
     return {
       walk: {
+        id: log.id,
         distanceMiles,
         hours,
         minutes,
@@ -45,6 +46,7 @@ export const mapLogToInitialValues = (
     const f = log.feeding;
     return {
       feeding: {
+        id: log.id,
         foodType: (f.food_type as never) ?? null,
         mealLabel: (f.meal_label as never) ?? null,
         foodName: f.food_name ?? "",
@@ -63,6 +65,7 @@ export const mapLogToInitialValues = (
       p.potty_type === "both" ? ["pee", "poo"] : [p.potty_type];
     return {
       potty: {
+        id: log.id,
         pottyTypes,
         consistency: (p.consistency as never) ?? null,
         location: p.location ?? "",

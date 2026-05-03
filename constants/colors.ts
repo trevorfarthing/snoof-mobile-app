@@ -25,6 +25,7 @@ export const colors = {
   accentGold: "#D4A34A",
   accentPeach: "#E8B89D",
   accentCream: "#F5E6C8",
+  accentForestGreen: "#357A39",
 
   // Semantic
   success: "#6B9E6B",

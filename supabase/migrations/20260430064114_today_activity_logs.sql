@@ -71,6 +71,6 @@ BEGIN
     AND al.occurred_at >= today_start
     AND al.occurred_at <  today_end
     AND can_access_pet(al.pet_id)
-  ORDER BY al.occurred_at DESC;
+  ORDER BY al.occurred_at ASC;
 END;
 $$;

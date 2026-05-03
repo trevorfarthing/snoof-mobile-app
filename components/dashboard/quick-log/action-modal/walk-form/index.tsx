@@ -1,4 +1,5 @@
 import ActionButton from "@/components/ui/action-button";
+import { useDeleteActivityLog } from "@/lib/hooks/activity-logs/use-delete-activity-log";
 import {
   useWalkForm,
   type WalkFormInitialValues,
@@ -11,6 +12,7 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import { useRef, useState } from "react";
 import {
+  Alert,
   Platform,
   Pressable,
   ScrollView,
@@ -54,6 +56,7 @@ export const WalkForm = ({
   const { activePet } = usePetStore();
   const { session } = useAuthContext();
   const form = useWalkForm(initialValues);
+  const deleteHook = useDeleteActivityLog();
   const [picker, setPicker] = useState<PickerTarget>(null);
   const [editing, setEditing] = useState(false);
   const inputsDisabled = readOnly && !editing;
@@ -144,6 +147,49 @@ export const WalkForm = ({
     onClose();
   };
 
+  const handleUpdate = async () => {
+    if (!activePet || !userId) {
+      form.setError("You must be signed in with an active pet");
+      return;
+    }
+    const { error } = await form.update({
+      petId: activePet.id,
+      householdId: activePet.household_id,
+      userId,
+    });
+    if (error) {
+      return;
+    }
+    onLogged?.();
+    onClose();
+  };
+
+  const handleDelete = () => {
+    if (!form.activityLogId) {
+      return;
+    }
+    Alert.alert(
+      "Delete this walk log?",
+      "It will disappear for everyone in your household.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            const { error } = await deleteHook.remove(form.activityLogId!);
+            if (error) {
+              form.setError(error);
+              return;
+            }
+            onLogged?.();
+            onClose();
+          },
+        },
+      ],
+    );
+  };
+
   // One-minute buffer on each side so the user can never select equal times.
   const startMax =
     form.endedAt !== null ? subMinutes(form.endedAt, 1) : undefined;
@@ -165,7 +211,11 @@ export const WalkForm = ({
         keyboardShouldPersistTaps="handled"
       >
         {readOnly ? (
-          <ReadOnlyBanner editing={editing} onEdit={() => setEditing(true)} />
+          <ReadOnlyBanner
+            editing={editing}
+            onEdit={() => setEditing(true)}
+            onDelete={handleDelete}
+          />
         ) : null}
         <View
           pointerEvents={inputsDisabled ? "none" : "auto"}
@@ -306,7 +356,7 @@ export const WalkForm = ({
       {editing && (
         <>
           <ActionButton
-            onPress={handleSubmit}
+            onPress={handleUpdate}
             label={form.submitting ? "Updating..." : "Update Log"}
             disabled={form.submitting}
           />

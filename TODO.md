@@ -18,7 +18,6 @@
 
 - Potentially refactor toast to global context/provider
 - Better global refresh trigger: Zustand state or TanStack React Query
-- Create shared button component that's reused across forms
 - Set up Supabase Realtime in some areas to sync households between users
 - CREATE TESTS
 

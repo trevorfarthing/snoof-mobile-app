@@ -26,6 +26,7 @@ const resolvePottyType = (
 };
 
 export type PottyFormInitialValues = {
+  id?: string;
   pottyTypes?: PottyTypeOption[];
   consistency?: PottyConsistency | null;
   location?: string;
@@ -35,6 +36,7 @@ export type PottyFormInitialValues = {
 };
 
 export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
+  const activityLogId = initialValues?.id ?? null;
   const [pottyTypes, setPottyTypes] = useState<PottyTypeOption[]>(
     initialValues?.pottyTypes ?? [],
   );
@@ -82,6 +84,31 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
     setSubmitting(false);
   };
 
+  // Shared between submit (insert) and update — produces only the mutable
+  // field payloads.
+  const buildPayloads = () => {
+    const trimmedNotes = notes.trim();
+    const trimmedLocation = location.trim();
+    const occurred = new Date();
+    const pottyType = resolvePottyType(pottyTypes);
+
+    return {
+      occurred,
+      log: {
+        occurred_at: occurred.toISOString(),
+        notes: trimmedNotes === "" ? null : trimmedNotes,
+      },
+      potty: {
+        // `potty_type` is NOT NULL in the schema; default to "pee" if the user
+        // somehow submits with nothing selected so the row is still valid.
+        potty_type: pottyType ?? "pee",
+        consistency: isPooSelected ? consistency : null,
+        location: trimmedLocation === "" ? null : trimmedLocation,
+        is_accident: isAccident,
+      },
+    };
+  };
+
   const submit = async ({
     petId,
     householdId,
@@ -95,9 +122,7 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
     setError(null);
     setSubmitting(true);
 
-    const trimmedNotes = notes.trim();
-    const trimmedLocation = location.trim();
-    const occurred = new Date();
+    const { log, potty } = buildPayloads();
 
     const { data: logRow, error: logErr } = await supabase
       .from("activity_logs")
@@ -105,9 +130,8 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
         pet_id: petId,
         household_id: householdId,
         type: "potty",
-        occurred_at: occurred.toISOString(),
         logged_by: userId,
-        notes: trimmedNotes === "" ? null : trimmedNotes,
+        ...log,
       })
       .select("id")
       .single();
@@ -119,17 +143,10 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
       return { error: msg };
     }
 
-    const pottyType = resolvePottyType(pottyTypes);
-
     const { error: pottyErr } = await supabase.from("potty_logs").insert({
       activity_log_id: logRow.id,
       pet_id: petId,
-      // `potty_type` is NOT NULL in the schema; default to "pee" if the user
-      // somehow submits with nothing selected so the row is still valid.
-      potty_type: pottyType ?? "pee",
-      consistency: isPooSelected ? consistency : null,
-      location: trimmedLocation === "" ? null : trimmedLocation,
-      is_accident: isAccident,
+      ...potty,
     });
 
     // If the potty_logs insert fails after the activity_logs insert succeeded
@@ -146,7 +163,56 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
     return { error: null };
   };
 
+  const update = async ({ userId }: SubmitParams): Promise<SubmitResult> => {
+    if (!activityLogId) {
+      const msg = "Missing activity log id";
+      setError(msg);
+      return { error: msg };
+    }
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
+      return { error: validationError };
+    }
+    setError(null);
+    setSubmitting(true);
+
+    // Don't overwrite occurred_at on edit — the original log time is the
+    // source of truth and there's no UI to pick it for potty logs.
+    const { potty } = buildPayloads();
+    const trimmedNotes = notes.trim();
+
+    const { error: logErr } = await supabase
+      .from("activity_logs")
+      .update({
+        notes: trimmedNotes === "" ? null : trimmedNotes,
+        updated_by: userId,
+      })
+      .eq("id", activityLogId);
+
+    if (logErr) {
+      setError(logErr.message);
+      setSubmitting(false);
+      return { error: logErr.message };
+    }
+
+    const { error: pottyErr } = await supabase
+      .from("potty_logs")
+      .update(potty)
+      .eq("activity_log_id", activityLogId);
+
+    if (pottyErr) {
+      setError(pottyErr.message);
+      setSubmitting(false);
+      return { error: pottyErr.message };
+    }
+
+    setSubmitting(false);
+    return { error: null };
+  };
+
   return {
+    activityLogId,
     pottyTypes,
     setPottyTypes: handleSetPottyTypes,
     consistency,
@@ -164,6 +230,7 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
     submitting,
     isPooSelected,
     submit,
+    update,
     reset,
   };
 };
