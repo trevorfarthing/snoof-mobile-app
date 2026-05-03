@@ -17,6 +17,25 @@ export const styles = StyleSheet.create({
     textTransform: "uppercase",
     marginBottom: spacing[2],
   },
+  timeField: {
+    marginBottom: spacing[3],
+  },
+  timeButton: {
+    backgroundColor: colors.bgSubtle,
+    borderRadius: radii.md,
+    paddingHorizontal: spacing[3],
+    paddingVertical: 12,
+  },
+  timeValue: {
+    fontFamily: fonts.nunitoBold,
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
+  },
+  timePlaceholder: {
+    fontFamily: fonts.nunitoSemiBold,
+    fontSize: fontSizes.secondary,
+    color: "#C8B9A4",
+  },
   locationField: {
     marginBottom: spacing[3],
   },

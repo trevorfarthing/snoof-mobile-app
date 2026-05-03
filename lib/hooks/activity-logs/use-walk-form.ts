@@ -2,9 +2,9 @@ import type {
   WalkEnvironment,
   WalkWeather,
 } from "@/components/dashboard/quick-log/action-modal/walk-form/options";
-import { supabase } from "@/lib/utils/supabase";
 import { useMemo, useState } from "react";
 import { SubmitParams, SubmitResult } from "./types";
+import { useActivityLogPersistence } from "./use-activity-log-persistence";
 
 const METERS_PER_MILE = 1609.344;
 
@@ -57,8 +57,10 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
   const [detailsExpanded, setDetailsExpanded] = useState(
     initialValues?.detailsExpanded ?? false,
   );
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const persistence = useActivityLogPersistence({
+    type: "walk",
+    childTable: "walks",
+  });
 
   const computedDurationMinutes = useMemo<number | null>(() => {
     if (!startedAt || !endedAt) {
@@ -131,8 +133,7 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     setWeather(null);
     setNotes("");
     setDetailsExpanded(false);
-    setError(null);
-    setSubmitting(false);
+    persistence.setError(null);
   };
 
   const onChangeDistance = (text: string) => {
@@ -143,9 +144,6 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     }
   };
 
-  // Shared between submit (insert) and update — produces only the mutable
-  // field payloads. Caller adds immutable fields (pet_id, household_id, etc.)
-  // for inserts.
   const buildPayloads = () => {
     // `walks.distance_meters` is decimal(10,2); round to 2 decimals to match.
     const distanceMeters =
@@ -168,12 +166,11 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     }
 
     return {
-      occurredAt,
-      log: {
+      logFields: {
         occurred_at: occurredAt.toISOString(),
         notes: trimmedNotes === "" ? null : trimmedNotes,
       },
-      walk: {
+      childFields: {
         started_at: (startedAt ?? occurredAt).toISOString(),
         ended_at: endedAt ? endedAt.toISOString() : null,
         duration_sec: durationSec,
@@ -183,99 +180,31 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     };
   };
 
-  const submit = async ({
-    petId,
-    householdId,
-    userId,
-  }: SubmitParams): Promise<SubmitResult> => {
+  const submit = async (params: SubmitParams): Promise<SubmitResult> => {
     const validationError = validate();
     if (validationError) {
-      setError(validationError);
+      persistence.setError(validationError);
       return { error: validationError };
     }
-    setError(null);
-    setSubmitting(true);
-
-    const { log, walk } = buildPayloads();
-
-    const { data: logRow, error: logErr } = await supabase
-      .from("activity_logs")
-      .insert({
-        pet_id: petId,
-        household_id: householdId,
-        type: "walk",
-        logged_by: userId,
-        ...log,
-      })
-      .select("id")
-      .single();
-
-    if (logErr || !logRow) {
-      const msg = logErr?.message ?? "Failed to save activity log";
-      setError(msg);
-      setSubmitting(false);
-      return { error: msg };
-    }
-
-    const { error: walkErr } = await supabase.from("walks").insert({
-      activity_log_id: logRow.id,
-      pet_id: petId,
-      ...walk,
-    });
-
-    // If the walks insert fails after the activity_logs insert succeeded we
-    // leave an orphan log row. The UNIQUE constraint on walks.activity_log_id
-    // prevents double-writes on retry; a future sweep job can reconcile.
-    if (walkErr) {
-      setError(walkErr.message);
-      setSubmitting(false);
-      return { error: walkErr.message };
-    }
-
-    setSubmitting(false);
-    return { error: null };
+    return persistence.insert({ ...buildPayloads(), ...params });
   };
 
   const update = async ({ userId }: SubmitParams): Promise<SubmitResult> => {
     if (!activityLogId) {
       const msg = "Missing activity log id";
-      setError(msg);
+      persistence.setError(msg);
       return { error: msg };
     }
     const validationError = validate();
     if (validationError) {
-      setError(validationError);
+      persistence.setError(validationError);
       return { error: validationError };
     }
-    setError(null);
-    setSubmitting(true);
-
-    const { log, walk } = buildPayloads();
-
-    const { error: logErr } = await supabase
-      .from("activity_logs")
-      .update({ ...log, updated_by: userId })
-      .eq("id", activityLogId);
-
-    if (logErr) {
-      setError(logErr.message);
-      setSubmitting(false);
-      return { error: logErr.message };
-    }
-
-    const { error: walkErr } = await supabase
-      .from("walks")
-      .update(walk)
-      .eq("activity_log_id", activityLogId);
-
-    if (walkErr) {
-      setError(walkErr.message);
-      setSubmitting(false);
-      return { error: walkErr.message };
-    }
-
-    setSubmitting(false);
-    return { error: null };
+    return persistence.update({
+      activityLogId,
+      userId,
+      ...buildPayloads(),
+    });
   };
 
   return {
@@ -298,9 +227,9 @@ export const useWalkForm = (initialValues?: WalkFormInitialValues) => {
     setNotes,
     detailsExpanded,
     setDetailsExpanded,
-    error,
-    setError,
-    submitting,
+    error: persistence.error,
+    setError: persistence.setError,
+    submitting: persistence.submitting,
     isDurationLocked,
     computedDurationMinutes,
     submit,

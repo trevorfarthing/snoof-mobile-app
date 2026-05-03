@@ -2,9 +2,9 @@ import type {
   PottyConsistency,
   PottyTypeOption,
 } from "@/components/dashboard/quick-log/action-modal/potty-form/options";
-import { supabase } from "@/lib/utils/supabase";
 import { useState } from "react";
 import { SubmitParams, SubmitResult } from "./types";
+import { useActivityLogPersistence } from "./use-activity-log-persistence";
 
 // Maps the multi-select UI values (["pee"], ["poo"], or both) onto the
 // `potty_type` enum stored in the database.
@@ -31,6 +31,7 @@ export type PottyFormInitialValues = {
   consistency?: PottyConsistency | null;
   location?: string;
   isAccident?: boolean;
+  occurredAt?: Date | null;
   notes?: string;
   detailsExpanded?: boolean;
 };
@@ -47,12 +48,17 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
   const [isAccident, setIsAccident] = useState(
     initialValues?.isAccident ?? false,
   );
+  const [occurredAt, setOccurredAt] = useState<Date | null>(
+    initialValues?.occurredAt ?? null,
+  );
   const [notes, setNotes] = useState(initialValues?.notes ?? "");
   const [detailsExpanded, setDetailsExpanded] = useState(
     initialValues?.detailsExpanded ?? false,
   );
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const persistence = useActivityLogPersistence({
+    type: "potty",
+    childTable: "potty_logs",
+  });
 
   const isPooSelected = pottyTypes.includes("poo");
 
@@ -60,7 +66,6 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
     if (!pottyTypes?.length) {
       return "A potty type must be selected";
     }
-
     return null;
   };
 
@@ -78,27 +83,24 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
     setConsistency(null);
     setLocation("");
     setIsAccident(false);
+    setOccurredAt(null);
     setNotes("");
     setDetailsExpanded(false);
-    setError(null);
-    setSubmitting(false);
+    persistence.setError(null);
   };
 
-  // Shared between submit (insert) and update — produces only the mutable
-  // field payloads.
   const buildPayloads = () => {
     const trimmedNotes = notes.trim();
     const trimmedLocation = location.trim();
-    const occurred = new Date();
+    const occurred = occurredAt ?? new Date();
     const pottyType = resolvePottyType(pottyTypes);
 
     return {
-      occurred,
-      log: {
+      logFields: {
         occurred_at: occurred.toISOString(),
         notes: trimmedNotes === "" ? null : trimmedNotes,
       },
-      potty: {
+      childFields: {
         // `potty_type` is NOT NULL in the schema; default to "pee" if the user
         // somehow submits with nothing selected so the row is still valid.
         potty_type: pottyType ?? "pee",
@@ -109,106 +111,31 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
     };
   };
 
-  const submit = async ({
-    petId,
-    householdId,
-    userId,
-  }: SubmitParams): Promise<SubmitResult> => {
+  const submit = async (params: SubmitParams): Promise<SubmitResult> => {
     const validationError = validate();
     if (validationError) {
-      setError(validationError);
+      persistence.setError(validationError);
       return { error: validationError };
     }
-    setError(null);
-    setSubmitting(true);
-
-    const { log, potty } = buildPayloads();
-
-    const { data: logRow, error: logErr } = await supabase
-      .from("activity_logs")
-      .insert({
-        pet_id: petId,
-        household_id: householdId,
-        type: "potty",
-        logged_by: userId,
-        ...log,
-      })
-      .select("id")
-      .single();
-
-    if (logErr || !logRow) {
-      const msg = logErr?.message ?? "Failed to save activity log";
-      setError(msg);
-      setSubmitting(false);
-      return { error: msg };
-    }
-
-    const { error: pottyErr } = await supabase.from("potty_logs").insert({
-      activity_log_id: logRow.id,
-      pet_id: petId,
-      ...potty,
-    });
-
-    // If the potty_logs insert fails after the activity_logs insert succeeded
-    // we leave an orphan log row. The UNIQUE constraint on
-    // potty_logs.activity_log_id prevents double-writes on retry; a future
-    // sweep job can reconcile.
-    if (pottyErr) {
-      setError(pottyErr.message);
-      setSubmitting(false);
-      return { error: pottyErr.message };
-    }
-
-    setSubmitting(false);
-    return { error: null };
+    return persistence.insert({ ...buildPayloads(), ...params });
   };
 
   const update = async ({ userId }: SubmitParams): Promise<SubmitResult> => {
     if (!activityLogId) {
       const msg = "Missing activity log id";
-      setError(msg);
+      persistence.setError(msg);
       return { error: msg };
     }
     const validationError = validate();
     if (validationError) {
-      setError(validationError);
+      persistence.setError(validationError);
       return { error: validationError };
     }
-    setError(null);
-    setSubmitting(true);
-
-    // Don't overwrite occurred_at on edit — the original log time is the
-    // source of truth and there's no UI to pick it for potty logs.
-    const { potty } = buildPayloads();
-    const trimmedNotes = notes.trim();
-
-    const { error: logErr } = await supabase
-      .from("activity_logs")
-      .update({
-        notes: trimmedNotes === "" ? null : trimmedNotes,
-        updated_by: userId,
-      })
-      .eq("id", activityLogId);
-
-    if (logErr) {
-      setError(logErr.message);
-      setSubmitting(false);
-      return { error: logErr.message };
-    }
-
-    const { error: pottyErr } = await supabase
-      .from("potty_logs")
-      .update(potty)
-      .eq("activity_log_id", activityLogId);
-
-    if (pottyErr) {
-      setError(pottyErr.message);
-      setSubmitting(false);
-      return { error: pottyErr.message };
-    }
-
-    setSubmitting(false);
-    return { error: null };
+    return persistence.update({
+      activityLogId,
+      userId,
+      ...buildPayloads(),
+    });
   };
 
   return {
@@ -221,13 +148,15 @@ export const usePottyForm = (initialValues?: PottyFormInitialValues) => {
     setLocation,
     isAccident,
     setIsAccident,
+    occurredAt,
+    setOccurredAt,
     notes,
     setNotes,
     detailsExpanded,
     setDetailsExpanded,
-    error,
-    setError,
-    submitting,
+    error: persistence.error,
+    setError: persistence.setError,
+    submitting: persistence.submitting,
     isPooSelected,
     submit,
     update,

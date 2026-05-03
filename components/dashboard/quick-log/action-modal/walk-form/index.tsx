@@ -1,18 +1,14 @@
 import ActionButton from "@/components/ui/action-button";
-import { useDeleteActivityLog } from "@/lib/hooks/activity-logs/use-delete-activity-log";
 import {
   useWalkForm,
   type WalkFormInitialValues,
 } from "@/lib/hooks/activity-logs/use-walk-form";
-import { useAuthContext } from "@/lib/hooks/use-auth-context";
-import { usePetStore } from "@/lib/stores/use-pet-store";
 import { NOTES_CHAR_LIMIT } from "@/lib/utils/constants";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { useRef, useState } from "react";
 import {
-  Alert,
   Platform,
   Pressable,
   ScrollView,
@@ -24,6 +20,7 @@ import { CollapsibleSection } from "../shared/collapsible-section";
 import { DurationInput } from "../shared/duration-input";
 import { ReadOnlyBanner } from "../shared/read-only-banner";
 import { SelectorGrid } from "../shared/selector-grid";
+import { useLogActions } from "../shared/use-log-actions";
 import { ENVIRONMENT_OPTIONS, WEATHER_OPTIONS } from "./options";
 import { styles } from "./styles";
 
@@ -53,10 +50,13 @@ export const WalkForm = ({
   readOnly = false,
   initialValues,
 }: Props) => {
-  const { activePet } = usePetStore();
-  const { session } = useAuthContext();
   const form = useWalkForm(initialValues);
-  const deleteHook = useDeleteActivityLog();
+  const { handleSubmit, handleUpdate, handleDelete } = useLogActions({
+    form,
+    label: "walk",
+    onLogged,
+    onClose,
+  });
   const [picker, setPicker] = useState<PickerTarget>(null);
   const [editing, setEditing] = useState(false);
   const inputsDisabled = readOnly && !editing;
@@ -68,8 +68,6 @@ export const WalkForm = ({
   // current time.
   const startInitial = useRef<Date>(new Date());
   const endInitial = useRef<Date>(new Date());
-
-  const userId = session?.user?.id;
 
   const openStartPicker = () => {
     if (picker === "start") {
@@ -126,68 +124,6 @@ export const WalkForm = ({
     }
     form.setError(null);
     form.setEndedAt(date);
-  };
-
-  const handleSubmit = async () => {
-    if (!activePet || !userId) {
-      form.setError("You must be signed in with an active pet");
-      return;
-    }
-    const { error } = await form.submit({
-      petId: activePet.id,
-      householdId: activePet.household_id,
-      userId,
-    });
-
-    if (error) {
-      return;
-    }
-    form.reset();
-    onLogged?.();
-    onClose();
-  };
-
-  const handleUpdate = async () => {
-    if (!activePet || !userId) {
-      form.setError("You must be signed in with an active pet");
-      return;
-    }
-    const { error } = await form.update({
-      petId: activePet.id,
-      householdId: activePet.household_id,
-      userId,
-    });
-    if (error) {
-      return;
-    }
-    onLogged?.();
-    onClose();
-  };
-
-  const handleDelete = () => {
-    if (!form.activityLogId) {
-      return;
-    }
-    Alert.alert(
-      "Delete this walk log?",
-      "It will disappear for everyone in your household.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            const { error } = await deleteHook.remove(form.activityLogId!);
-            if (error) {
-              form.setError(error);
-              return;
-            }
-            onLogged?.();
-            onClose();
-          },
-        },
-      ],
-    );
   };
 
   // One-minute buffer on each side so the user can never select equal times.

@@ -70,6 +70,7 @@ export const mapLogToInitialValues = (
         consistency: (p.consistency as never) ?? null,
         location: p.location ?? "",
         isAccident: p.is_accident ?? false,
+        occurredAt: new Date(log.occurredAt),
         notes: log.notes ?? "",
         detailsExpanded: true,
       },

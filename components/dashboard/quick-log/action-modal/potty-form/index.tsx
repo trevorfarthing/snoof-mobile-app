@@ -1,16 +1,16 @@
 import ActionButton from "@/components/ui/action-button";
-import { useDeleteActivityLog } from "@/lib/hooks/activity-logs/use-delete-activity-log";
 import {
   usePottyForm,
   type PottyFormInitialValues,
 } from "@/lib/hooks/activity-logs/use-potty-form";
-import { useAuthContext } from "@/lib/hooks/use-auth-context";
-import { usePetStore } from "@/lib/stores/use-pet-store";
 import { NOTES_CHAR_LIMIT } from "@/lib/utils/constants";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { Check } from "lucide-react-native";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
-  Alert,
+  Platform,
   Pressable,
   ScrollView,
   Text,
@@ -21,6 +21,7 @@ import { CollapsibleSection } from "../shared/collapsible-section";
 import { MultiSelectorGrid } from "../shared/multi-selector-grid";
 import { ReadOnlyBanner } from "../shared/read-only-banner";
 import { SelectorGrid } from "../shared/selector-grid";
+import { useLogActions } from "../shared/use-log-actions";
 import { CONSISTENCY_OPTIONS, POTTY_TYPE_OPTIONS } from "./options";
 import { styles } from "./styles";
 
@@ -31,81 +32,59 @@ type Props = {
   initialValues?: PottyFormInitialValues;
 };
 
+const formatTime = (d: Date): string =>
+  d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+
 export const PottyForm = ({
   onClose,
   onLogged,
   readOnly = false,
   initialValues,
 }: Props) => {
-  const { activePet } = usePetStore();
-  const { session } = useAuthContext();
   const form = usePottyForm(initialValues);
-  const deleteHook = useDeleteActivityLog();
+  const { handleSubmit, handleUpdate, handleDelete } = useLogActions({
+    form,
+    label: "potty",
+    onLogged,
+    onClose,
+  });
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const inputsDisabled = readOnly && !editing;
 
-  const userId = session?.user?.id;
+  // Snapshot of the initial value at picker-open time. Stays referentially
+  // stable for the picker's lifetime — passing form.occurredAt directly creates
+  // a new Date() on every render and resets the iOS spinner's scroll position.
+  const pickerInitial = useRef<Date>(new Date());
 
-  const handleSubmit = async () => {
-    if (!activePet || !userId) {
-      form.setError("You must be signed in with an active pet");
+  const togglePicker = () => {
+    if (pickerOpen) {
+      setPickerOpen(false);
       return;
     }
-    const { error } = await form.submit({
-      petId: activePet.id,
-      householdId: activePet.household_id,
-      userId,
-    });
-    if (error) {
-      return;
-    }
-    form.reset();
-    onLogged?.();
-    onClose();
+    pickerInitial.current = form.occurredAt ?? new Date();
+    setPickerOpen(true);
   };
 
-  const handleUpdate = async () => {
-    if (!activePet || !userId) {
-      form.setError("You must be signed in with an active pet");
+  // Android's DateTimePicker is a one-shot modal — once the user picks or
+  // dismisses, we unmount it. iOS renders the picker as an inline spinner, so
+  // we keep it mounted until the user taps the field again to close.
+  const handleTimeChange = (_: DateTimePickerEvent, date?: Date) => {
+    if (Platform.OS !== "ios") {
+      setPickerOpen(false);
+    }
+    if (!date) {
       return;
     }
-    const { error } = await form.update({
-      petId: activePet.id,
-      householdId: activePet.household_id,
-      userId,
-    });
-    if (error) {
-      return;
-    }
-    onLogged?.();
-    onClose();
+    form.setOccurredAt(date);
   };
 
-  const handleDelete = () => {
-    if (!form.activityLogId) {
-      return;
-    }
-    Alert.alert(
-      "Delete this potty log?",
-      "It will disappear for everyone in your household.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            const { error } = await deleteHook.remove(form.activityLogId!);
-            if (error) {
-              form.setError(error);
-              return;
-            }
-            onLogged?.();
-            onClose();
-          },
-        },
-      ],
-    );
-  };
+  // Bound the picker to today so users can backfill earlier in the day but
+  // can't pick a future time or wander to other days.
+  const dayStart = new Date();
+  dayStart.setHours(0, 0, 0, 0);
+  const dayEnd = new Date();
+  dayEnd.setHours(23, 59, 0, 0);
 
   return (
     <>
@@ -162,6 +141,19 @@ export const PottyForm = ({
               />
             </View>
 
+            <View style={styles.timeField}>
+              <Text style={styles.fieldLabel}>Time</Text>
+              <Pressable style={styles.timeButton} onPress={togglePicker}>
+                <Text
+                  style={
+                    form.occurredAt ? styles.timeValue : styles.timePlaceholder
+                  }
+                >
+                  {form.occurredAt ? formatTime(form.occurredAt) : "Now"}
+                </Text>
+              </Pressable>
+            </View>
+
             <Pressable
               style={({ pressed }) => [
                 styles.accidentRow,
@@ -201,6 +193,19 @@ export const PottyForm = ({
           </CollapsibleSection>
         </View>
       </ScrollView>
+
+      {/* Picker renders OUTSIDE the ScrollView so the spinner's vertical scroll
+          gestures aren't stolen by the parent ScrollView. */}
+      {pickerOpen ? (
+        <DateTimePicker
+          value={pickerInitial.current}
+          mode="time"
+          display={Platform.OS === "ios" ? "spinner" : "default"}
+          onChange={handleTimeChange}
+          minimumDate={dayStart}
+          maximumDate={dayEnd}
+        />
+      ) : null}
 
       {!readOnly ? (
         <ActionButton
