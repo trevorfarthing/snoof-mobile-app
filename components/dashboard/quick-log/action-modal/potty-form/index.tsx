@@ -204,6 +204,7 @@ export const PottyForm = ({
           onChange={handleTimeChange}
           minimumDate={dayStart}
           maximumDate={dayEnd}
+          themeVariant="light" // TODO: Remove this in the future when we allow dark mode
         />
       ) : null}
 

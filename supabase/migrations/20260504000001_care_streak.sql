@@ -417,14 +417,14 @@ BEGIN
   -- than yesterday, the streak has lapsed regardless of what the cache says.
   SELECT
     CASE
-      WHEN last_met_day IS NULL        THEN 0
-      WHEN last_met_day >= v_today - 1 THEN current_streak
+      WHEN ps.last_met_day IS NULL        THEN 0
+      WHEN ps.last_met_day >= v_today - 1 THEN ps.current_streak
       ELSE 0
     END,
-    longest_streak
+    ps.longest_streak
   INTO v_current, v_longest
-  FROM pet_streaks
-  WHERE pet_id = p_pet_id;
+  FROM pet_streaks ps
+  WHERE ps.pet_id = p_pet_id;
 
   v_current := COALESCE(v_current, 0);
   v_longest := COALESCE(v_longest, 0);

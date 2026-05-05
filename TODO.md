@@ -13,6 +13,8 @@
 - Animate the progress bars for goals increasing after you log an activity
 - Fade transition between SVG hero backgrounds when time changes
 - Add haptics everywhere that needs it
+- Add docs for all areas of the app in docs/ folder and CLAUDE.md in various folders
+- Implement dark mode
 
 ## Refactor
 

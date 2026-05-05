@@ -267,6 +267,7 @@ export const WalkForm = ({
           onChange={handleStartChange}
           minimumDate={startMin}
           maximumDate={startMax}
+          themeVariant="light" // TODO: Remove this in the future when we allow dark mode
         />
       ) : null}
 
@@ -278,6 +279,7 @@ export const WalkForm = ({
           onChange={handleEndChange}
           minimumDate={endMin}
           maximumDate={endMax}
+          themeVariant="light" // TODO: Remove this in the future when we allow dark mode
         />
       ) : null}
 

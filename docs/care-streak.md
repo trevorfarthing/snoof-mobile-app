@@ -58,10 +58,10 @@ Each paw is one of three states:
 
 All triggers are statement-level on `AFTER` events. They fire synchronously inside the same transaction as the write, so the streak is up to date by the time the client gets a response.
 
-- `activity_logs_streak_insert`: recomputes the inserted log's local day.
-- `activity_logs_streak_update`: recomputes both the old and new local day (an edit can shift which day a log belongs to).
-- `activity_logs_streak_delete`: recomputes the deleted log's local day.
+- `walks_streak_insert` and `feedings_streak_insert`: recompute when a new walk or feeding is added. These are the real handler for new logs because the client inserts the child row in a separate request after the parent activity_logs row, so an activity_logs INSERT trigger would fire before the goal-relevant data exists.
 - `walks_streak_update` and `feedings_streak_update`: recompute when child-table edits change values that goals depend on (walk distance, walk duration, food type, etc.).
+- `activity_logs_streak_update`: recomputes both the old and new local day. Catches the case where an edit to `occurred_at` shifts which day a log belongs to (the child rows are unchanged in that case, so their triggers wouldn't fire).
+- `activity_logs_streak_delete`: recomputes the deleted log's local day. Handles deletes uniformly for all activity types.
 
 There is intentionally no trigger on `pet_daily_goals` changes. See "Goal changes" below.
 

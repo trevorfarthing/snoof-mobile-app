@@ -33,8 +33,8 @@ export const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: spacing[3],
+    alignItems: "flex-start",
+    marginBottom: spacing[5],
   },
   cardTitle: {
     fontFamily: fonts.nunitoBold,
@@ -56,9 +56,8 @@ export const styles = StyleSheet.create({
   },
   longestText: {
     fontFamily: fonts.nunito,
-    fontSize: fontSizes.minimum,
+    fontSize: fontSizes.caption,
     color: colors.textTertiary,
-    marginTop: 2,
   },
   daysRow: {
     flexDirection: "row",
@@ -71,16 +70,16 @@ export const styles = StyleSheet.create({
   },
   dayLabel: {
     fontFamily: fonts.nunitoBold,
-    fontSize: fontSizes.minimum,
+    fontSize: fontSizes.caption,
     color: colors.textTertiary,
   },
   dayLabelToday: {
     color: colors.primary,
   },
   pawCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 40,
+    height: 40,
+    borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
   },

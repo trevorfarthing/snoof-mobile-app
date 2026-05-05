@@ -38,9 +38,9 @@ const StreakDayCell = ({ day }: StreakDayCellProps) => {
   if (day.status === "met") {
     opacity = 1;
   } else if (day.status === "in_progress") {
-    opacity = 0.5;
+    opacity = 0.7;
   } else {
-    opacity = 0.25;
+    opacity = 0.5;
   }
 
   return (
@@ -79,10 +79,10 @@ export const CareStreakCard = ({
               <Text style={styles.badgeText}>
                 {currentStreak} {currentStreak === 1 ? "day" : "days"}
               </Text>
+              {longestStreak > 0 ? (
+                <Text style={styles.longestText}>| Best: {longestStreak}</Text>
+              ) : null}
             </View>
-            {longestStreak > 0 ? (
-              <Text style={styles.longestText}>Best: {longestStreak}</Text>
-            ) : null}
           </View>
         </View>
 
