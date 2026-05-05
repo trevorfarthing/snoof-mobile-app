@@ -1,8 +1,10 @@
+import { CareStreakCard } from "@/components/dashboard/care-streak-card";
 import { HeroCard } from "@/components/dashboard/hero-card";
 import { QuickLog } from "@/components/dashboard/quick-log";
 import { ActionModal } from "@/components/dashboard/quick-log/action-modal";
 import type { ActivityType } from "@/components/dashboard/quick-log/activity-config";
 import { TodayLogList } from "@/components/dashboard/today-log-list";
+import { useCareStreak } from "@/lib/hooks/use-care-streak";
 import {
   buildOptimisticLog,
   mapLogToInitialValues,
@@ -24,6 +26,7 @@ const DashboardScreen = () => {
   const [viewingLog, setViewingLog] = useState<TodayLog | null>(null);
 
   const todayLogs = useTodayLogs(activePet?.id ?? null, refreshKey);
+  const careStreak = useCareStreak(activePet?.id ?? null, refreshKey);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -76,6 +79,12 @@ const DashboardScreen = () => {
         />
         <QuickLog onRefresh={onRefresh} onLogged={handleLogged} />
         <TodayLogList logs={todayLogs.logs} onRowPress={setViewingLog} />
+        <CareStreakCard
+          days={careStreak.days}
+          currentStreak={careStreak.currentStreak}
+          longestStreak={careStreak.longestStreak}
+          loading={careStreak.loading}
+        />
       </ScrollView>
 
       <BottomSheet

@@ -19,7 +19,7 @@
 - Potentially refactor toast to global context/provider
 - Better global refresh trigger: Zustand state or TanStack React Query
 - Set up Supabase Realtime in some areas to sync households between users
-- CREATE TESTS
+- CREATE TESTS - Playwright? pgTAP?
 
 ## Bugs
 

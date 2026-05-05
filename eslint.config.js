@@ -18,6 +18,7 @@ export default defineConfig([
       "unicorn/no-negated-condition": "off",
       "unicorn/no-null": "off",
       "unicorn/prevent-abbreviations": "off",
+      "unicorn/no-useless-switch-case": "warn",
       curly: ["error", "all"],
     },
   },

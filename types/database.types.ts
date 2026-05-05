@@ -19,6 +19,7 @@ export type Database = {
           created_at: string;
           household_id: string;
           id: string;
+          local_day: string;
           logged_by: string | null;
           metadata: Json | null;
           notes: string | null;
@@ -27,11 +28,13 @@ export type Database = {
           type: Database["public"]["Enums"]["activity_type"];
           updated_at: string;
           updated_by: string | null;
+          utc_offset_minutes: number;
         };
         Insert: {
           created_at?: string;
           household_id: string;
           id?: string;
+          local_day: string;
           logged_by?: string | null;
           metadata?: Json | null;
           notes?: string | null;
@@ -40,11 +43,13 @@ export type Database = {
           type: Database["public"]["Enums"]["activity_type"];
           updated_at?: string;
           updated_by?: string | null;
+          utc_offset_minutes: number;
         };
         Update: {
           created_at?: string;
           household_id?: string;
           id?: string;
+          local_day?: string;
           logged_by?: string | null;
           metadata?: Json | null;
           notes?: string | null;
@@ -53,6 +58,7 @@ export type Database = {
           type?: Database["public"]["Enums"]["activity_type"];
           updated_at?: string;
           updated_by?: string | null;
+          utc_offset_minutes?: number;
         };
         Relationships: [
           {
@@ -514,6 +520,67 @@ export type Database = {
             foreignKeyName: "pet_daily_goals_pet_id_fkey";
             columns: ["pet_id"];
             isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      pet_streak_days: {
+        Row: {
+          day: string;
+          goals_snapshot: Json;
+          met_at: string;
+          pet_id: string;
+        };
+        Insert: {
+          day: string;
+          goals_snapshot: Json;
+          met_at?: string;
+          pet_id: string;
+        };
+        Update: {
+          day?: string;
+          goals_snapshot?: Json;
+          met_at?: string;
+          pet_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pet_streak_days_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      pet_streaks: {
+        Row: {
+          current_streak: number;
+          last_met_day: string | null;
+          longest_streak: number;
+          pet_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          current_streak?: number;
+          last_met_day?: string | null;
+          longest_streak?: number;
+          pet_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          current_streak?: number;
+          last_met_day?: string | null;
+          longest_streak?: number;
+          pet_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pet_streaks_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: true;
             referencedRelation: "pets";
             referencedColumns: ["id"];
           },
@@ -1016,6 +1083,13 @@ export type Database = {
     };
     Functions: {
       can_access_pet: { Args: { p_id: string }; Returns: boolean };
+      evaluate_pet_day: {
+        Args: { p_day: string; p_pet_id: string };
+        Returns: {
+          all_met: boolean;
+          snapshot: Json;
+        }[];
+      };
       get_next_upcoming_event: {
         Args: { p_pet_id: string };
         Returns: {
@@ -1036,6 +1110,16 @@ export type Database = {
           target_value: number;
         }[];
       };
+      get_pet_streak: {
+        Args: { p_pet_id: string; p_utc_offset_minutes?: number };
+        Returns: {
+          current_streak: number;
+          day: string;
+          is_today: boolean;
+          longest_streak: number;
+          status: string;
+        }[];
+      };
       get_today_activity_logs: {
         Args: { p_pet_id: string; p_utc_offset_minutes?: number };
         Returns: {
@@ -1050,6 +1134,10 @@ export type Database = {
       };
       get_user_household_ids: { Args: never; Returns: string[] };
       is_household_admin: { Args: { h_id: string }; Returns: boolean };
+      recompute_pet_streak: {
+        Args: { p_day: string; p_pet_id: string };
+        Returns: undefined;
+      };
     };
     Enums: {
       activity_type:

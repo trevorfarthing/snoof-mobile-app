@@ -3,15 +3,22 @@ import { supabase } from "@/lib/utils/supabase";
 import { useState } from "react";
 import { SubmitResult } from "./types";
 
-// Tables that hang off activity_logs via a UNIQUE activity_log_id FK. Adding a
-// new activity type with its own child table is a one-line change here plus a
-// thin form hook that builds the right payload.
+/* Tables that hang off activity_logs via a UNIQUE activity_log_id FK. Adding a
+   new activity type with its own child table is a one-line change here plus a
+   thin form hook that builds the right payload. */
 type ChildTable = "walks" | "feedings" | "potty_logs";
 
 type LogFields = {
   occurred_at: string;
   notes: string | null;
 };
+
+/* Capture the writer's UTC offset so the streak engine can bucket this
+   activity by its local day. Postgres derives local_day from occurred_at +
+   utc_offset_minutes via a generated column. Frozen at insert and never
+   updated on edits — e.g., a walk that happened in NYC stays bucketed to its NYC
+   day even if the user later edits it from a different timezone. */
+const currentUtcOffsetMinutes = (): number => -new Date().getTimezoneOffset();
 
 type InsertParams = {
   logFields: LogFields;
@@ -33,9 +40,9 @@ type Args = {
   childTable: ChildTable;
 };
 
-// Owns the Supabase round-trips for any activity_logs + child-table pair.
-// Form hooks pass type-specific payloads in and read submitting/error state
-// out — keeps every form hook free of insert/update boilerplate.
+/* Owns the Supabase round-trips for any activity_logs + child-table pair.
+   Form hooks pass type-specific payloads in and read submitting/error state
+   out. This keeps every form hook free of insert/update boilerplate. */
 export const useActivityLogPersistence = ({ type, childTable }: Args) => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +64,7 @@ export const useActivityLogPersistence = ({ type, childTable }: Args) => {
         household_id: householdId,
         type,
         logged_by: userId,
+        utc_offset_minutes: currentUtcOffsetMinutes(),
         ...logFields,
       })
       .select("id")
@@ -69,10 +77,10 @@ export const useActivityLogPersistence = ({ type, childTable }: Args) => {
       return { error: msg };
     }
 
-    // If this child insert fails after the activity_logs insert succeeded we
-    // leave an orphan log row. The UNIQUE constraint on
-    // <child>.activity_log_id prevents double-writes on retry; a future sweep
-    // job can reconcile.
+    /* If this child insert fails after the activity_logs insert succeeded we
+       leave an orphan log row. The UNIQUE constraint on
+       <child>.activity_log_id prevents double-writes on retry; a future sweep
+       job can reconcile. */
     const { error: childErr } = await supabase.from(childTable).insert({
       activity_log_id: logRow.id,
       pet_id: petId,

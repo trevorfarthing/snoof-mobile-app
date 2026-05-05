@@ -315,6 +315,7 @@ Snoof's advantages: comprehensive + beautiful + AI-native + dog-first + transpar
 - **Always** re-use functions, components, types and constants when possible. If needed, extract parts of components or functions out to their own shared files/folders. For utility functions, use @lib/utils/utils.ts. For constants, use @lib/utils/constants.ts.
 - Prefer re-using types from @types/database/types.ts rather than creating new type definitions when possible.
 - When styling components, use colors / spacing constants from @constants/colors.ts and fonts / font sizes from @constants/fonts.ts
+- For single line comments use the standard // style. For longer comments use the multi-line /* style rather than several lines of single line // style.
 
 ### Naming Conventions
 
