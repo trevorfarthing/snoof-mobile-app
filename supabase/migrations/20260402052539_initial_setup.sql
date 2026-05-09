@@ -272,7 +272,7 @@ CREATE POLICY hm_delete ON household_members
 -- For tables with household_id column: members can read, members can write.
 
 -- Macro-like approach: apply the same pattern to household-level tables.
--- (Pets, activity_logs, expenses, inventory, reminders, pawchat_conversations)
+-- (Pets, activity_logs, expenses, inventory, reminders, snoof_ai_conversations)
 
 -- PETS
 CREATE POLICY pets_select ON pets

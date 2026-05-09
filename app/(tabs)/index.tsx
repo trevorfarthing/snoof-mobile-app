@@ -3,8 +3,10 @@ import { HeroCard } from "@/components/dashboard/hero-card";
 import { QuickLog } from "@/components/dashboard/quick-log";
 import { ActionModal } from "@/components/dashboard/quick-log/action-modal";
 import type { ActivityType } from "@/components/dashboard/quick-log/activity-config";
+import { SnoofAiInsightCard } from "@/components/dashboard/snoof-ai-insight-card";
 import { TodayLogList } from "@/components/dashboard/today-log-list";
 import { useCareStreak } from "@/lib/hooks/use-care-streak";
+import { useSnoofAiInsight } from "@/lib/hooks/use-snoof-ai-insight";
 import {
   buildOptimisticLog,
   mapLogToInitialValues,
@@ -27,6 +29,7 @@ const DashboardScreen = () => {
 
   const todayLogs = useTodayLogs(activePet?.id ?? null, refreshKey);
   const careStreak = useCareStreak(activePet?.id ?? null, refreshKey);
+  const aiInsight = useSnoofAiInsight(activePet?.id ?? null, refreshKey);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -84,6 +87,12 @@ const DashboardScreen = () => {
           currentStreak={careStreak.currentStreak}
           longestStreak={careStreak.longestStreak}
           loading={careStreak.loading}
+        />
+        <SnoofAiInsightCard
+          state={aiInsight}
+          onDiscussPress={() => {
+            // TODO: navigate to Snoof AI screen
+          }}
         />
       </ScrollView>
 

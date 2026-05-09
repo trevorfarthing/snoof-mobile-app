@@ -23,7 +23,9 @@
     "eas:preview:ios": "eas build --profile preview --platform ios",
     "eas:submit:ios": "eas submit --platform ios",
     "eas:production:ios": "eas build --profile production --platform ios",
-    "update-types": "supabase gen types --lang=typescript --project-id \"$PROJECT_REF\" > types/database.types.ts"
+    "update-types": "supabase gen types --lang=typescript --project-id \"$PROJECT_REF\" > types/database.types.ts",
+    "functions:run:pet-insight": "supabase functions serve generate-pet-insight",
+    "functions:deploy": "supabase functions deploy"
   },
   "dependencies": {
     "@expo-google-fonts/dm-mono": "^0.4.2",

@@ -1,8 +1,7 @@
-- Generate design for app icon and color palette
 - Design some mockups with Stitch
 - Set up complex forms with react-hook-form
 
-### Future
+### Features
 
 - Generate some assets for whimsical icons on empty / loading screens (animations + images)
 - Create onboarding flow / tutorial screens
@@ -15,6 +14,8 @@
 - Add haptics everywhere that needs it
 - Add docs for all areas of the app in docs/ folder and CLAUDE.md in various folders
 - Implement dark mode
+- Add ability to select multiple pets on log modals - avatars with name underneath (ellipsis if too long) with text that updates, e.g. "Log a walk for: Ruby, Poppy"
+- Make everything clickable - stat cards, care streak days - should take you to another screen or modal with more details or a graph or something
 
 ## Refactor
 

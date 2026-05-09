@@ -118,7 +118,7 @@ Each pet profile gets a unique accent color for their hero card and chip indicat
 | Body      | **Nunito**  | 'Nunito Sans', sans-serif         | 400, 500, 600 |
 | Mono/Data | **DM Mono** | 'Courier New', monospace          | 400, 500      |
 
-**Lora** is the personality font — used for display-size text like the app title on splash/onboarding, empty state headlines, and PawChat greeting messages. Its warm, rounded serifs feel inviting and distinctive without being formal. Use sparingly for emotional impact.
+**Lora** is the personality font — used for display-size text like the app title on splash/onboarding, empty state headlines, and Snoof AI greeting messages. Its warm, rounded serifs feel inviting and distinctive without being formal. Use sparingly for emotional impact.
 
 **Nunito** is the workhorse — headings, labels, body text, buttons, navigation. Its rounded terminals perfectly match the rounded-corner philosophy. Highly legible at small sizes, friendly at large sizes.
 
@@ -364,7 +364,7 @@ For quick-log buttons and category indicators, icons sit inside soft-colored con
 - Background: `--color-bg-subtle`
 - Tap opens bottom sheet
 
-#### PawChat Icon (Top Right)
+#### Snoof AI Icon (Top Right)
 
 - Same container style as settings
 - Icon: Lucide `message-square`, `--color-text-secondary`, 18px
@@ -445,7 +445,7 @@ Snoof uses **line-art illustrations with warm color fills** for decorative and f
 - **Onboarding screens:** Full-width illustrated scenes (dog on a couch, walking in autumn leaves, etc.)
 - **Empty states:** Centered illustration with encouraging text ("No walks logged yet — time for an adventure?")
 - **Achievement badges:** Small circular illustrations for training milestones
-- **PawChat:** Friendly dog avatar in chat interface
+- **Snoof AI:** Friendly dog avatar in chat interface
 - **Loading/splash:** Animated Snoof mascot or paw print
 
 ### 9.2 Photography
@@ -579,7 +579,7 @@ Photos should always have rounded corners and, when used as hero images, a subtl
 └─────────────────────────────────┘
 ```
 
-> **No bottom tab navigation.** Settings is top-left gear icon. Navigation is via horizontal pill tabs. PawChat is top-right icon.
+> **No bottom tab navigation.** Settings is top-left gear icon. Navigation is via horizontal pill tabs. Snoof AI is top-right icon.
 
 ### 11.2 Safe Areas
 

@@ -125,7 +125,7 @@ The Dashboard is the home screen and the most important view. It contains:
 2. **Quick Log section** — 4 buttons in a row: default to Walk, Feed, Potty, Meds. Editable for paying subscribers.
 3. **Today timeline** — chronological list of today's logged activities. Done items have teal dots (#4ECDC4) and timestamps. Pending items have gray dots (#ccc) and a blue "Log" action.
 4. **Care streak** — 7 circles (one for each day of the past week) that are filled in once the user completes their daily care tasks for that day.
-5. **PawChat Insight** – A card with an important AI-generated insight based on historical data for the pet (e.g. Baxter's walks have been 12% longer this week).
+5. **Snoof AI Insight** – A card with an important AI-generated insight based on historical data for the pet (e.g. Baxter's walks have been 12% longer this week).
 
 ## Supabase Database Schema
 
@@ -168,15 +168,15 @@ Design the schema around these core entities. Use UUIDs for all primary keys. Al
 
 ### AI Tables
 
-- **pawchat_conversations** — (id, user_id, pet_id, title, created_at)
-- **pawchat_messages** — (id, conversation_id, role: user|assistant, content, created_at)
+- **snoof_ai_conversations** — (id, user_id, pet_id, title, created_at)
+- **snoof_ai_messages** — (id, conversation_id, role: user|assistant, content, created_at)
 
 ### RLS Policy Guidelines
 
 - Users can only access data for pets in their household
 - All logged_by fields reference the auth.users.id of the person who created the entry
 - Household members with "member" role can read and create, but only "owner" role can delete pets or manage household membership
-- PawChat conversations are private to the user (not shared with household)
+- Snoof AI conversations are private to the user (not shared with household)
 
 ## MVP Feature Scope
 
@@ -196,7 +196,7 @@ Ship these features at launch. Resist scope creep — the core validation questi
 10. **Weight Tracking** — log weight over time with charts
 11. **Document Storage** — upload vet records, lab results as PDFs/photos
 12. **Emergency Card** — one-tap shareable card with critical info (allergies, meds, vet contact)
-13. **PawChat (AI Assistant)** — 24/7 AI chatbot powered by Claude, context-aware based on pet profile and history. This is the primary differentiator.
+13. **Snoof AI (AI Assistant)** — 24/7 AI chatbot powered by Claude, context-aware based on pet profile and history. This is the primary differentiator.
 14. **Smart Reminders** — proactive reminders for medications, appointments, and routines
 15. **Household Coordination** — multiple family members can log; everyone sees who did what via Realtime
 16. **Breed-Specific Intelligence** — all AI responses tailored to the specific breed's needs
@@ -235,7 +235,7 @@ Freemium model with transparent pricing. This directly addresses competitor back
 | ------------- | -------------------------------- | ----------------------------- | ----------------------------------- |
 | Pets          | 1                                | Up to 3                       | Unlimited                           |
 | Core Tracking | Basic daily logs + med reminders | Full tracking, all modules    | Full tracking + data export         |
-| AI (PawChat)  | 5 messages/day                   | Unlimited + food analyzer     | All AI features incl. health trends |
+| AI (Snoof AI) | 5 messages/day                   | Unlimited + food analyzer     | All AI features incl. health trends |
 | Training      | Command tracker only             | Full training module + videos | AI training plans + achievements    |
 | Reports       | None                             | Monthly summaries             | Custom reports + vet-ready exports  |
 
@@ -243,9 +243,9 @@ Annual discount: 30-40% off ($3.99/mo Plus, $6.99/mo Pro).
 
 RevenueCat handles all subscription management, Apple/Google billing, and receipt validation.
 
-## AI Integration (PawChat)
+## AI Integration (Snoof AI)
 
-PawChat is the app's primary differentiator. It uses the Anthropic Claude API via Supabase Edge Functions.
+Snoof AI is the app's primary differentiator. It uses the Claude API via Supabase Edge Functions.
 
 ### Architecture
 
@@ -255,7 +255,7 @@ React Native UI → Supabase Edge Function → Claude API → Response streamed 
 
 ### Context Injection
 
-Every PawChat request should include the active pet's profile as system context:
+Every Snoof AI request should include the active pet's profile as system context:
 
 - Pet name, breed, age, weight, gender, spay/neuter status
 - Known allergies and health conditions
@@ -274,7 +274,7 @@ This makes responses personalized rather than generic.
 
 ### Suggested Prompt Chips
 
-Show contextual suggested prompts on the PawChat screen based on the pet's data:
+Show contextual suggested prompts on the Snoof AI screen based on the pet's data:
 
 - "Is [food brand] good for Golden Retrievers?"
 - "Baxter has been scratching a lot — what could cause this?"
@@ -373,5 +373,5 @@ EXPO_PUBLIC_SUPABASE_KEY=
 - **Offline support is critical** — log entries must work without network. Sync when back online.
 - **The daily dashboard is the most important screen** — it should load instantly and feel effortless.
 - **Quick Log must be zero-friction** — single tap to log, toast confirmation, done. No modals or forms for basic actions.
-- **PawChat is the differentiator** — invest in making the AI context-aware and genuinely useful, not a generic chatbot wrapper.
+- **Snoof AI is the differentiator** — invest in making the AI context-aware and genuinely useful, not a generic chatbot wrapper.
 - **Dogs Poppy (Cattle Dog, 2 yrs, 37 lbs) and Ruby (Springer Spaniel, 7 yrs, 40 lbs) are the test cases** — always think about multi-pet households when designing features.

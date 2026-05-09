@@ -72,15 +72,15 @@ export const AppHeader = () => {
           />
         </TouchableOpacity>
 
-        {/* PawChat message button */}
+        {/* Snoof AI message button */}
         <View>
           <TouchableOpacity
             style={styles.iconButton}
             onPress={() => {
-              // TODO: navigate to PawChat tab
+              // TODO: navigate to Snoof AI tab
             }}
             activeOpacity={0.7}
-            accessibilityLabel="PawChat"
+            accessibilityLabel="Snoof AI"
             accessibilityRole="button"
           >
             <MessageSquare
