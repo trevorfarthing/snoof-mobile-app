@@ -16,7 +16,7 @@ const getTimePeriod = (hour: number): string => {
 };
 
 const GEMINI_API_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 const SYSTEM_PROMPT = `You are a warm, knowledgeable dog care assistant inside a mobile app called Snoof.
 Write a 2-3 sentence insight about the dog based on the structured JSON data provided.
@@ -177,8 +177,11 @@ Deno.serve(async (req) => {
         },
       ],
       generationConfig: {
-        maxOutputTokens: 120,
+        maxOutputTokens: 300,
         temperature: 0.7,
+        thinkingConfig: {
+          thinkingBudget: 0,
+        },
       },
     };
 
@@ -195,6 +198,7 @@ Deno.serve(async (req) => {
     }
 
     const geminiData = await geminiRes.json();
+    console.log("Received response from Gemini:", JSON.stringify(geminiData));
     const insightText: string =
       geminiData?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
 
